@@ -149,3 +149,14 @@
     animation: none;
   }
 }
+
+/* Hide Next.js devtools indicator & overlay elements completely */
+[data-nextjs-dev-tools-button],
+[data-nextjs-toast],
+#next-dev-tools-indicator,
+nextjs-portal {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}

@@ -3,8 +3,69 @@
 import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, Sparkle } from 'lucide-react'
+import { GithubIcon, Html5Icon, Css3Icon, JavascriptIcon } from '@/components/brand-icons'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
+
+// 4 Corner Floating Tech Icons around the Hero Code Window
+const FLOATING_HERO_ICONS = [
+  {
+    id: 'html5',
+    name: 'HTML5',
+    icon: Html5Icon,
+    side: 'left',
+    size: 'large',
+    className: '-top-6 -left-3 sm:-top-7 sm:-left-6',
+    containerClass: 'size-13 sm:size-15 rounded-2xl',
+    iconClass: 'size-6 sm:size-7',
+    yAnim: [0, -9, 0],
+    rotateAnim: [0, 1.5, 0],
+    duration: 5.2,
+    delay: 0,
+  },
+  {
+    id: 'css3',
+    name: 'CSS3',
+    icon: Css3Icon,
+    side: 'left',
+    size: 'small',
+    className: '-bottom-5 -left-2 sm:-bottom-6 sm:-left-5',
+    containerClass: 'size-10 sm:size-11 rounded-xl',
+    iconClass: 'size-5 sm:size-5.5',
+    yAnim: [0, 8, 0],
+    rotateAnim: [0, -2, 0],
+    duration: 4.6,
+    delay: 0.5,
+  },
+  {
+    id: 'github',
+    name: 'GitHub',
+    icon: GithubIcon,
+    side: 'right',
+    size: 'small',
+    className: '-top-5 -right-2 sm:-top-6 sm:-right-5',
+    containerClass: 'size-10 sm:size-11 rounded-xl',
+    iconClass: 'size-5 sm:size-5.5',
+    yAnim: [0, -8, 0],
+    rotateAnim: [0, -1.5, 0],
+    duration: 4.9,
+    delay: 0.3,
+  },
+  {
+    id: 'javascript',
+    name: 'JavaScript',
+    icon: JavascriptIcon,
+    side: 'right',
+    size: 'large',
+    className: '-bottom-6 -right-3 sm:-bottom-7 sm:-right-6',
+    containerClass: 'size-13 sm:size-15 rounded-2xl',
+    iconClass: 'size-6 sm:size-7',
+    yAnim: [0, 10, 0],
+    rotateAnim: [0, 2, 0],
+    duration: 5.5,
+    delay: 0.8,
+  },
+]
 
 interface Props {
   onNavigate: (id: SectionId) => void
@@ -74,7 +135,7 @@ export function Hero({ onNavigate, data }: Props) {
 
       {/* ── Right column — code window ── */}
       <motion.div
-        className="relative"
+        className="relative px-2 sm:px-4"
         initial={{ opacity: 0, scale: 0.94 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.15 }}
@@ -82,54 +143,73 @@ export function Hero({ onNavigate, data }: Props) {
         {/* soft glow — purely decorative, no layout impact */}
         <div className="pointer-events-none absolute inset-6 -z-10 rounded-[3rem] bg-accent/15 blur-3xl" />
 
-        <div className="mx-auto max-w-md rounded-2xl border border-border bg-[#0e0b0d] shadow-2xl">
-          {/* Window chrome */}
-          <div className="flex items-center gap-2 border-b border-white/5 px-4 py-3">
-            <span className="size-3 rounded-full bg-[#ff5f57]" />
-            <span className="size-3 rounded-full bg-[#febc2e]" />
-            <span className="size-3 rounded-full bg-[#28c840]" />
-            <span className="ml-3 font-mono text-xs text-[#8a7680]">{data?.codeWindowFilename || 'ikram.js'}</span>
+        <div className="relative mx-auto max-w-md">
+          {/* Main code window */}
+          <div className="rounded-2xl border border-border bg-[#0e0b0d] shadow-2xl">
+            {/* Window chrome */}
+            <div className="flex items-center gap-2 border-b border-white/5 px-4 py-3">
+              <span className="size-3 rounded-full bg-[#ff5f57]" />
+              <span className="size-3 rounded-full bg-[#febc2e]" />
+              <span className="size-3 rounded-full bg-[#28c840]" />
+              <span className="ml-3 font-mono text-xs text-[#8a7680]">{data?.codeWindowFilename || 'ikram.js'}</span>
+            </div>
+
+            {/* Code lines */}
+            <div className="space-y-1 p-5 font-mono text-sm">
+              {codeLines.map((line) => (
+                <div key={line.n} className="flex gap-4">
+                  <span className="w-4 select-none text-right text-[#5a4750]">{line.n}</span>
+                  <code className="text-[#e6a4c4]">
+                    {line.code}
+                    {line.n === codeLines.length && (
+                      <span className="animate-blink ml-0.5 text-white">▍</span>
+                    )}
+                  </code>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Code lines */}
-          <div className="space-y-1 p-5 font-mono text-sm">
-            {codeLines.map((line) => (
-              <div key={line.n} className="flex gap-4">
-                <span className="w-4 select-none text-right text-[#5a4750]">{line.n}</span>
-                <code className="text-[#e6a4c4]">
-                  {line.code}
-                  {line.n === codeLines.length && (
-                    <span className="animate-blink ml-0.5 text-white">▍</span>
-                  )}
-                </code>
-              </div>
-            ))}
-          </div>
+          {/* 4 Floating Programming Icons with Baby-Pink Glow */}
+          {FLOATING_HERO_ICONS.map((item) => {
+            const Icon = item.icon
+            return (
+              <motion.div
+                key={item.id}
+                title={item.name}
+                aria-label={item.name}
+                initial={{ opacity: 0, scale: 0.75 }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  y: item.yAnim,
+                  rotate: item.rotateAnim,
+                }}
+                transition={{
+                  opacity: { duration: 0.5, delay: item.delay },
+                  scale: { duration: 0.5, delay: item.delay },
+                  y: { duration: item.duration, repeat: Infinity, ease: 'easeInOut', delay: item.delay },
+                  rotate: { duration: item.duration, repeat: Infinity, ease: 'easeInOut', delay: item.delay },
+                }}
+                whileHover={{ scale: 1.15, rotate: 0, transition: { duration: 0.2 } }}
+                className={`group absolute ${item.className} z-20 flex ${item.containerClass} items-center justify-center border border-[#f3c9dc]/35 bg-[#171115]/92 shadow-[0_10px_28px_-2px_rgba(243,201,220,0.48),0_0_20px_rgba(230,164,196,0.32)] backdrop-blur-md transition-all hover:border-[#f3c9dc] hover:shadow-[0_14px_36px_0px_rgba(243,201,220,0.7),0_0_28px_rgba(230,164,196,0.5)] cursor-default select-none`}
+              >
+                {/* Soft baby-pink glow underneath each logo */}
+                <div className="pointer-events-none absolute -inset-1 -z-10 rounded-2xl bg-[#f3c9dc]/35 blur-md transition-all group-hover:bg-[#f3c9dc]/60 group-hover:blur-lg" />
+
+                {/* Pure White Logo / Icon */}
+                <Icon className={`${item.iconClass} text-white drop-shadow-[0_2px_10px_rgba(243,201,220,0.6)] transition-transform group-hover:scale-105`} />
+
+                {/* Decorative subtle accent dot */}
+                <span className="absolute -right-1 -top-1 size-2 rounded-full bg-accent-soft ring-2 ring-background" />
+              </motion.div>
+            )
+          })}
         </div>
 
         <p className="mt-4 flex items-center justify-center gap-1.5 text-center font-serif italic text-muted-foreground">
           <Sparkle className="size-3.5 text-accent" /> {data?.codeWindowCaption || 'built with curiosity'}
         </p>
-
-        {/* Floating tech icon badges — these are static positions, no flickering SVG lines */}
-        {(data?.floaters || []).map((f, i) => (
-          <div
-            key={i}
-            className={`animate-floaty absolute ${f.className} flex size-14 items-center justify-center rounded-[20px] bg-gradient-to-br from-white to-[#ffeaf3] shadow-xl ring-1 ring-black/5`}
-            style={{ animationDelay: f.delay }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={f.icon || '/placeholder.svg'}
-              alt=""
-              width={28}
-              height={28}
-              className="size-7 object-contain"
-              crossOrigin="anonymous"
-            />
-            <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-accent-soft ring-2 ring-background" />
-          </div>
-        ))}
       </motion.div>
     </div>
   )

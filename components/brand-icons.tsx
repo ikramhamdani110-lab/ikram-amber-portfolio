@@ -15,3 +15,27 @@ export function LinkedinIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   )
 }
+
+export function Html5Icon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0Zm7.031 9.75-.234-2.625h11.203l.235-2.625H4.875l.703 7.875h10.031l-.328 3.656-3.328.938-3.328-.938-.211-2.344H6.016l.375 4.5 5.586 1.547 5.586-1.547.797-8.937H8.531Z" />
+    </svg>
+  )
+}
+
+export function Css3Icon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0Zm16.71 4.5H5.062l.258 2.875h12.59l-.281 3.125H5.578l.258 2.875h9.469l-.328 3.656-2.992.828-2.992-.828-.188-2.078H6.047l.352 4.219 5.586 1.547 5.586-1.547 1.055-11.75.258-2.875-.226-.047Z" />
+    </svg>
+  )
+}
+
+export function JavascriptIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M3 3h18v18H3V3Zm11.82 14.5c1.47 0 2.45-.74 2.95-1.66l-1.42-.92c-.32.55-.83.92-1.53.92-.93 0-1.47-.53-1.47-1.34 0-1.02.66-1.37 1.88-1.87 1.64-.67 2.65-1.37 2.65-3.05 0-1.66-1.29-2.83-3.15-2.83-1.56 0-2.6.75-3.17 1.84l1.4.92c.4-.73.95-1.1 1.77-1.1.92 0 1.47.53 1.47 1.25 0 .82-.54 1.21-1.64 1.7-1.54.66-2.82 1.45-2.82 3.16 0 1.82 1.34 3.03 3.08 3.03Zm-6.52 0c1.45 0 2.36-.71 2.76-1.74V7.24H9.2v7.54c0 .78-.39 1.18-1.03 1.18-.48 0-.84-.23-1.09-.53l-.94 1.18c.55.67 1.27.89 2.16.89Z" />
+    </svg>
+  )
+}
