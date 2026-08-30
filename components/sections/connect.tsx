@@ -8,13 +8,27 @@ import { SectionLabel } from '@/components/section-label'
 
 interface Props {
   socials: DbSchema['socials']
+  connect: DbSchema['connect']
   num?: string
 }
 
-export function Connect({ socials, num = '06' }: Props) {
+export function Connect({ socials, connect, num = '06' }: Props) {
   const githubUrl = socials?.github || ''
   const linkedinUrl = socials?.linkedin || ''
   const emailVal = socials?.email || ''
+  
+  const sectionLabel = connect?.sectionLabel || 'Connect'
+  const title = connect?.title || 'Find me around the web.'
+  const description = connect?.description || 'No forms, no fuss — just the places I actually live online. Follow along, or reach out whenever you like.'
+  const githubLabel = connect?.githubLabel || 'GitHub'
+  const githubSubtitle = connect?.githubSubtitle || 'Explore my code'
+  const githubCta = connect?.githubCta || 'Visit GitHub'
+  const linkedinLabel = connect?.linkedinLabel || 'LinkedIn'
+  const linkedinSubtitle = connect?.linkedinSubtitle || 'See my journey & experiences'
+  const linkedinCta = connect?.linkedinCta || 'Visit LinkedIn'
+  const emailLabel = connect?.emailLabel || 'Email'
+  const emailSubtitle = connect?.emailSubtitle || 'Say hello directly'
+  const emailCta = connect?.emailCta || 'Send Email'
 
   const getGithubHandle = (url: string) => {
     if (!url) return ''
@@ -42,41 +56,40 @@ export function Connect({ socials, num = '06' }: Props) {
   const cards = [
     {
       icon: GithubIcon,
-      title: 'GitHub',
-      sub: 'Explore my code',
+      title: githubLabel,
+      sub: githubSubtitle,
       handle: getGithubHandle(githubUrl) || 'github',
-      cta: 'Visit GitHub',
+      cta: githubCta,
       href: githubUrl || '#',
     },
     {
       icon: LinkedinIcon,
-      title: 'LinkedIn',
-      sub: 'See my journey & experiences',
+      title: linkedinLabel,
+      sub: linkedinSubtitle,
       handle: getLinkedinHandle(linkedinUrl) || 'linkedin',
-      cta: 'Visit LinkedIn',
+      cta: linkedinCta,
       href: linkedinUrl || '#',
     },
     {
       icon: Mail,
-      title: 'Email',
-      sub: 'Say hello directly',
+      title: emailLabel,
+      sub: emailSubtitle,
       handle: emailVal || 'email',
-      cta: 'Send Email',
+      cta: emailCta,
       href: emailVal ? `mailto:${emailVal}` : '#',
     },
   ]
 
   return (
     <div>
-      <SectionLabel num={num} label="Connect" />
+      <SectionLabel num={num} label={sectionLabel} />
 
       <h2 className="font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
-        Find me around the <span className="text-accent italic">web.</span>
+        {title}
       </h2>
 
       <p className="mt-6 max-w-lg leading-relaxed text-muted-foreground">
-        No forms, no fuss — just the places I actually live online. Follow along, or reach
-        out whenever you like.
+        {description}
       </p>
 
       <div className="mt-12 grid gap-5 md:grid-cols-3">

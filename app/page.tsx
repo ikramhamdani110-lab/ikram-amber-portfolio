@@ -123,12 +123,12 @@ export default function Page() {
             {active === 'certifications' && <Certifications certifications={data.certifications} num={certNum} />}
             {active === 'journey' && <Journey data={data.journey} linkedinUrl={data.socials?.linkedin} num={journeyNum} />}
             {active === 'updates' && <Updates updates={data.updates} num={updatesNum} />}
-            {active === 'connect' && <Connect socials={data.socials} num={connectNum} />}
+            {active === 'connect' && <Connect socials={data.socials} connect={data.connect} num={connectNum} />}
           </motion.section>
         </AnimatePresence>
 
         {active === 'connect' && (
-          <SiteFooter socials={data.socials} siteSettings={data.siteSettings} hero={data.hero} />
+          <SiteFooter socials={data.socials} siteSettings={data.siteSettings} hero={data.hero} customSocialLinks={data.customSocialLinks} />
         )}
       </main>
     </div>

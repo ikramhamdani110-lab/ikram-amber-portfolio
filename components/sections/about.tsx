@@ -14,6 +14,10 @@ interface Props {
 export function About({ data, aboutSkills }: Props) {
   const focusItems = data?.focus || ['Web', 'Software', 'Databases']
   const title = data?.title || 'Curious by nature. Always learning.'
+  const profileLabel = data?.profileLabel || 'Profile'
+  const currentlyLabel = data?.currentlyLabel || 'Currently'
+  const basedInLabel = data?.basedInLabel || 'Based in'
+  const focusLabel = data?.focusLabel || 'Focus'
 
   // Render title with custom accent styling
   const renderTitle = () => {
@@ -72,13 +76,13 @@ export function About({ data, aboutSkills }: Props) {
           className="rounded-3xl border border-border bg-card/50 p-7 sm:p-9"
         >
           <div className="mb-8 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            <User className="size-3.5" /> Profile
+            <User className="size-3.5" /> {profileLabel}
           </div>
 
           <div className="space-y-7">
             <div>
               <div className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent">
-                <Sparkles className="size-3.5" /> Currently
+                <Sparkles className="size-3.5" /> {currentlyLabel}
               </div>
               <p className="font-serif text-xl">
                 {data?.currently ? (
@@ -103,7 +107,7 @@ export function About({ data, aboutSkills }: Props) {
 
             <div>
               <div className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent">
-                <MapPin className="size-3.5" /> Based in
+                <MapPin className="size-3.5" /> {basedInLabel}
               </div>
               <p className="font-serif text-xl">{data?.location || 'Chlef, Algeria'}</p>
             </div>
@@ -112,7 +116,7 @@ export function About({ data, aboutSkills }: Props) {
 
             <div>
               <div className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent">
-                <Layers className="size-3.5" /> Focus
+                <Layers className="size-3.5" /> {focusLabel}
               </div>
               <div className="flex flex-wrap gap-2">
                 {focusItems.map((f) => (

@@ -1,5 +1,5 @@
 export default async function run(page, ui) {
-  await page.waitForFunction(() => document.body.innerText.length > 200, null, { timeout: 20000 }).catch(() => {})
+  await page.waitForFunction(() => document.body.innerText.length > 200, null, { timeout: 20000 }).catch(() => { })
   // 1. Click About, capture overlay mid-count
   let snap = await ui.snapshot()
   await ui.click(snap.match(/@(e\d+) button "About"/)?.[1])

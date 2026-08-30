@@ -11,11 +11,12 @@ interface Props {
   socials: DbSchema['socials']
   siteSettings: DbSchema['siteSettings']
   hero: DbSchema['hero']
+  customSocialLinks: DbSchema['customSocialLinks']
   /** Add other social channels here, e.g. [{ label: 'X / Twitter', url: 'https://x.com/...' }] */
   extraSocials?: ExtraSocial[]
 }
 
-export function SiteFooter({ socials, siteSettings, hero, extraSocials = [] }: Props) {
+export function SiteFooter({ socials, siteSettings, hero, customSocialLinks, extraSocials = [] }: Props) {
   const wordmark = siteSettings?.wordmark || 'IKRAM'
   const copyright = siteSettings?.copyright || '© 2026 Ikram Hamdani'
   const location = hero?.location || 'Chlef · Algeria'
@@ -82,13 +83,18 @@ export function SiteFooter({ socials, siteSettings, hero, extraSocials = [] }: P
               Email
             </a>
           )}
+          {customSocialLinks?.map((link) => (
+            <a key={link.id} href={link.url} target="_blank" rel="noreferrer" className="text-sm text-muted-foreground transition-colors hover:text-accent">
+              {link.name}
+            </a>
+          ))}
         </nav>
       </div>
 
       <div className="flex flex-col gap-2 border-t border-border py-6 font-mono text-xs uppercase tracking-widest text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <span>{copyright}</span>
         <span className="normal-case tracking-normal">
-          coded &amp; designed by <span className="text-accent">ikram</span>
+          Coded &amp; Designed by <span className="text-accent">Ikram</span>
         </span>
         <span className="flex items-center gap-2">
           {location.replace('·', '')} <span className="size-1.5 rounded-full bg-accent" />

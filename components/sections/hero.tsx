@@ -70,17 +70,6 @@ export function Hero({ onNavigate, data }: Props) {
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </button>
         </div>
-
-        <div className="mt-10 flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-          <span>{data?.location || 'Chlef · Algeria'}</span>
-          <span className="size-1.5 rounded-full bg-accent" />
-          <span>{'</>'} {data?.creativeTechnologist || 'Creative Technologist'}</span>
-        </div>
-
-        {/* "Coded and designed by Ikram" — subtle author tag */}
-        <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground/50">
-          Coded &amp; designed by Ikram
-        </p>
       </motion.div>
 
       {/* ── Right column — code window ── */}

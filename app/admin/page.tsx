@@ -411,6 +411,11 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   const [currently, setCurrently] = useState(db.about?.currently || '')
   const [aboutLocation, setAboutLocation] = useState(db.about?.location || '')
   const [focusInput, setFocusInput] = useState(db.about?.focus?.join(', ') || '')
+  const [profileLabel, setProfileLabel] = useState(db.about?.profileLabel || 'Profile')
+  const [currentlyLabel, setCurrentlyLabel] = useState(db.about?.currentlyLabel || 'Currently')
+  const [basedInLabel, setBasedInLabel] = useState(db.about?.basedInLabel || 'Based in')
+  const [focusLabel, setFocusLabel] = useState(db.about?.focusLabel || 'Focus')
+  const [aboutSectionLabel, setAboutSectionLabel] = useState(db.about?.sectionLabel || 'About')
 
   // Code editor lines
   const [codeLines, setCodeLines] = useState<{ n: number; code: string }[]>(db.hero?.codeLines || [])
@@ -442,7 +447,12 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
         currently,
         location: aboutLocation,
         focus: focusInput.split(',').map(f => f.trim()).filter(Boolean),
-        bio: bio // Sync bio for consistency
+        bio: bio, // Sync bio for consistency
+        profileLabel,
+        currentlyLabel,
+        basedInLabel,
+        focusLabel,
+        sectionLabel: aboutSectionLabel
       }
     })
   }
@@ -601,6 +611,60 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             />
           </div>
         </div>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Profile Card Label</label>
+            <input
+              type="text"
+              value={profileLabel}
+              onChange={(e) => setProfileLabel(e.target.value)}
+              placeholder="Profile"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Currently Label</label>
+            <input
+              type="text"
+              value={currentlyLabel}
+              onChange={(e) => setCurrentlyLabel(e.target.value)}
+              placeholder="Currently"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Based In Label</label>
+            <input
+              type="text"
+              value={basedInLabel}
+              onChange={(e) => setBasedInLabel(e.target.value)}
+              placeholder="Based in"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Focus Label</label>
+            <input
+              type="text"
+              value={focusLabel}
+              onChange={(e) => setFocusLabel(e.target.value)}
+              placeholder="Focus"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Navigation Section Label</label>
+          <input
+            type="text"
+            value={aboutSectionLabel}
+            onChange={(e) => setAboutSectionLabel(e.target.value)}
+            placeholder="About"
+            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+          />
+        </div>
       </div>
 
       <button
@@ -620,6 +684,7 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
   const [title, setTitle] = useState(db.skills?.title || '')
   const [description, setDescription] = useState(db.skills?.description || '')
   const [dbTextBadge, setDbTextBadge] = useState(db.skills?.dbTextBadge || '')
+  const [sectionLabel, setSectionLabel] = useState(db.skills?.sectionLabel || 'Skills')
   
   // local copy of skills inside groups
   const [groups, setGroups] = useState<SkillGroup[]>(db.skills?.groups || [])
@@ -631,6 +696,7 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
       title,
       description,
       dbTextBadge,
+      sectionLabel,
       aboutSkills,
       groups,
     })
@@ -692,6 +758,16 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Navigation Section Label</label>
+            <input
+              type="text"
+              value={sectionLabel}
+              onChange={(e) => setSectionLabel(e.target.value)}
+              placeholder="Skills"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
             />
           </div>
           <div>
@@ -844,6 +920,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
   const [title, setTitle] = useState(db.journey?.title || '')
   const [ctaTitle, setCtaTitle] = useState(db.journey?.ctaTitle || '')
   const [ctaButtonText, setCtaButtonText] = useState(db.journey?.ctaButtonText || '')
+  const [sectionLabel, setSectionLabel] = useState(db.journey?.sectionLabel || 'Journey')
   const [stages, setStages] = useState<JourneyStage[]>(db.journey?.stages || [])
 
   const handleSave = (e: React.FormEvent) => {
@@ -853,6 +930,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
       stages,
       ctaTitle,
       ctaButtonText,
+      sectionLabel,
     })
   }
 
@@ -922,6 +1000,17 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+          />
+        </div>
+
+        <div>
+          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Navigation Section Label</label>
+          <input
+            type="text"
+            value={sectionLabel}
+            onChange={(e) => setSectionLabel(e.target.value)}
+            placeholder="Journey"
+            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
           />
         </div>
 
@@ -1467,74 +1556,474 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
 // ----------------------------------------------------
 // 6. SOCIAL LINKS TAB
 // ----------------------------------------------------
-function SocialsTab({ db, save }: { db: DbSchema; save: any }) {
+function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; uploadImage: any }) {
   const [github, setGithub] = useState(db.socials?.github || '')
   const [linkedin, setLinkedin] = useState(db.socials?.linkedin || '')
   const [email, setEmail] = useState(db.socials?.email || '')
   const [fiverr, setFiverr] = useState(db.socials?.fiverr || '')
+  
+  // Connect section labels
+  const [connectSectionLabel, setConnectSectionLabel] = useState(db.connect?.sectionLabel || 'Connect')
+  const [connectTitle, setConnectTitle] = useState(db.connect?.title || 'Find me around the web.')
+  const [connectDescription, setConnectDescription] = useState(db.connect?.description || 'No forms, no fuss — just the places I actually live online. Follow along, or reach out whenever you like.')
+  const [githubLabel, setGithubLabel] = useState(db.connect?.githubLabel || 'GitHub')
+  const [githubSubtitle, setGithubSubtitle] = useState(db.connect?.githubSubtitle || 'Explore my code')
+  const [githubCta, setGithubCta] = useState(db.connect?.githubCta || 'Visit GitHub')
+  const [linkedinLabel, setLinkedinLabel] = useState(db.connect?.linkedinLabel || 'LinkedIn')
+  const [linkedinSubtitle, setLinkedinSubtitle] = useState(db.connect?.linkedinSubtitle || 'See my journey & experiences')
+  const [linkedinCta, setLinkedinCta] = useState(db.connect?.linkedinCta || 'Visit LinkedIn')
+  const [emailLabel, setEmailLabel] = useState(db.connect?.emailLabel || 'Email')
+  const [emailSubtitle, setEmailSubtitle] = useState(db.connect?.emailSubtitle || 'Say hello directly')
+  const [emailCta, setEmailCta] = useState(db.connect?.emailCta || 'Send Email')
+  
+  const [customLinks, setCustomLinks] = useState(db.customSocialLinks || [])
+  const [isEditingCustom, setIsEditingCustom] = useState(false)
+  const [customForm, setCustomForm] = useState<{ id?: string; name: string; url: string; icon: string }>({
+    name: '',
+    url: '',
+    icon: ''
+  })
+  
+  const customFileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSavePredefined = (e: React.FormEvent) => {
     e.preventDefault()
+    save('socials', {
+      github, linkedin, email, fiverr
+    })
     save('profile', {
-      socials: { github, linkedin, email, fiverr }
+      connect: {
+        sectionLabel: connectSectionLabel,
+        title: connectTitle,
+        description: connectDescription,
+        githubLabel,
+        githubSubtitle,
+        githubCta,
+        linkedinLabel,
+        linkedinSubtitle,
+        linkedinCta,
+        emailLabel,
+        emailSubtitle,
+        emailCta
+      }
     })
   }
 
+  const handleAddCustom = () => {
+    setCustomForm({ name: '', url: '', icon: '' })
+    setIsEditingCustom(true)
+  }
+
+  const handleEditCustom = (link: any) => {
+    setCustomForm({ id: link.id, name: link.name, url: link.url, icon: link.icon || '' })
+    setIsEditingCustom(true)
+  }
+
+  const handleCustomFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    try {
+      const path = await uploadImage(file)
+      setCustomForm({ ...customForm, icon: path })
+    } catch (err) {
+      alert('Upload failed')
+    }
+  }
+
+  const handleCustomSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const url = '/api/admin/custom-socials'
+    const method = customForm.id ? 'PUT' : 'POST'
+    
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(customForm),
+      })
+      if (res.ok) {
+        const json = await res.json()
+        setCustomLinks(json.links || [])
+        setIsEditingCustom(false)
+      } else {
+        alert('Save error')
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleDeleteCustom = async (id: string) => {
+    if (!confirm('Delete this social link?')) return
+    try {
+      const res = await fetch(`/api/admin/custom-socials?id=${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        const json = await res.json()
+        setCustomLinks(json.links || [])
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const moveCustomLink = async (index: number, direction: 'up' | 'down') => {
+    const newLinks = [...customLinks]
+    if (direction === 'up' && index > 0) {
+      [newLinks[index], newLinks[index - 1]] = [newLinks[index - 1], newLinks[index]]
+    } else if (direction === 'down' && index < newLinks.length - 1) {
+      [newLinks[index], newLinks[index + 1]] = [newLinks[index + 1], newLinks[index]]
+    }
+    
+    try {
+      const res = await fetch('/api/admin/custom-socials', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newLinks.map((l, i) => ({ ...l, order: i }))),
+      })
+      if (res.ok) {
+        const json = await res.json()
+        setCustomLinks(json.links || [])
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if (isEditingCustom) {
+    return (
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-6">
+        <div className="flex items-center justify-between border-b border-border/40 pb-3">
+          <h3 className="font-serif text-xl font-light">
+            {customForm.id ? 'Edit Custom Link' : 'Add Custom Link'}
+          </h3>
+          <button type="button" onClick={() => setIsEditingCustom(false)} className="font-mono text-[10px] text-muted-foreground">
+            Cancel
+          </button>
+        </div>
+
+        <form onSubmit={handleCustomSubmit} className="space-y-5">
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Platform Name</label>
+            <input
+              type="text"
+              required
+              value={customForm.name}
+              onChange={(e) => setCustomForm({ ...customForm, name: e.target.value })}
+              placeholder="e.g., Behance, Dribbble, Mostaql"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+            />
+          </div>
+
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">URL</label>
+            <input
+              type="url"
+              required
+              value={customForm.url}
+              onChange={(e) => setCustomForm({ ...customForm, url: e.target.value })}
+              placeholder="https://..."
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+            />
+          </div>
+
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Icon URL (Optional)</label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={customForm.icon}
+                onChange={(e) => setCustomForm({ ...customForm, icon: e.target.value })}
+                className="flex-1 rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+              />
+              <button
+                type="button"
+                onClick={() => customFileInputRef.current?.click()}
+                className="rounded-2xl border border-border bg-card p-3 text-muted-foreground hover:text-accent"
+              >
+                <Upload className="size-4" />
+              </button>
+              <input
+                ref={customFileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleCustomFileChange}
+                className="hidden"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5"
+          >
+            {customForm.id ? 'Update Link' : 'Add Link'}
+          </button>
+        </form>
+      </div>
+    )
+  }
+
   return (
-    <form onSubmit={handleSave} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
-      <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Website Social Channels</h3>
+    <div className="space-y-8">
+      {/* Predefined social links */}
+      <form onSubmit={handleSavePredefined} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+        <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Predefined Social Channels</h3>
 
-      <div>
-        <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">GitHub URL</label>
-        <input
-          type="url"
-          value={github}
-          onChange={(e) => setGithub(e.target.value)}
-          placeholder="https://github.com/..."
-          className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
-        />
+        <div>
+          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">GitHub URL</label>
+          <input
+            type="url"
+            value={github}
+            onChange={(e) => setGithub(e.target.value)}
+            placeholder="https://github.com/..."
+            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+          />
+        </div>
+
+        <div>
+          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">LinkedIn URL</label>
+          <input
+            type="url"
+            value={linkedin}
+            onChange={(e) => setLinkedin(e.target.value)}
+            placeholder="https://linkedin.com/in/..."
+            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+          />
+        </div>
+
+        <div>
+          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Email Address</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="email@example.com"
+            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+          />
+        </div>
+
+        <div>
+          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Fiverr URL (Optional)</label>
+          <input
+            type="url"
+            value={fiverr}
+            onChange={(e) => setFiverr(e.target.value)}
+            placeholder="https://fiverr.com/..."
+            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5"
+        >
+          Save Social & Connect Settings
+        </button>
+      </form>
+
+      {/* Connect section labels */}
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+        <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Connect Section Labels</h3>
+        
+        <div>
+          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Navigation Section Label</label>
+          <input
+            type="text"
+            value={connectSectionLabel}
+            onChange={(e) => setConnectSectionLabel(e.target.value)}
+            placeholder="Connect"
+            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+          />
+        </div>
+        
+        <div>
+          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Section Title</label>
+          <input
+            type="text"
+            value={connectTitle}
+            onChange={(e) => setConnectTitle(e.target.value)}
+            placeholder="Find me around the web."
+            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif text-lg"
+          />
+        </div>
+        
+        <div>
+          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Section Description</label>
+          <textarea
+            value={connectDescription}
+            onChange={(e) => setConnectDescription(e.target.value)}
+            rows={2}
+            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+          />
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-3">
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">GitHub Label</label>
+            <input
+              type="text"
+              value={githubLabel}
+              onChange={(e) => setGithubLabel(e.target.value)}
+              placeholder="GitHub"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">GitHub Subtitle</label>
+            <input
+              type="text"
+              value={githubSubtitle}
+              onChange={(e) => setGithubSubtitle(e.target.value)}
+              placeholder="Explore my code"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">GitHub CTA</label>
+            <input
+              type="text"
+              value={githubCta}
+              onChange={(e) => setGithubCta(e.target.value)}
+              placeholder="Visit GitHub"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">LinkedIn Label</label>
+            <input
+              type="text"
+              value={linkedinLabel}
+              onChange={(e) => setLinkedinLabel(e.target.value)}
+              placeholder="LinkedIn"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">LinkedIn Subtitle</label>
+            <input
+              type="text"
+              value={linkedinSubtitle}
+              onChange={(e) => setLinkedinSubtitle(e.target.value)}
+              placeholder="See my journey & experiences"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">LinkedIn CTA</label>
+            <input
+              type="text"
+              value={linkedinCta}
+              onChange={(e) => setLinkedinCta(e.target.value)}
+              placeholder="Visit LinkedIn"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Email Label</label>
+            <input
+              type="text"
+              value={emailLabel}
+              onChange={(e) => setEmailLabel(e.target.value)}
+              placeholder="Email"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Email Subtitle</label>
+            <input
+              type="text"
+              value={emailSubtitle}
+              onChange={(e) => setEmailSubtitle(e.target.value)}
+              placeholder="Say hello directly"
+              className="w-full rounded-2xl border border-divider bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Email CTA</label>
+            <input
+              type="text"
+              value={emailCta}
+              onChange={(e) => setEmailCta(e.target.value)}
+              placeholder="Send Email"
+              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            />
+          </div>
+        </div>
       </div>
 
-      <div>
-        <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">LinkedIn URL</label>
-        <input
-          type="url"
-          value={linkedin}
-          onChange={(e) => setLinkedin(e.target.value)}
-          placeholder="https://linkedin.com/in/..."
-          className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
-        />
-      </div>
+      {/* Custom social links */}
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+        <div className="flex items-center justify-between border-b border-border/40 pb-3">
+          <h3 className="font-serif text-xl font-light">Custom Social Links ({customLinks.length})</h3>
+          <button
+            onClick={handleAddCustom}
+            className="flex items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 text-xs font-mono uppercase tracking-wider text-[#201319]"
+          >
+            <Plus className="size-4" /> Add Custom Link
+          </button>
+        </div>
 
-      <div>
-        <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Email Address</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="email@example.com"
-          className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
-        />
-      </div>
+        {customLinks.length === 0 ? (
+          <div className="rounded-3xl border border-border bg-card/10 p-10 text-center text-sm text-muted-foreground">
+            No custom social links added yet. Add platforms like Behance, Dribbble, Mostaql, etc.
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {customLinks.map((link, index) => (
+              <div
+                key={link.id}
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border bg-[#0e0b0d] p-6"
+              >
+                <div className="flex items-center gap-4">
+                  {link.icon ? (
+                    <div className="size-12 rounded-xl overflow-hidden bg-card flex items-center justify-center">
+                      <img src={link.icon} alt="" className="size-8 object-contain" />
+                    </div>
+                  ) : (
+                    <div className="size-12 rounded-xl bg-card flex items-center justify-center text-muted-foreground">
+                      <Globe className="size-5" />
+                    </div>
+                  )}
+                  <div>
+                    <h4 className="font-serif text-lg font-medium">{link.name}</h4>
+                    <p className="text-xs text-muted-foreground font-mono">{link.url}</p>
+                  </div>
+                </div>
 
-      <div>
-        <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Fiverr URL (Optional)</label>
-        <input
-          type="url"
-          value={fiverr}
-          onChange={(e) => setFiverr(e.target.value)}
-          placeholder="https://fiverr.com/..."
-          className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
-        />
+                <div className="flex items-center gap-2 border-t border-border/20 pt-4 sm:pt-0 sm:border-t-0 justify-end">
+                  <button
+                    onClick={() => moveCustomLink(index, 'up')}
+                    disabled={index === 0}
+                    className="p-2 border border-border/60 rounded-xl text-muted-foreground hover:text-accent transition-colors disabled:opacity-30"
+                  >
+                    <ArrowUp className="size-3.5" />
+                  </button>
+                  <button
+                    onClick={() => moveCustomLink(index, 'down')}
+                    disabled={index === customLinks.length - 1}
+                    className="p-2 border border-border/60 rounded-xl text-muted-foreground hover:text-accent transition-colors disabled:opacity-30"
+                  >
+                    <ArrowDown className="size-3.5" />
+                  </button>
+                  <button
+                    onClick={() => handleEditCustom(link)}
+                    className="p-2 border border-border/60 rounded-xl text-muted-foreground hover:text-accent transition-colors"
+                  >
+                    <Edit className="size-3.5" />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteCustom(link.id)}
+                    className="p-2 border border-border/60 rounded-xl text-muted-foreground hover:text-red-400 transition-colors"
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-
-      <button
-        type="submit"
-        className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5"
-      >
-        Save Social Channels
-      </button>
-    </form>
+    </div>
   )
 }
 

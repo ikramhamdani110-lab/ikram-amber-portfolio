@@ -1,5 +1,5 @@
 export default async function run(page, ui) {
-  await page.waitForFunction(() => document.body.innerText.length > 200, null, { timeout: 20000 }).catch(() => {})
+  await page.waitForFunction(() => document.body.innerText.length > 200, null, { timeout: 20000 }).catch(() => { })
   const results = {}
 
   // Click About in nav -> overlay should appear instantly with counter

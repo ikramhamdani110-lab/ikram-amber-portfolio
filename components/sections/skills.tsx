@@ -11,6 +11,7 @@ interface Props {
 export function Skills({ data }: Props) {
   const groups = data?.groups || []
   const title = data?.title || 'My digital toolbox.'
+  const sectionLabel = data?.sectionLabel || 'Skills'
 
   // Render title with custom accent styling
   const renderTitle = () => {
@@ -38,7 +39,7 @@ export function Skills({ data }: Props) {
 
   return (
     <div>
-      <SectionLabel num="03" label="Skills" />
+      <SectionLabel num="03" label={sectionLabel} />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
         <h2 className="font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">

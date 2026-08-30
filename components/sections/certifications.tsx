@@ -3,17 +3,23 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Award, ArrowUpRight, X, ZoomIn } from 'lucide-react'
-import type { Certification } from '@/lib/db'
+import type { Certification, DbSchema } from '@/lib/db'
 import { SectionLabel } from '@/components/section-label'
 
 interface Props {
   certifications: Certification[]
+  certificationsSettings: DbSchema['certificationsSettings']
   num?: string
 }
 
-export function Certifications({ certifications, num = '04' }: Props) {
+export function Certifications({ certifications, certificationsSettings, num = '04' }: Props) {
   const [viewerImage, setViewerImage] = useState<string | null>(null)
   const [viewerName, setViewerName] = useState<string>('')
+
+  const sectionLabel = certificationsSettings?.sectionLabel || 'Certifications'
+  const title = certificationsSettings?.title || 'Validated expertise.'
+  const description = certificationsSettings?.description || 'Certificates and credentials I have earned through coursework and examinations.'
+  const emptyMessage = certificationsSettings?.emptyMessage || 'No certifications added yet.'
 
   const visibleCerts = certifications.filter((c) => c.visible !== false)
 

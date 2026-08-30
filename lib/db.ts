@@ -46,6 +46,14 @@ export interface PortfolioUpdate {
   category: 'certification' | 'skill' | 'achievement' | 'experience' | 'update'
 }
 
+export interface CustomSocialLink {
+  id: string
+  name: string
+  url: string
+  icon?: string
+  order: number
+}
+
 export interface DbSchema {
   hero: {
     hello: string
@@ -65,6 +73,11 @@ export interface DbSchema {
     currently: string
     location: string
     focus: string[]
+    profileLabel: string
+    currentlyLabel: string
+    basedInLabel: string
+    focusLabel: string
+    sectionLabel: string
   }
   skills: {
     title: string
@@ -72,18 +85,35 @@ export interface DbSchema {
     dbTextBadge: string
     aboutSkills: Skill[]
     groups: SkillGroup[]
+    sectionLabel: string
   }
   journey: {
     title: string
     stages: JourneyStage[]
     ctaTitle: string
     ctaButtonText: string
+    sectionLabel: string
   }
   socials: {
     github: string
     linkedin: string
     email: string
     fiverr?: string
+  }
+  customSocialLinks: CustomSocialLink[]
+  connect: {
+    sectionLabel: string
+    title: string
+    description: string
+    githubLabel: string
+    githubSubtitle: string
+    githubCta: string
+    linkedinLabel: string
+    linkedinSubtitle: string
+    linkedinCta: string
+    emailLabel: string
+    emailSubtitle: string
+    emailCta: string
   }
   siteSettings: {
     metaTitle: string
@@ -92,7 +122,17 @@ export interface DbSchema {
     copyright: string
   }
   certifications: Certification[]
+  certificationsSettings: {
+    sectionLabel: string
+    title: string
+    emptyMessage: string
+  }
   updates: PortfolioUpdate[]
+  updatesSettings: {
+    sectionLabel: string
+    title: string
+    emptyMessage: string
+  }
 }
 
 const DB_PATH = path.join(process.cwd(), 'data', 'db.json')
@@ -122,12 +162,18 @@ const DEFAULT_DATA: DbSchema = {
     bio: "I'm an Information Science student interested in software development, web technologies, databases, and information systems. I enjoy learning through experimentation and building practical things that turn ideas into working digital experiences.",
     currently: "Learning → Building → Experimenting",
     location: "Chlef, Algeria",
-    focus: ['Web', 'Software', 'Databases']
+    focus: ['Web', 'Software', 'Databases'],
+    profileLabel: "Profile",
+    currentlyLabel: "Currently",
+    basedInLabel: "Based in",
+    focusLabel: "Focus",
+    sectionLabel: "About"
   },
   skills: {
     title: "My digital toolbox.",
     description: "A growing ecosystem of languages and tools I use to learn, build and experiment. Hover a badge to see what it means to me.",
     dbTextBadge: "Database Design",
+    sectionLabel: "Skills",
     aboutSkills: [
       { name: 'PYTHON', note: 'Scripting · Data · Automation', icon: `${D}/python/python-original.svg` },
       { name: 'MYSQL', note: 'Queries & relations', icon: `${D}/mysql/mysql-original.svg` },
@@ -179,6 +225,7 @@ const DEFAULT_DATA: DbSchema = {
     title: "Learning. Building. Growing.",
     ctaTitle: "Want to see more of my journey?",
     ctaButtonText: "Visit my LinkedIn",
+    sectionLabel: "Journey",
     stages: [
       {
         num: '01',
@@ -227,6 +274,21 @@ const DEFAULT_DATA: DbSchema = {
     linkedin: 'https://www.linkedin.com/in/REPLACE-WITH-YOUR-LINKEDIN',
     email: 'your.email@example.com',
   },
+  customSocialLinks: [],
+  connect: {
+    sectionLabel: "Connect",
+    title: "Find me around the web.",
+    description: "No forms, no fuss — just the places I actually live online. Follow along, or reach out whenever you like.",
+    githubLabel: "GitHub",
+    githubSubtitle: "Explore my code",
+    githubCta: "Visit GitHub",
+    linkedinLabel: "LinkedIn",
+    linkedinSubtitle: "See my journey & experiences",
+    linkedinCta: "Visit LinkedIn",
+    emailLabel: "Email",
+    emailSubtitle: "Say hello directly",
+    emailCta: "Send Email"
+  },
   siteSettings: {
     metaTitle: 'Ikram Hamdani | Information Science Student & Web Developer',
     metaDescription: 'I love turning ideas into digital experiences while exploring software, web technologies, databases, and information systems.',
@@ -234,7 +296,17 @@ const DEFAULT_DATA: DbSchema = {
     copyright: '© 2026 Ikram Hamdani'
   },
   certifications: [],
-  updates: []
+  certificationsSettings: {
+    sectionLabel: "Certifications",
+    title: "Certifications & Achievements",
+    emptyMessage: "No certifications added yet."
+  },
+  updates: [],
+  updatesSettings: {
+    sectionLabel: "Updates",
+    title: "What's New",
+    emptyMessage: "No updates posted yet."
+  }
 }
 
 export function readDb(): DbSchema {

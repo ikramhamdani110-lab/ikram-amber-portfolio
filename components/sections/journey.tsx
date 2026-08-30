@@ -19,9 +19,10 @@ interface Props {
 }
 
 export function Journey({ data, linkedinUrl, num = '05' }: Props) {
+  const sectionLabel = data?.sectionLabel || 'Journey'
   return (
     <div>
-      <SectionLabel num={num} label="Journey" />
+      <SectionLabel num={num} label={sectionLabel} />
 
       <h2 className="font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
         {data.title || (

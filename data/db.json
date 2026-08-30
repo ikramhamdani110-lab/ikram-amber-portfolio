@@ -40,12 +40,18 @@
       "Web",
       "Software",
       "Databases"
-    ]
+    ],
+    "profileLabel": "Profile",
+    "currentlyLabel": "Currently",
+    "basedInLabel": "Based in",
+    "focusLabel": "Focus",
+    "sectionLabel": "About"
   },
   "skills": {
     "title": "My digital toolbox.",
     "description": "A growing ecosystem of languages and tools I use to learn, build and experiment. Hover a badge to see what it means to me.",
     "dbTextBadge": "Database Design",
+    "sectionLabel": "Skills",
     "aboutSkills": [
       {
         "name": "PYTHON",
@@ -169,6 +175,7 @@
     "title": "Learning. Building. Growing.",
     "ctaTitle": "Want to see more of my journey?",
     "ctaButtonText": "Visit my LinkedIn",
+    "sectionLabel": "Journey",
     "stages": [
       {
         "num": "01",
@@ -232,11 +239,31 @@
     "linkedin": "https://www.linkedin.com/in/REPLACE-WITH-YOUR-LINKEDIN",
     "email": "your.email@example.com"
   },
+  "customSocialLinks": [],
+  "connect": {
+    "sectionLabel": "Connect",
+    "title": "Find me around the web.",
+    "description": "No forms, no fuss — just the places I actually live online. Follow along, or reach out whenever you like.",
+    "githubLabel": "GitHub",
+    "githubSubtitle": "Explore my code",
+    "githubCta": "Visit GitHub",
+    "linkedinLabel": "LinkedIn",
+    "linkedinSubtitle": "See my journey & experiences",
+    "linkedinCta": "Visit LinkedIn",
+    "emailLabel": "Email",
+    "emailSubtitle": "Say hello directly",
+    "emailCta": "Send Email"
+  },
   "siteSettings": {
     "metaTitle": "Ikram Hamdani | Information Science Student & Web Developer",
-    "metaDescription": "I love turning ideas into digital experiences while exploring software, web technologies, databases, and information systems.",
-    "wordmark": "IKRAM",
+    "metaDescription": "I'm an Information Science student interested in software development, web technologies, databases, and information systems. I enjoy learning through experimentation and building practical things that turn ideas into working digital experiences.",
+    "wordmark": "IKRAM HAMDANI",
     "copyright": "© 2026 Ikram Hamdani"
+  },
+  "certificationsSettings": {
+    "sectionLabel": "Certifications",
+    "title": "Certifications & Achievements",
+    "emptyMessage": "No certifications added yet."
   },
   "certifications": [
     {
@@ -324,5 +351,20 @@
       "order": 6
     }
   ],
-  "updates": []
+  "updatesSettings": {
+    "sectionLabel": "Updates",
+    "title": "What's New",
+    "emptyMessage": "No updates posted yet."
+  },
+  "updates": [
+    {
+      "id": "update-1788126547149",
+      "title": "wwwwwwwwwwwwww",
+      "description": "wwwwwwwwwwwwwww",
+      "date": "2026-08-30",
+      "image": "/uploads/1788126545277-shot-anim.png",
+      "visible": true,
+      "category": "achievement"
+    }
+  ]
 }
