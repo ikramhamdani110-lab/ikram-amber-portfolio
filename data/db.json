@@ -1,0 +1,328 @@
+{
+  "hero": {
+    "hello": "Hello, I'm",
+    "name": "IKRAM",
+    "title": "Information Science Student & Web Developer",
+    "bio": "I love turning ideas into digital experiences while exploring software, web technologies, databases, and information systems.",
+    "location": "Chlef · Algeria",
+    "creativeTechnologist": "Creative Technologist",
+    "codeWindowFilename": "ikram.js",
+    "codeWindowCaption": "built with curiosity",
+    "codeLines": [
+      {
+        "n": 1,
+        "code": "const ikram = {"
+      },
+      {
+        "n": 2,
+        "code": "  learns: \"technology\","
+      },
+      {
+        "n": 3,
+        "code": "  builds: \"web experiences\","
+      },
+      {
+        "n": 4,
+        "code": "  goal: \"keep growing\""
+      },
+      {
+        "n": 5,
+        "code": "};"
+      }
+    ]
+  },
+  "about": {
+    "title": "Curious by nature. Always learning.",
+    "bio": "I'm an Information Science student interested in software development, web technologies, databases, and information systems. I enjoy learning through experimentation and building practical things that turn ideas into working digital experiences.",
+    "currently": "Learning → Building → Experimenting",
+    "location": "Chlef, Algeria",
+    "focus": [
+      "Web",
+      "Software",
+      "Databases"
+    ]
+  },
+  "skills": {
+    "title": "My digital toolbox.",
+    "description": "A growing ecosystem of languages and tools I use to learn, build and experiment. Hover a badge to see what it means to me.",
+    "dbTextBadge": "Database Design",
+    "aboutSkills": [
+      {
+        "name": "PYTHON",
+        "note": "Scripting · Data · Automation",
+        "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
+      },
+      {
+        "name": "MYSQL",
+        "note": "Queries & relations",
+        "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"
+      },
+      {
+        "name": "HTML5",
+        "note": "Semantic structure",
+        "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
+      },
+      {
+        "name": "GIT",
+        "note": "Version control",
+        "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"
+      }
+    ],
+    "groups": [
+      {
+        "num": "01",
+        "title": "Programming",
+        "skills": [
+          {
+            "name": "C",
+            "note": "Fundamentals · Memory · Logic",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg"
+          },
+          {
+            "name": "PYTHON",
+            "note": "Scripting · Data · Automation",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
+          },
+          {
+            "name": "JAVA",
+            "note": "OOP · Structured programs",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg"
+          }
+        ]
+      },
+      {
+        "num": "02",
+        "title": "Web",
+        "skills": [
+          {
+            "name": "HTML5",
+            "note": "Semantic structure",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
+          },
+          {
+            "name": "CSS3",
+            "note": "Layout · Motion · Design",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
+          },
+          {
+            "name": "JAVASCRIPT",
+            "note": "Interactivity & logic",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+          },
+          {
+            "name": "PHP",
+            "note": "Server-side scripting",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg"
+          }
+        ]
+      },
+      {
+        "num": "03",
+        "title": "Databases",
+        "skills": [
+          {
+            "name": "MYSQL",
+            "note": "Queries & relations",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"
+          },
+          {
+            "name": "MARIADB",
+            "note": "Open-source database",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mariadb/mariadb-original.svg"
+          }
+        ]
+      },
+      {
+        "num": "04",
+        "title": "Tools",
+        "skills": [
+          {
+            "name": "GIT",
+            "note": "Version control",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"
+          },
+          {
+            "name": "GITHUB",
+            "note": "Hosting & collaboration",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg"
+          },
+          {
+            "name": "VS CODE",
+            "note": "My daily editor",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg"
+          },
+          {
+            "name": "XAMPP",
+            "note": "Local server stack",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xampp/xampp-original.svg"
+          },
+          {
+            "name": "CODE::BLOCKS",
+            "note": "C/C++ IDE",
+            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/codeblocks/codeblocks-original.svg"
+          }
+        ]
+      }
+    ]
+  },
+  "journey": {
+    "title": "Learning. Building. Growing.",
+    "ctaTitle": "Want to see more of my journey?",
+    "ctaButtonText": "Visit my LinkedIn",
+    "stages": [
+      {
+        "num": "01",
+        "short": "University",
+        "stage": "STAGE 01",
+        "title": "Information Science",
+        "body": "Licence 2 — studying information systems, system modeling and the foundations that connect data, people and software.",
+        "tags": [
+          "Information Systems",
+          "System Modeling"
+        ]
+      },
+      {
+        "num": "02",
+        "short": "Programming",
+        "stage": "STAGE 02",
+        "title": "Foundations of code",
+        "body": "Learning to think in logic — algorithms and data structures with C, Python and Java.",
+        "tags": [
+          "Algorithms",
+          "Data Structures"
+        ]
+      },
+      {
+        "num": "03",
+        "short": "Web Development",
+        "stage": "STAGE 03",
+        "title": "Building for the browser",
+        "body": "Turning static pages into interactive experiences with HTML, CSS, JavaScript and PHP.",
+        "tags": [
+          "HTML · CSS · JS",
+          "PHP"
+        ]
+      },
+      {
+        "num": "04",
+        "short": "Databases",
+        "stage": "STAGE 04",
+        "title": "Structuring information",
+        "body": "Designing and querying relational databases with MySQL and MariaDB.",
+        "tags": [
+          "Database Design",
+          "SQL"
+        ]
+      },
+      {
+        "num": "05",
+        "short": "Exploring",
+        "stage": "STAGE 05",
+        "title": "Always curious",
+        "body": "Experimenting with new tools and ideas, and growing a little every single day.",
+        "tags": [
+          "New tools",
+          "Side experiments"
+        ]
+      }
+    ]
+  },
+  "socials": {
+    "github": "https://github.com/ikramhamdani110-lab",
+    "linkedin": "https://www.linkedin.com/in/REPLACE-WITH-YOUR-LINKEDIN",
+    "email": "your.email@example.com"
+  },
+  "siteSettings": {
+    "metaTitle": "Ikram Hamdani | Information Science Student & Web Developer",
+    "metaDescription": "I love turning ideas into digital experiences while exploring software, web technologies, databases, and information systems.",
+    "wordmark": "IKRAM",
+    "copyright": "© 2026 Ikram Hamdani"
+  },
+  "certifications": [
+    {
+      "id": "cert-1788016409798",
+      "name": "Baccalaureate in Technical Mathematics",
+      "organization": "Ministry of National Education, Algeria",
+      "date": "June 2024",
+      "credentialId": "",
+      "credentialUrl": "",
+      "image": "/uploads/1788016194444-photo-2026-08-29-14-41-34.jpg",
+      "description": "Baccalaureate degree in Technical Mathematics, with a focus on mathematics, technology, physics, and scientific studies.",
+      "visible": true,
+      "order": 0
+    },
+    {
+      "id": "cert-1788039713796",
+      "name": "Certificate of Excellence",
+      "organization": "InfoBrains Club and AI House, Hassiba Ben Bouali University of Chlef",
+      "date": "march 2026",
+      "credentialId": "",
+      "credentialUrl": "",
+      "image": "/uploads/1788039310255-photo-2026-08-29-14-41-26.jpg",
+      "description": "For achieving 1st place in the InfoBrains Challenge in Web Development.",
+      "visible": true,
+      "order": 1
+    },
+    {
+      "id": "cert-1788039889896",
+      "name": "Certificate of Achievement",
+      "organization": "InfoBrains Club",
+      "date": "march 2026",
+      "credentialId": "",
+      "credentialUrl": "",
+      "image": "/uploads/1788039839679-photo-2026-08-29-14-41-30.jpg",
+      "description": "For outstanding performance, creativity, and excellence in the Media Category during the Infobrains Challenge.",
+      "visible": true,
+      "order": 2
+    },
+    {
+      "id": "cert-1788040024332",
+      "name": "Certificate of Recognition",
+      "organization": "InfoBrains Scientific Club, Hassiba Ben Bouali University of Chlef (in partnership with Mobilis and Wellmax)",
+      "date": "April 17–19, 2026",
+      "credentialId": "",
+      "credentialUrl": "",
+      "image": "/uploads/1788039963769-photo-2026-08-29-14-41-22.jpg",
+      "description": "For successful participation and wining the first place in BrainHack, a Problem Solving & Coding Hackathon.",
+      "visible": true,
+      "order": 3
+    },
+    {
+      "id": "cert-1788040113456",
+      "name": "Certificate of Appreciation",
+      "organization": "InfoBrains Scientific Club, Hassiba Ben Bouali University of Chlef",
+      "date": "april 2026",
+      "credentialId": "",
+      "credentialUrl": "",
+      "image": "/uploads/1788040074201-photo-2026-08-29-14-41-13.jpg",
+      "description": "For serving as a Media Team member at Science Day Poster Competition and BrainHack Hackathon.",
+      "visible": true,
+      "order": 4
+    },
+    {
+      "id": "cert-1788040166784",
+      "name": "Participation Certificate (Summer University)",
+      "organization": "Hassiba Ben Bouali University of Chlef",
+      "date": "July 08–10, 2026",
+      "credentialId": "",
+      "credentialUrl": "",
+      "image": "/uploads/1788040130024-photo-2026-08-29-14-41-18.jpg",
+      "description": "For attending the Scientific Clubs Summer University \"Al-Tabi'a\" at the Institute of Marine Sciences in Ténès.",
+      "visible": true,
+      "order": 5
+    },
+    {
+      "id": "cert-1788040309071",
+      "name": "Certificate of Attendance",
+      "organization": "Sema Nova Academy",
+      "date": "April 2, 2026",
+      "credentialId": "",
+      "credentialUrl": "",
+      "image": "/uploads/1788040255092-photo-2026-08-29-22-50-36.jpg",
+      "description": "For attending the free workshop \"Mobile Journalism & Content Creation\" ",
+      "visible": true,
+      "order": 6
+    }
+  ],
+  "updates": []
+}

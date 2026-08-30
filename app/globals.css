@@ -1,0 +1,151 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-inter), 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), 'Fraunces Fallback', Georgia, serif;
+  --font-mono: var(--font-jetbrains), 'JetBrains Mono Fallback', ui-monospace, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+}
+
+:root {
+  color-scheme: light;
+  --radius: 0.9rem;
+
+  /* Light theme */
+  --background: #fff9fb;
+  --foreground: #211a1e;
+  --card: #ffffff;
+  --card-foreground: #211a1e;
+  --muted: #f3e7ed;
+  --muted-foreground: #8a7680;
+  --accent: #d06792;
+  --accent-foreground: #ffffff;
+  --accent-soft: #f6cadd;
+  --border: #eddbe4;
+  --ring: #d06792;
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Dark theme */
+  --background: #141013;
+  --foreground: #fff4f8;
+  --card: #1b1519;
+  --card-foreground: #fff4f8;
+  --muted: #2a2126;
+  --muted-foreground: #a08d97;
+  --accent: #e6a4c4;
+  --accent-foreground: #201319;
+  --accent-soft: #f3c9dc;
+  --border: rgba(255, 244, 248, 0.09);
+  --ring: #e6a4c4;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Marquee for the CONNECT / footer band */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+}
+
+/* Blinking cursor in the code window */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Subtle floating for hero badges */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-floaty {
+  animation: floaty 6s ease-in-out infinite;
+}
+
+/* Premium shine sweep across the hero name */
+@keyframes name-shine {
+  0% { background-position: 200% center; }
+  55%, 100% { background-position: -200% center; }
+}
+.animate-name-shine {
+  background-image: linear-gradient(
+    110deg,
+    var(--foreground) 0%,
+    var(--foreground) 44%,
+    #ffeaf5 50%,
+    var(--foreground) 56%,
+    var(--foreground) 100%
+  );
+  background-size: 220% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: name-shine 7s ease-in-out infinite;
+}
+/* Light mode: a slightly warmer sheen so the sweep stays visible on pale backgrounds */
+.light .animate-name-shine {
+  background-image: linear-gradient(
+    110deg,
+    var(--foreground) 0%,
+    var(--foreground) 44%,
+    #ffffff 50%,
+    var(--foreground) 56%,
+    var(--foreground) 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-name-shine {
+    animation: none;
+    background: none;
+    color: var(--foreground);
+  }
+  .animate-marquee,
+  .animate-blink,
+  .animate-floaty {
+    animation: none;
+  }
+}
