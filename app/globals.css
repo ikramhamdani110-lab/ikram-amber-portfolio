@@ -33,24 +33,24 @@
   color-scheme: light;
   --radius: 0.9rem;
 
-  /* Light theme */
-  --background: #fff9fb;
-  --foreground: #211a1e;
-  --card: #ffffff;
-  --card-foreground: #211a1e;
-  --muted: #f3e7ed;
-  --muted-foreground: #8a7680;
-  --accent: #d06792;
+  /* Light theme — Soft Baby Pink & White Accent Aesthetic */
+  --background: #fae8f0;
+  --foreground: #26151f;
+  --card: #fff0f6;
+  --card-foreground: #26151f;
+  --muted: #f3d4e4;
+  --muted-foreground: #795166;
+  --accent: #c94a7e;
   --accent-foreground: #ffffff;
-  --accent-soft: #f6cadd;
-  --border: #eddbe4;
-  --ring: #d06792;
+  --accent-soft: #f8c3da;
+  --border: #f0c3d9;
+  --ring: #c94a7e;
 }
 
 .dark {
   color-scheme: dark;
 
-  /* Dark theme */
+  /* Dark theme — Unchanged */
   --background: #141013;
   --foreground: #fff4f8;
   --card: #1b1519;

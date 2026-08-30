@@ -30,7 +30,7 @@ export function SiteNav({
   const [open, setOpen] = useState(false)
 
   const circleBtn =
-    'flex size-10 items-center justify-center rounded-full border border-[#f5d2e3]/80 bg-[#100d12]/80 text-[#f8eff4] shadow-[0_0_18px_rgba(240,170,205,0.15)] transition-colors hover:border-[#f8d9e6] hover:text-[#ffd9eb]'
+    'flex size-10 items-center justify-center rounded-full border border-border bg-card/85 text-foreground shadow-[0_0_18px_rgba(240,170,205,0.2)] transition-colors hover:border-accent hover:text-accent dark:border-[#f5d2e3]/80 dark:bg-[#100d12]/80 dark:text-[#f8eff4] dark:hover:border-[#f8d9e6] dark:hover:text-[#ffd9eb]'
 
   const githubUrl = socials?.github || '#'
   const linkedinUrl = socials?.linkedin || '#'
@@ -40,19 +40,19 @@ export function SiteNav({
     return (
       <>
         {wordmark.slice(0, -1)}
-        <span className="text-[#f4bfd7]">{wordmark.slice(-1)}</span>
-        <span className="text-[#f4bfd7]">.</span>
+        <span className="text-accent">{wordmark.slice(-1)}</span>
+        <span className="text-accent">.</span>
       </>
     )
   }
 
   return (
     <header className="fixed inset-x-0 top-4 z-50 px-4 sm:px-6">
-      <nav className="mx-auto flex max-w-[1100px] items-center justify-start gap-6 rounded-full border border-[#f5d2e3]/80 bg-[#0d0b0f]/90 py-2.5 pl-5 pr-2.5 shadow-[0_0_25px_rgba(242,160,200,0.16)] backdrop-blur-xl">
+      <nav className="mx-auto flex max-w-[1100px] items-center justify-start gap-6 rounded-full border border-border bg-card/90 py-2.5 pl-5 pr-2.5 shadow-[0_0_25px_rgba(242,160,200,0.22)] backdrop-blur-xl dark:border-[#f5d2e3]/80 dark:bg-[#0d0b0f]/90">
         <button
           onClick={() => onNavigate('home')}
           aria-label="Go to home"
-          className="font-serif text-[2rem] font-medium tracking-tight text-[#f5ebf1] sm:text-[2.2rem]"
+          className="font-serif text-[2rem] font-medium tracking-tight text-foreground sm:text-[2.2rem]"
         >
           {renderWordmark()}
         </button>
@@ -66,8 +66,8 @@ export function SiteNav({
               className={cn(
                 'rounded-full px-3 py-2 text-xs sm:text-sm font-medium transition-colors',
                 active === item.id
-                  ? 'bg-[#f5d2e3]/15 text-[#f8eff4]'
-                  : 'text-[#c4aab5] hover:text-[#f8eff4]',
+                  ? 'bg-accent/20 font-semibold text-foreground dark:bg-[#f5d2e3]/15 dark:text-[#f8eff4]'
+                  : 'text-muted-foreground hover:text-foreground dark:text-[#c4aab5] dark:hover:text-[#f8eff4]',
               )}
             >
               {item.label}
@@ -111,7 +111,7 @@ export function SiteNav({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="mx-auto mt-2 max-w-[1100px] overflow-hidden rounded-3xl border border-[#f5d2e3]/80 bg-[#100d12]/90 p-2 backdrop-blur-xl md:hidden"
+            className="mx-auto mt-2 max-w-[1100px] overflow-hidden rounded-3xl border border-border bg-card/95 p-2 shadow-xl backdrop-blur-xl dark:border-[#f5d2e3]/80 dark:bg-[#100d12]/90 md:hidden"
           >
             <ul className="flex flex-col">
               {navItems.map((item) => (
@@ -123,7 +123,7 @@ export function SiteNav({
                     }}
                     className={cn(
                       'flex w-full items-center gap-2 rounded-2xl px-4 py-3 text-left text-sm transition-colors',
-                      active === item.id ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground',
+                      active === item.id ? 'bg-muted text-foreground font-semibold' : 'text-muted-foreground hover:text-foreground',
                     )}
                   >
                     <span className="font-mono text-[10px] text-accent">{item.num}</span>

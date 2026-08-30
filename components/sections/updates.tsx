@@ -66,7 +66,7 @@ export function Updates({ updates, num = '05' }: Props) {
                   <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
                     {update.date}
                   </span>
-                  <span className="ml-2.5 rounded-full bg-accent-soft px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-[#201319] md:block md:w-fit md:ml-0 md:mt-2">
+                  <span className="ml-2.5 rounded-full bg-accent-soft px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-foreground font-semibold md:block md:w-fit md:ml-0 md:mt-2">
                     {update.category}
                   </span>
                 </div>

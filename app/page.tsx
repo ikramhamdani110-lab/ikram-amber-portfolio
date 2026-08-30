@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { IntroLoader } from '@/components/intro-loader'
 import { SiteNav } from '@/components/site-nav'
 import { SiteFooter } from '@/components/site-footer'
 import { Hero } from '@/components/sections/hero'
@@ -16,15 +17,39 @@ import type { DbSchema } from '@/lib/db'
 
 export default function Page() {
   const [active, setActive] = useState<SectionId>('home')
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
+  const [theme, setTheme] = useState<'dark' | 'light'>('light')
   const [data, setData] = useState<DbSchema | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [introFinished, setIntroFinished] = useState(false)
+
+  // Synchronize with stored theme on mount if present
+  useEffect(() => {
+    try {
+      const savedTheme = localStorage.getItem('theme')
+      if (savedTheme === 'dark' || savedTheme === 'light') {
+        setTheme(savedTheme)
+      }
+    } catch (err) {
+      console.error('Error reading theme from localStorage:', err)
+    }
+  }, [])
 
   useEffect(() => {
     const root = document.documentElement
     root.classList.toggle('dark', theme === 'dark')
     root.classList.toggle('light', theme === 'light')
   }, [theme])
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => {
+      const nextTheme = prev === 'dark' ? 'light' : 'dark'
+      try {
+        localStorage.setItem('theme', nextTheme)
+      } catch (err) {
+        console.error('Error saving theme to localStorage:', err)
+      }
+      return nextTheme
+    })
+  }
 
   useEffect(() => {
     async function loadPortfolio() {
@@ -36,8 +61,6 @@ export default function Page() {
         }
       } catch (err) {
         console.error('Error fetching portfolio data:', err)
-      } finally {
-        setLoading(false)
       }
     }
     loadPortfolio()
@@ -50,19 +73,7 @@ export default function Page() {
     window.scrollTo({ top: 0, behavior: 'auto' })
   }
 
-  if (loading || !data) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#141013] text-foreground font-serif text-3xl">
-        <motion.div
-          initial={{ opacity: 0.3 }}
-          animate={{ opacity: [0.3, 1, 0.3] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          IKRAM<span className="text-accent">.</span>
-        </motion.div>
-      </div>
-    )
-  }
+  const isReady = introFinished && data !== null
 
   // Build nav items — only show sections that have content
   const rawNavItems: { id: SectionId; label: string }[] = [
@@ -71,14 +82,14 @@ export default function Page() {
     { id: 'skills', label: 'Skills' },
   ]
 
-  const visibleCerts = data.certifications?.filter((c) => c.visible !== false) || []
+  const visibleCerts = data?.certifications?.filter((c) => c.visible !== false) || []
   if (visibleCerts.length > 0) {
     rawNavItems.push({ id: 'certifications', label: 'Certifications' })
   }
 
   rawNavItems.push({ id: 'journey', label: 'Journey' })
 
-  const visibleUpdates = data.updates?.filter((u) => u.visible !== false) || []
+  const visibleUpdates = data?.updates?.filter((u) => u.visible !== false) || []
   if (visibleUpdates.length > 0) {
     rawNavItems.push({ id: 'updates', label: 'Updates' })
   }
@@ -98,39 +109,52 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteNav
-        active={active}
-        onNavigate={navigate}
-        theme={theme}
-        onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-        socials={data.socials}
-        navItems={navItems}
-        wordmark={data.siteSettings?.wordmark}
-      />
-
-      <main className="mx-auto max-w-6xl px-4 pb-16 pt-32 sm:px-6 sm:pt-36">
-        <AnimatePresence mode="wait">
-          <motion.section
-            key={active}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {active === 'home' && <Hero onNavigate={navigate} data={data.hero} />}
-            {active === 'about' && <About data={data.about} aboutSkills={data.skills?.aboutSkills} />}
-            {active === 'skills' && <Skills data={data.skills} />}
-            {active === 'certifications' && <Certifications certifications={data.certifications} num={certNum} />}
-            {active === 'journey' && <Journey data={data.journey} linkedinUrl={data.socials?.linkedin} num={journeyNum} />}
-            {active === 'updates' && <Updates updates={data.updates} num={updatesNum} />}
-            {active === 'connect' && <Connect socials={data.socials} connect={data.connect} num={connectNum} />}
-          </motion.section>
-        </AnimatePresence>
-
-        {active === 'connect' && (
-          <SiteFooter socials={data.socials} siteSettings={data.siteSettings} hero={data.hero} customSocialLinks={data.customSocialLinks} />
+      <AnimatePresence>
+        {!isReady && (
+          <IntroLoader
+            key="intro-loader"
+            onComplete={() => setIntroFinished(true)}
+          />
         )}
-      </main>
+      </AnimatePresence>
+
+      {data && (
+        <div className={`transition-opacity duration-700 ${isReady ? 'opacity-100' : 'opacity-0'}`}>
+          <SiteNav
+            active={active}
+            onNavigate={navigate}
+            theme={theme}
+            onToggleTheme={handleToggleTheme}
+            socials={data.socials}
+            navItems={navItems}
+            wordmark={data.siteSettings?.wordmark}
+          />
+
+          <main className="mx-auto max-w-6xl px-4 pb-16 pt-32 sm:px-6 sm:pt-36">
+            <AnimatePresence mode="wait">
+              <motion.section
+                key={active}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {active === 'home' && <Hero onNavigate={navigate} data={data.hero} />}
+                {active === 'about' && <About data={data.about} aboutSkills={data.skills?.aboutSkills} />}
+                {active === 'skills' && <Skills data={data.skills} />}
+                {active === 'certifications' && <Certifications certifications={data.certifications} num={certNum} />}
+                {active === 'journey' && <Journey data={data.journey} linkedinUrl={data.socials?.linkedin} num={journeyNum} />}
+                {active === 'updates' && <Updates updates={data.updates} num={updatesNum} />}
+                {active === 'connect' && <Connect socials={data.socials} connect={data.connect} num={connectNum} />}
+              </motion.section>
+            </AnimatePresence>
+
+            {active === 'connect' && (
+              <SiteFooter socials={data.socials} siteSettings={data.siteSettings} hero={data.hero} customSocialLinks={data.customSocialLinks} />
+            )}
+          </main>
+        </div>
+      )}
     </div>
   )
 }

@@ -53,7 +53,7 @@ export function Journey({ data, linkedinUrl, num = '05' }: Props) {
                   <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
                     {stage.stage}
                   </span>
-                  <span className="ml-2.5 rounded-full bg-accent-soft px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-[#201319] md:block md:w-fit md:ml-0 md:mt-2">
+                  <span className="ml-2.5 rounded-full bg-accent-soft px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-foreground font-semibold md:block md:w-fit md:ml-0 md:mt-2">
                     {stage.short}
                   </span>
                 </div>
@@ -94,7 +94,7 @@ export function Journey({ data, linkedinUrl, num = '05' }: Props) {
             href={linkedinUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 font-mono text-xs uppercase tracking-widest text-[#201319] transition-transform hover:scale-[1.03]"
+            className="group inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 font-mono text-xs uppercase tracking-widest text-accent-foreground font-semibold transition-transform hover:scale-[1.03]"
           >
             {data.ctaButtonText}
             <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

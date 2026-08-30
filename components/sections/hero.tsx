@@ -15,10 +15,10 @@ const FLOATING_HERO_ICONS = [
     icon: Html5Icon,
     side: 'left',
     size: 'large',
-    className: '-top-6 -left-3 sm:-top-7 sm:-left-6',
-    containerClass: 'size-13 sm:size-15 rounded-2xl',
-    iconClass: 'size-6 sm:size-7',
-    yAnim: [0, -9, 0],
+    className: '-top-5 -left-3 sm:-top-6 sm:-left-5',
+    containerClass: 'size-12 sm:size-14 rounded-2xl',
+    iconClass: 'size-5.5 sm:size-6.5',
+    yAnim: [0, -8, 0],
     rotateAnim: [0, 1.5, 0],
     duration: 5.2,
     delay: 0,
@@ -29,10 +29,10 @@ const FLOATING_HERO_ICONS = [
     icon: Css3Icon,
     side: 'left',
     size: 'small',
-    className: '-bottom-5 -left-2 sm:-bottom-6 sm:-left-5',
-    containerClass: 'size-10 sm:size-11 rounded-xl',
-    iconClass: 'size-5 sm:size-5.5',
-    yAnim: [0, 8, 0],
+    className: '-bottom-4 -left-2 sm:-bottom-5 sm:-left-4',
+    containerClass: 'size-9.5 sm:size-10.5 rounded-xl',
+    iconClass: 'size-4.5 sm:size-5',
+    yAnim: [0, 7, 0],
     rotateAnim: [0, -2, 0],
     duration: 4.6,
     delay: 0.5,
@@ -43,10 +43,10 @@ const FLOATING_HERO_ICONS = [
     icon: GithubIcon,
     side: 'right',
     size: 'small',
-    className: '-top-5 -right-2 sm:-top-6 sm:-right-5',
-    containerClass: 'size-10 sm:size-11 rounded-xl',
-    iconClass: 'size-5 sm:size-5.5',
-    yAnim: [0, -8, 0],
+    className: '-top-4 -right-2 sm:-top-5 sm:-right-4',
+    containerClass: 'size-9.5 sm:size-10.5 rounded-xl',
+    iconClass: 'size-4.5 sm:size-5',
+    yAnim: [0, -7, 0],
     rotateAnim: [0, -1.5, 0],
     duration: 4.9,
     delay: 0.3,
@@ -57,10 +57,10 @@ const FLOATING_HERO_ICONS = [
     icon: JavascriptIcon,
     side: 'right',
     size: 'large',
-    className: '-bottom-6 -right-3 sm:-bottom-7 sm:-right-6',
-    containerClass: 'size-13 sm:size-15 rounded-2xl',
-    iconClass: 'size-6 sm:size-7',
-    yAnim: [0, 10, 0],
+    className: '-bottom-5 -right-3 sm:-bottom-6 sm:-right-5',
+    containerClass: 'size-12 sm:size-14 rounded-2xl',
+    iconClass: 'size-5.5 sm:size-6.5',
+    yAnim: [0, 8, 0],
     rotateAnim: [0, 2, 0],
     duration: 5.5,
     delay: 0.8,
@@ -117,7 +117,7 @@ export function Hero({ onNavigate, data }: Props) {
           <button
             onClick={() => onNavigate('skills')}
             aria-label="Explore skills"
-            className="group flex items-center gap-2 rounded-full bg-accent-soft px-6 py-3 text-sm font-medium text-[#201319] transition-transform hover:-translate-y-0.5"
+            className="group flex items-center gap-2 rounded-full bg-accent-soft px-6 py-3 text-sm font-semibold text-foreground transition-transform hover:-translate-y-0.5"
           >
             Explore
             <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -135,7 +135,7 @@ export function Hero({ onNavigate, data }: Props) {
 
       {/* ── Right column — code window ── */}
       <motion.div
-        className="relative px-2 sm:px-4"
+        className="relative px-2 sm:px-4 lg:-translate-x-6"
         initial={{ opacity: 0, scale: 0.94 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.15 }}
@@ -143,26 +143,26 @@ export function Hero({ onNavigate, data }: Props) {
         {/* soft glow — purely decorative, no layout impact */}
         <div className="pointer-events-none absolute inset-6 -z-10 rounded-[3rem] bg-accent/15 blur-3xl" />
 
-        <div className="relative mx-auto max-w-md">
-          {/* Main code window */}
-          <div className="rounded-2xl border border-border bg-[#0e0b0d] shadow-2xl">
+        <div className="relative mx-auto max-w-[340px] rotate-[-8deg] transform-gpu py-3 sm:max-w-[370px] sm:py-4">
+          {/* Main code window — light/pink in light mode, deep dark in dark mode */}
+          <div className="rounded-2xl border border-border bg-card/95 shadow-2xl backdrop-blur-md dark:bg-[#0e0b0d]">
             {/* Window chrome */}
-            <div className="flex items-center gap-2 border-b border-white/5 px-4 py-3">
-              <span className="size-3 rounded-full bg-[#ff5f57]" />
-              <span className="size-3 rounded-full bg-[#febc2e]" />
-              <span className="size-3 rounded-full bg-[#28c840]" />
-              <span className="ml-3 font-mono text-xs text-[#8a7680]">{data?.codeWindowFilename || 'ikram.js'}</span>
+            <div className="flex items-center gap-1.5 border-b border-border/80 px-3.5 py-2.5 dark:border-white/5">
+              <span className="size-2.5 rounded-full bg-[#ff5f57]" />
+              <span className="size-2.5 rounded-full bg-[#febc2e]" />
+              <span className="size-2.5 rounded-full bg-[#28c840]" />
+              <span className="ml-2.5 font-mono text-[11px] text-muted-foreground">{data?.codeWindowFilename || 'ikram.js'}</span>
             </div>
 
             {/* Code lines */}
-            <div className="space-y-1 p-5 font-mono text-sm">
+            <div className="space-y-1 p-4 font-mono text-[13px] sm:p-4.5 sm:text-sm">
               {codeLines.map((line) => (
-                <div key={line.n} className="flex gap-4">
-                  <span className="w-4 select-none text-right text-[#5a4750]">{line.n}</span>
-                  <code className="text-[#e6a4c4]">
+                <div key={line.n} className="flex gap-3">
+                  <span className="w-3.5 select-none text-right text-muted-foreground/60 dark:text-[#5a4750]">{line.n}</span>
+                  <code className="font-medium text-accent dark:text-[#e6a4c4]">
                     {line.code}
                     {line.n === codeLines.length && (
-                      <span className="animate-blink ml-0.5 text-white">▍</span>
+                      <span className="animate-blink ml-0.5 text-foreground dark:text-white">▍</span>
                     )}
                   </code>
                 </div>
@@ -170,7 +170,7 @@ export function Hero({ onNavigate, data }: Props) {
             </div>
           </div>
 
-          {/* 4 Floating Programming Icons with Baby-Pink Glow */}
+          {/* 4 Floating Programming Icons (White Containers + Authentic Logos + Baby-Pink Glow) */}
           {FLOATING_HERO_ICONS.map((item) => {
             const Icon = item.icon
             return (
@@ -192,16 +192,16 @@ export function Hero({ onNavigate, data }: Props) {
                   rotate: { duration: item.duration, repeat: Infinity, ease: 'easeInOut', delay: item.delay },
                 }}
                 whileHover={{ scale: 1.15, rotate: 0, transition: { duration: 0.2 } }}
-                className={`group absolute ${item.className} z-20 flex ${item.containerClass} items-center justify-center border border-[#f3c9dc]/35 bg-[#171115]/92 shadow-[0_10px_28px_-2px_rgba(243,201,220,0.48),0_0_20px_rgba(230,164,196,0.32)] backdrop-blur-md transition-all hover:border-[#f3c9dc] hover:shadow-[0_14px_36px_0px_rgba(243,201,220,0.7),0_0_28px_rgba(230,164,196,0.5)] cursor-default select-none`}
+                className={`group absolute ${item.className} z-20 flex ${item.containerClass} items-center justify-center border border-border bg-white/95 text-[#24292e] shadow-[0_10px_24px_-2px_rgba(243,180,210,0.5),0_0_18px_rgba(230,164,196,0.35)] backdrop-blur-md transition-all hover:border-accent hover:shadow-[0_14px_32px_0px_rgba(243,180,210,0.7)] cursor-default select-none dark:bg-white/95`}
               >
                 {/* Soft baby-pink glow underneath each logo */}
-                <div className="pointer-events-none absolute -inset-1 -z-10 rounded-2xl bg-[#f3c9dc]/35 blur-md transition-all group-hover:bg-[#f3c9dc]/60 group-hover:blur-lg" />
+                <div className="pointer-events-none absolute -inset-1 -z-10 rounded-2xl bg-[#f3c9dc]/45 blur-md transition-all group-hover:bg-[#f3c9dc]/70 group-hover:blur-lg" />
 
-                {/* Pure White Logo / Icon */}
-                <Icon className={`${item.iconClass} text-white drop-shadow-[0_2px_10px_rgba(243,201,220,0.6)] transition-transform group-hover:scale-105`} />
+                {/* Recognizable Logo / Icon */}
+                <Icon className={`${item.iconClass} ${item.id === 'github' ? 'text-[#24292e]' : ''} drop-shadow-[0_2px_8px_rgba(243,201,220,0.4)] transition-transform group-hover:scale-105`} />
 
                 {/* Decorative subtle accent dot */}
-                <span className="absolute -right-1 -top-1 size-2 rounded-full bg-accent-soft ring-2 ring-background" />
+                <span className="absolute -right-1 -top-1 size-2 rounded-full bg-accent-soft ring-2 ring-card" />
               </motion.div>
             )
           })}

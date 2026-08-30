@@ -115,7 +115,7 @@ export function Connect({ socials, connect, num = '06' }: Props) {
             <p className="mt-1 text-sm text-muted-foreground">{card.sub}</p>
             <p className="mt-5 font-mono text-xs text-muted-foreground">{card.handle}</p>
 
-            <span className="mt-5 inline-flex w-fit items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 text-sm font-medium text-[#201319]">
+            <span className="mt-5 inline-flex w-fit items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 text-sm font-medium text-foreground font-semibold">
               {card.cta}
               <ArrowUpRight className="size-3.5" />
             </span>
