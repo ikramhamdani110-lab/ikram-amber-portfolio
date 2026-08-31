@@ -6,6 +6,7 @@ import { ArrowRight, ArrowUpRight, Sparkle } from 'lucide-react'
 import { GithubIcon, Html5Icon, Css3Icon, JavascriptIcon } from '@/components/brand-icons'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
+import { useLanguage } from '@/lib/i18n'
 
 // 4 Corner Floating Tech Icons around the Hero Code Window
 const FLOATING_HERO_ICONS = [
