@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { IntroLoader } from '@/components/intro-loader'
 import { SiteNav } from '@/components/site-nav'
@@ -14,8 +14,11 @@ import { Updates } from '@/components/sections/updates'
 import { Connect } from '@/components/sections/connect'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
+import { useLanguage } from '@/lib/i18n'
+import { AR_DATA } from '@/lib/data.ar'
 
 export default function Page() {
+  const { lang, t } = useLanguage()
   const [active, setActive] = useState<SectionId>('home')
   const [theme, setTheme] = useState<'dark' | 'light'>('light')
   const [data, setData] = useState<DbSchema | null>(null)
@@ -73,28 +76,53 @@ export default function Page() {
     window.scrollTo({ top: 0, behavior: 'auto' })
   }
 
-  const isReady = introFinished && data !== null
+  // English content comes from the live DB. Arabic uses the professional
+  // translation, while dynamic/user-owned data (socials, custom links,
+  // certifications, updates) and the brand wordmark/code stay from the DB.
+  const localized = useMemo<DbSchema | null>(() => {
+    if (!data) return null
+    if (lang === 'en') return data
+    return {
+      ...AR_DATA,
+      socials: data.socials,
+      customSocialLinks: data.customSocialLinks,
+      certifications: data.certifications,
+      updates: data.updates,
+      hero: {
+        ...AR_DATA.hero,
+        name: data.hero?.name ?? AR_DATA.hero.name,
+        codeWindowFilename: data.hero?.codeWindowFilename ?? AR_DATA.hero.codeWindowFilename,
+        codeLines: data.hero?.codeLines ?? AR_DATA.hero.codeLines,
+      },
+      siteSettings: {
+        ...AR_DATA.siteSettings,
+        wordmark: data.siteSettings?.wordmark ?? AR_DATA.siteSettings.wordmark,
+      },
+    }
+  }, [data, lang])
+
+  const isReady = introFinished && localized !== null
 
   // Build nav items — only show sections that have content
   const rawNavItems: { id: SectionId; label: string }[] = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About' },
-    { id: 'skills', label: 'Skills' },
+    { id: 'home', label: t.nav.home },
+    { id: 'about', label: t.nav.about },
+    { id: 'skills', label: t.nav.skills },
   ]
 
   const visibleCerts = data?.certifications?.filter((c) => c.visible !== false) || []
   if (visibleCerts.length > 0) {
-    rawNavItems.push({ id: 'certifications', label: 'Certifications' })
+    rawNavItems.push({ id: 'certifications', label: t.nav.certifications })
   }
 
-  rawNavItems.push({ id: 'journey', label: 'Journey' })
+  rawNavItems.push({ id: 'journey', label: t.nav.journey })
 
   const visibleUpdates = data?.updates?.filter((u) => u.visible !== false) || []
   if (visibleUpdates.length > 0) {
-    rawNavItems.push({ id: 'updates', label: 'Updates' })
+    rawNavItems.push({ id: 'updates', label: t.nav.updates })
   }
 
-  rawNavItems.push({ id: 'connect', label: 'Connect' })
+  rawNavItems.push({ id: 'connect', label: t.nav.connect })
 
   const navItems = rawNavItems.map((item, index) => ({
     id: item.id,
@@ -118,16 +146,16 @@ export default function Page() {
         )}
       </AnimatePresence>
 
-      {data && (
+      {localized && (
         <div className={`transition-opacity duration-700 ${isReady ? 'opacity-100' : 'opacity-0'}`}>
           <SiteNav
             active={active}
             onNavigate={navigate}
             theme={theme}
             onToggleTheme={handleToggleTheme}
-            socials={data.socials}
+            socials={localized.socials}
             navItems={navItems}
-            wordmark={data.siteSettings?.wordmark}
+            wordmark={localized.siteSettings?.wordmark}
           />
 
           <main className="mx-auto max-w-6xl px-4 pb-16 pt-32 sm:px-6 sm:pt-36">
@@ -139,18 +167,18 @@ export default function Page() {
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               >
-                {active === 'home' && <Hero onNavigate={navigate} data={data.hero} />}
-                {active === 'about' && <About data={data.about} aboutSkills={data.skills?.aboutSkills} />}
-                {active === 'skills' && <Skills data={data.skills} />}
-                {active === 'certifications' && <Certifications certifications={data.certifications} num={certNum} />}
-                {active === 'journey' && <Journey data={data.journey} linkedinUrl={data.socials?.linkedin} num={journeyNum} />}
-                {active === 'updates' && <Updates updates={data.updates} num={updatesNum} />}
-                {active === 'connect' && <Connect socials={data.socials} connect={data.connect} num={connectNum} />}
+                {active === 'home' && <Hero onNavigate={navigate} data={localized.hero} />}
+                {active === 'about' && <About data={localized.about} aboutSkills={localized.skills?.aboutSkills} />}
+                {active === 'skills' && <Skills data={localized.skills} />}
+                {active === 'certifications' && <Certifications certifications={localized.certifications} num={certNum} />}
+                {active === 'journey' && <Journey data={localized.journey} linkedinUrl={localized.socials?.linkedin} num={journeyNum} />}
+                {active === 'updates' && <Updates updates={localized.updates} num={updatesNum} />}
+                {active === 'connect' && <Connect socials={localized.socials} connect={localized.connect} num={connectNum} />}
               </motion.section>
             </AnimatePresence>
 
             {active === 'connect' && (
-              <SiteFooter socials={data.socials} siteSettings={data.siteSettings} hero={data.hero} customSocialLinks={data.customSocialLinks} />
+              <SiteFooter socials={localized.socials} siteSettings={localized.siteSettings} hero={localized.hero} customSocialLinks={localized.customSocialLinks} />
             )}
           </main>
         </div>

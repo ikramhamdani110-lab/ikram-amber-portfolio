@@ -7,6 +7,7 @@ import { GithubIcon, LinkedinIcon } from '@/components/brand-icons'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/lib/i18n'
 
 type Props = {
   active: SectionId
@@ -28,6 +29,7 @@ export function SiteNav({
   wordmark = 'IKRAM',
 }: Props) {
   const [open, setOpen] = useState(false)
+  const { lang, toggle: toggleLang, t } = useLanguage()
 
   const circleBtn =
     'flex size-10 items-center justify-center rounded-full border border-border bg-card/85 text-foreground shadow-[0_0_18px_rgba(240,170,205,0.2)] transition-colors hover:border-accent hover:text-accent dark:border-[#f5d2e3]/80 dark:bg-[#100d12]/80 dark:text-[#f8eff4] dark:hover:border-[#f8d9e6] dark:hover:text-[#ffd9eb]'
@@ -86,6 +88,14 @@ export function SiteNav({
               <LinkedinIcon className="size-4" />
             </a>
           )}
+          <button
+            onClick={toggleLang}
+            aria-label={t.lang.aria}
+            title={t.lang.aria}
+            className={cn(circleBtn, 'font-serif text-sm font-semibold')}
+          >
+            {lang === 'en' ? <span className="text-base leading-none">ع</span> : 'EN'}
+          </button>
           <button
             onClick={onToggleTheme}
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
