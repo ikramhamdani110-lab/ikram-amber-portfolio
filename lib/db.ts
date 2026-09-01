@@ -120,6 +120,7 @@ export interface DbSchema {
     metaDescription: string
     wordmark: string
     copyright: string
+    favicon: string
   }
   certifications: Certification[]
   certificationsSettings: {
@@ -293,7 +294,8 @@ const DEFAULT_DATA: DbSchema = {
     metaTitle: 'Ikram Hamdani | Information Science Student & Web Developer',
     metaDescription: 'I love turning ideas into digital experiences while exploring software, web technologies, databases, and information systems.',
     wordmark: 'IKRAM',
-    copyright: '© 2026 Ikram Hamdani'
+    copyright: '© 2026 Ikram Hamdani',
+    favicon: '/uploads/BCO.4a8408d8-a19f-4b25-84fa-5e00fbb1e8db.png'
   },
   certifications: [],
   certificationsSettings: {

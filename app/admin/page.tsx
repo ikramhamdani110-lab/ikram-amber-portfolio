@@ -2379,6 +2379,7 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
   const [metaDescription, setMetaDescription] = useState(db.siteSettings?.metaDescription || '')
   const [wordmark, setWordmark] = useState(db.siteSettings?.wordmark || '')
   const [copyright, setCopyright] = useState(db.siteSettings?.copyright || '')
+  const [favicon, setFavicon] = useState(db.siteSettings?.favicon || '/uploads/BCO.4a8408d8-a19f-4b25-84fa-5e00fbb1e8db.png')
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault()
@@ -2387,7 +2388,8 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
         metaTitle,
         metaDescription,
         wordmark,
-        copyright
+        copyright,
+        favicon
       }
     })
   }
@@ -2395,6 +2397,21 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
   return (
     <form onSubmit={handleSave} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
       <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Global SEO & settings</h3>
+
+      <div>
+        <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Favicon image</label>
+        <div className="flex items-center gap-4 rounded-2xl border border-border bg-background p-3 dark:bg-[#0e0b0d]">
+          <div className="flex size-14 shrink-0 items-center justify-center rounded-xl border border-border bg-transparent p-2">
+            <img src={favicon} alt="Current strawberry favicon" className="size-full object-contain" />
+          </div>
+          <input
+            type="text"
+            value={favicon}
+            onChange={(e) => setFavicon(e.target.value)}
+            className="min-w-0 flex-1 bg-transparent p-1 text-sm font-mono outline-none focus:border-accent"
+          />
+        </div>
+      </div>
 
       <div>
         <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Wordmark Logo Text</label>

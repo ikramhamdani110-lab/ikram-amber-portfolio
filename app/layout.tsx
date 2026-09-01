@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Fraunces, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { LanguageProvider } from '@/contexts/language-context'
+import { readDb } from '@/lib/db'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -22,21 +23,26 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 })
 
-export const metadata: Metadata = {
-  title: 'Ikram Hamdani | Information Science Student & Web Developer',
-  description:
-    'I love turning ideas into digital experiences while exploring software, web technologies, databases, and information systems.',
-  generator: 'v0.app',
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = readDb().siteSettings
+  const favicon = settings?.favicon || '/uploads/BCO.4a8408d8-a19f-4b25-84fa-5e00fbb1e8db.png'
+
+  return {
+    title: 'Ikram Hamdani | Information Science Student & Web Developer',
+    description:
+      'I love turning ideas into digital experiences while exploring software, web technologies, databases, and information systems.',
+    generator: 'v0.app',
   icons: {
     icon: {
-      url: '/uploads/BCO.4a8408d8-a19f-4b25-84fa-5e00fbb1e8db.png',
+      url: favicon,
       type: 'image/png',
     },
     apple: {
-      url: '/uploads/BCO.4a8408d8-a19f-4b25-84fa-5e00fbb1e8db.png',
+      url: favicon,
       type: 'image/png',
     },
   },
+  }
 }
 
 export const viewport: Viewport = {
