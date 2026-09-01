@@ -1,4 +1,4 @@
-export type Language = 'en' | 'ar'
+export type Language = 'en'
 export type TranslationKey = keyof typeof translations.en
 
 export const translations = {
@@ -87,103 +87,6 @@ export const translations = {
       email: 'Email',
       emailSubtitle: 'Say hello directly',
       emailCta: 'Send Email',
-    },
-    // Language Switcher
-    language: {
-      switch: 'Switch to Arabic',
-      switchAr: 'التبديل إلى العربية',
-    },
-  },
-  ar: {
-    // Navigation
-    nav: {
-      home: 'الرئيسية',
-      about: 'عني',
-      skills: 'المهارات',
-      certifications: 'الشهادات',
-      journey: 'رحلتي',
-      updates: 'التحديثات',
-      connect: 'تواصل معي',
-    },
-    // Hero
-    hero: {
-      hello: 'مرحباً، أنا',
-      explore: 'استكشف',
-      aboutMe: 'تعرف علي',
-      codeWindowCaption: 'مبني بحب الفضول',
-      typewriterTitles: [
-        'طالبة علوم المعلومات',
-        'مطورة ويب',
-        'متعلمة شغوفة',
-        'مستكشفة قواعد البيانات',
-        'مصممة',
-      ],
-    },
-    // About
-    about: {
-      label: 'عني',
-      profile: 'الملف الشخصي',
-      currently: 'حالياً',
-      basedIn: 'مقيمة في',
-      focus: 'التركيز',
-    },
-    // Skills
-    skills: {
-      label: 'المهارات',
-    },
-    // Certifications
-    certifications: {
-      label: 'الشهادات',
-      title: 'خبرات معتمدة.',
-      description: 'الشهادات والاعتمادات التي حصلت عليها من خلال الدورات والامتحانات.',
-      emptyMessage: 'لم تُضاف شهادات بعد.',
-      issued: 'تاريخ الإصدار',
-      id: 'رقم الشهادة',
-      clickToView: 'انقر لعرض الشهادة كاملة',
-      certificate: 'الشهادة',
-      closeViewer: 'إغلاق عارض الشهادات',
-      tapToClose: 'انقر في أي مكان للإغلاق',
-      viewCredential: 'عرض الاعتماد لـ',
-    },
-    // Journey
-    journey: {
-      label: 'رحلتي',
-      title: 'أتعلم. أبني. أنمو.',
-      ctaTitle: 'شاهد رحلتي الكاملة على لينكدإن',
-      ctaButton: 'عرض لينكدإن',
-    },
-    // Updates
-    updates: {
-      label: 'التحديثات',
-      title: 'ما الجديد.',
-      description: 'أحدث الإنجازات والمشاريع المكتملة وإشعارات تقدمي.',
-      categories: {
-        certification: 'شهادة',
-        achievement: 'إنجاز',
-        experience: 'خبرة',
-        skill: 'مهارة',
-        update: 'تحديث',
-      },
-    },
-    // Connect
-    connect: {
-      label: 'تواصل معي',
-      title: 'ابحث عنني على الإنترنت.',
-      description: 'بدون تعقيدات — الأماكن التي أتواجد فيها فعلياً. تابعني، أو تواصل معي متى شئت.',
-      github: 'جيت هب',
-      githubSubtitle: 'اكتشف أكوادي',
-      githubCta: 'زيارة جيت هب',
-      linkedin: 'لينكدإن',
-      linkedinSubtitle: 'شاهد رحلتي وخبراتي',
-      linkedinCta: 'زيارة لينكدإن',
-      email: 'البريد الإلكتروني',
-      emailSubtitle: 'قل مرحباً مباشرة',
-      emailCta: 'إرسال بريد',
-    },
-    // Language Switcher
-    language: {
-      switch: 'التبديل إلى العربية',
-      switchAr: 'Switch to English',
     },
   },
 }

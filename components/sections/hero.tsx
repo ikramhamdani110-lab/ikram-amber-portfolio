@@ -94,7 +94,7 @@ export function Hero({ onNavigate, data }: Props) {
   }
 
   return (
-    <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-8">
+    <div className="grid min-w-0 items-center gap-12 lg:grid-cols-2 lg:gap-8">
       {/* ── Left column ── */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -139,7 +139,7 @@ export function Hero({ onNavigate, data }: Props) {
 
       {/* ── Right column — code window ── */}
       <motion.div
-        className="relative px-2 sm:px-4 lg:-translate-x-6"
+        className="relative min-w-0 px-2 sm:px-4 lg:-translate-x-6"
         initial={{ opacity: 0, scale: 0.94 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.15 }}
@@ -147,7 +147,7 @@ export function Hero({ onNavigate, data }: Props) {
         {/* soft glow — purely decorative, no layout impact */}
         <div className="pointer-events-none absolute inset-6 -z-10 rounded-[3rem] bg-accent/15 blur-3xl" />
 
-        <div className="relative mx-auto max-w-[340px] rotate-[-8deg] transform-gpu py-3 sm:max-w-[370px] sm:py-4">
+        <div className="relative mx-auto w-full max-w-[340px] rotate-[-8deg] transform-gpu py-3 sm:max-w-[370px] sm:py-4">
           {/* Main code window — light/pink in light mode, deep dark in dark mode */}
           <div className="rounded-2xl border border-border bg-card/95 shadow-2xl backdrop-blur-md dark:bg-[#0e0b0d]">
             {/* Window chrome */}
@@ -161,9 +161,9 @@ export function Hero({ onNavigate, data }: Props) {
             {/* Code lines */}
             <div className="space-y-1 p-4 font-mono text-[13px] sm:p-4.5 sm:text-sm">
               {codeLines.map((line) => (
-                <div key={line.n} className="flex gap-3">
+                <div key={line.n} className="flex min-w-0 gap-3">
                   <span className="w-3.5 select-none text-right text-muted-foreground/60 dark:text-[#5a4750]">{line.n}</span>
-                  <code className="font-medium text-accent dark:text-[#e6a4c4]">
+                  <code className="min-w-0 break-words font-medium text-accent dark:text-[#e6a4c4]">
                     {line.code}
                     {line.n === codeLines.length && (
                       <span className="animate-blink ml-0.5 text-foreground dark:text-white">▍</span>

@@ -84,7 +84,7 @@ export function Connect({ socials, connect, num = '06' }: Props) {
     <div>
       <SectionLabel num={num} label={sectionLabel} />
 
-      <h2 className="font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
+      <h2 className="max-w-full break-words font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
         {title}
       </h2>
 
@@ -102,7 +102,7 @@ export function Connect({ socials, connect, num = '06' }: Props) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: i * 0.1 }}
-            className="group flex flex-col rounded-3xl border border-border bg-card/50 p-7 transition-colors hover:border-accent"
+            className="group flex min-w-0 flex-col rounded-3xl border border-border bg-card/50 p-7 transition-colors hover:border-accent"
           >
             <div className="flex items-start justify-between">
               <div className="flex size-12 items-center justify-center rounded-2xl border border-border text-accent">

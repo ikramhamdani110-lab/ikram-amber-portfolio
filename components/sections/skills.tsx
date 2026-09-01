@@ -57,8 +57,8 @@ export function Skills({ data }: Props) {
     <div>
       <SectionLabel num="03" label={sectionLabel} />
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-        <h2 className="font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
+      <div className="grid min-w-0 gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+        <h2 className="max-w-full break-words font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
           {renderTitle()}
         </h2>
         <p className="max-w-xs leading-relaxed text-muted-foreground">
@@ -70,14 +70,14 @@ export function Skills({ data }: Props) {
         {groups.map((group) => (
           <div
             key={group.num}
-            className="grid gap-6 border-t border-border pt-8 md:grid-cols-[220px_1fr] md:gap-10"
+            className="grid min-w-0 gap-6 border-t border-border pt-8 md:grid-cols-[220px_1fr] md:gap-10"
           >
             <div className="flex items-start gap-3">
               <span className="font-mono text-xs text-accent">{group.num}</span>
               <h3 className="font-serif text-2xl">{group.title}</h3>
             </div>
 
-            <div className="flex flex-wrap items-start gap-x-8 gap-y-6">
+            <div className="flex min-w-0 flex-wrap items-start gap-x-8 gap-y-6">
               {(group.skills || []).map((skill, i) => (
                 <SkillBadge key={skill.name} skill={skill} index={i} />
               ))}

@@ -54,14 +54,14 @@ export function About({ data, aboutSkills }: Props) {
     <div>
       <SectionLabel num="02" label={t.about.label} />
 
-      <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <div className="grid min-w-0 gap-10 lg:grid-cols-2 lg:gap-16">
         {/* Left */}
-        <div>
-          <h2 className="font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
+        <div className="min-w-0">
+          <h2 className="max-w-full break-words font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
             {renderTitle()}
           </h2>
 
-          <p className="mt-8 max-w-lg leading-relaxed text-muted-foreground">
+          <p className="mt-8 max-w-lg break-words leading-relaxed text-muted-foreground">
             {data?.bio || ''}
           </p>
 
@@ -77,7 +77,7 @@ export function About({ data, aboutSkills }: Props) {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="rounded-3xl border border-border bg-card/50 p-7 sm:p-9"
+          className="min-w-0 rounded-3xl border border-border bg-card/50 p-7 sm:p-9"
         >
           <div className="mb-8 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">
             <User className="size-3.5" /> {profileLabel}
@@ -88,9 +88,8 @@ export function About({ data, aboutSkills }: Props) {
               <div className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent">
                 <Sparkles className="size-3.5" /> {currentlyLabel}
               </div>
-              <p className="font-serif text-xl">
+              <p className="break-words font-serif text-xl">
                 {data?.currently ? (
-                  // Support rendering arrow styling if arrows exist in currently string
                   data.currently.includes('→') ? (
                     data.currently.split('→').map((part, index, arr) => (
                       <span key={index}>
@@ -102,7 +101,7 @@ export function About({ data, aboutSkills }: Props) {
                     data.currently
                   )
                 ) : (
-                  language === 'ar' ? 'أتعلم → أبني → أجرب' : 'Learning → Building → Experimenting'
+                  'Learning → Building → Experimenting'
                 )}
               </p>
             </div>
@@ -113,7 +112,7 @@ export function About({ data, aboutSkills }: Props) {
               <div className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent">
                 <MapPin className="size-3.5" /> {basedInLabel}
               </div>
-              <p className="font-serif text-xl">{data?.location || (language === 'ar' ? 'الشلف، الجزائر' : 'Chlef, Algeria')}</p>
+              <p className="font-serif text-xl">{data?.location || 'Chlef, Algeria'}</p>
             </div>
 
             <div className="h-px bg-border" />

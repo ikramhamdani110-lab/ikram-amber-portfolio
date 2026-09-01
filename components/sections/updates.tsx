@@ -33,11 +33,11 @@ export function Updates({ updates, num = '05' }: Props) {
   }
 
   return (
-    <div>
+    <div className="min-w-0">
       <SectionLabel num={num} label="Updates" />
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-        <h2 className="font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
+      <div className="grid min-w-0 gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+        <h2 className="max-w-full break-words font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
           What&apos;s <span className="text-accent italic">new.</span>
         </h2>
         <p className="max-w-xs leading-relaxed text-muted-foreground">
@@ -60,7 +60,7 @@ export function Updates({ updates, num = '05' }: Props) {
                 {getCategoryIcon(update.category)}
               </div>
 
-              <div className="grid gap-6 md:grid-cols-[180px_1fr] md:gap-10">
+              <div className="grid min-w-0 gap-6 md:grid-cols-[180px_1fr] md:gap-10">
                 {/* Date column */}
                 <div className="pt-1.5">
                   <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
@@ -72,7 +72,7 @@ export function Updates({ updates, num = '05' }: Props) {
                 </div>
 
                 {/* Content column */}
-                <div className="rounded-3xl border border-border bg-card/40 p-6 md:p-8">
+                <div className="min-w-0 rounded-3xl border border-border bg-card/40 p-6 md:p-8">
                   <h3 className="font-serif text-2xl tracking-tight leading-snug">
                     {update.title}
                   </h3>
@@ -86,7 +86,7 @@ export function Updates({ updates, num = '05' }: Props) {
                       <img
                         src={update.image}
                         alt=""
-                        className="w-full max-h-60 object-cover"
+                        className="h-auto max-h-60 w-full object-contain"
                         crossOrigin="anonymous"
                       />
                     </div>

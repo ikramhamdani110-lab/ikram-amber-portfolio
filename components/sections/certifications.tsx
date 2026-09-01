@@ -47,11 +47,11 @@ export function Certifications({ certifications, certificationsSettings, num = '
 
   return (
     <>
-      <div>
+      <div className="min-w-0">
         <SectionLabel num={num} label={sectionLabel} />
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-          <h2 className="font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+          <h2 className="max-w-full break-words font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
             {title}
           </h2>
           <p className="max-w-xs leading-relaxed text-muted-foreground">
@@ -66,7 +66,7 @@ export function Certifications({ certifications, certificationsSettings, num = '
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
-              className={`group flex flex-col rounded-3xl border border-border bg-card/50 p-7 transition-colors hover:border-accent ${
+              className={`group flex min-w-0 flex-col rounded-3xl border border-border bg-card/50 p-7 transition-colors hover:border-accent ${
                 cert.image ? 'cursor-pointer' : ''
               }`}
               onClick={() => cert.image && openViewer(cert)}

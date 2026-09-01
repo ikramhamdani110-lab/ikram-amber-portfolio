@@ -20,10 +20,10 @@ interface Props {
 
 export function Journey({ data, linkedinUrl, num = '05' }: Props) {
   return (
-    <div>
+    <div className="min-w-0">
       <SectionLabel num={num} label="Journey" />
 
-      <h2 className="font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
+      <h2 className="max-w-full break-words font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
         {data.title || (
           <>
             Learning. Building. <span className="text-accent italic">Growing.</span>
@@ -46,7 +46,7 @@ export function Journey({ data, linkedinUrl, num = '05' }: Props) {
                 {stage.num}
               </div>
 
-              <div className="grid gap-6 md:grid-cols-[180px_1fr] md:gap-10">
+              <div className="grid min-w-0 gap-6 md:grid-cols-[180px_1fr] md:gap-10">
                 {/* Stage label column */}
                 <div className="pt-1.5">
                   <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
@@ -58,7 +58,7 @@ export function Journey({ data, linkedinUrl, num = '05' }: Props) {
                 </div>
 
                 {/* Content column */}
-                <div className="rounded-3xl border border-border bg-card/40 p-6 md:p-8">
+                <div className="min-w-0 rounded-3xl border border-border bg-card/40 p-6 md:p-8">
                   <h3 className="font-serif text-2xl tracking-tight leading-snug">
                     {stage.title}
                   </h3>
