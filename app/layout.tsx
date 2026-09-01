@@ -29,12 +29,12 @@ export const metadata: Metadata = {
   generator: 'v0.app',
   icons: {
     icon: {
-      url: '/uploads/%23fyp.jpg',
-      type: 'image/jpeg',
+      url: '/uploads/BCO.4a8408d8-a19f-4b25-84fa-5e00fbb1e8db.png',
+      type: 'image/png',
     },
     apple: {
-      url: '/uploads/%23fyp.jpg',
-      type: 'image/jpeg',
+      url: '/uploads/BCO.4a8408d8-a19f-4b25-84fa-5e00fbb1e8db.png',
+      type: 'image/png',
     },
   },
 }
