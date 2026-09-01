@@ -134,7 +134,7 @@ export default function Page() {
             wordmark={data.siteSettings?.wordmark}
           />
 
-          <main className="mx-auto max-w-6xl px-4 pb-16 pt-32 sm:px-6 sm:pt-36">
+          <main className="mx-auto min-w-0 max-w-6xl overflow-x-clip px-4 pb-16 pt-28 sm:px-6 sm:pt-36">
             <AnimatePresence mode="wait">
               <motion.section
                 key={active}

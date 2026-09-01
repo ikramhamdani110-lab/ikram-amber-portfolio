@@ -250,15 +250,14 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row">
-      {/* Sidebar Panel */}
-      <aside className="w-full md:w-64 border-b md:border-b-0 md:border-r border-border bg-card p-6 flex flex-col justify-between shrink-0 dark:bg-[#0e0b0d]">
+    <div className="min-h-screen overflow-x-hidden bg-background text-foreground md:flex">
+      <aside className="w-full shrink-0 border-b border-border bg-card p-4 dark:bg-[#0e0b0d] md:sticky md:top-0 md:flex md:h-screen md:w-64 md:flex-col md:justify-between md:overflow-y-auto md:border-b-0 md:border-r md:p-6">
         <div>
-          <div className="font-serif text-2xl font-medium tracking-tight mb-8">
+          <div className="mb-5 font-serif text-xl font-medium tracking-tight sm:text-2xl md:mb-8">
             IKRAM<span className="text-accent">.</span> Dashboard
           </div>
 
-          <nav className="space-y-1">
+          <nav className="grid grid-cols-2 gap-1 sm:grid-cols-3 md:block md:space-y-1">
             {[
               { id: 'overview', label: 'Overview', icon: Globe },
               { id: 'profile', label: 'Profile & Hero', icon: User },
@@ -276,7 +275,7 @@ export default function AdminPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`w-full flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-xs font-mono uppercase tracking-wider transition-colors ${
+                    className={`flex min-h-11 w-full items-center gap-2 rounded-2xl px-3 py-3 text-left text-[10px] font-mono uppercase tracking-wider transition-colors sm:text-xs md:gap-3 md:px-4 ${
                     isActive
                       ? 'bg-accent-soft text-[#201319] dark:text-[#201319]'
                       : 'text-muted-foreground hover:bg-background hover:text-foreground dark:hover:bg-card dark:hover:text-foreground'
@@ -290,7 +289,7 @@ export default function AdminPage() {
           </nav>
         </div>
 
-        <div className="mt-8 pt-4 border-t border-border/40">
+        <div className="mt-4 border-t border-border/40 pt-4 md:mt-8">
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-xs font-mono uppercase tracking-wider text-red-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/20 dark:text-red-400 dark:hover:text-red-400 transition-colors"
@@ -302,9 +301,9 @@ export default function AdminPage() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-6 md:p-10 overflow-y-auto max-w-5xl mx-auto w-full">
+      <main className="min-w-0 w-full max-w-5xl flex-1 overflow-y-auto p-4 sm:p-6 md:mx-auto md:p-10">
         {/* Header bar */}
-        <div className="flex items-center justify-between border-b border-border/40 pb-5 mb-8">
+        <div className="mb-6 flex flex-col gap-4 border-b border-border/40 pb-5 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="font-serif text-3xl font-light uppercase tracking-tight">
               {activeTab.replace('-', ' ')}
@@ -314,7 +313,7 @@ export default function AdminPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {saveStatus === 'saving' && (
               <span className="text-xs font-mono text-accent animate-pulse">Saving changes...</span>
             )}

@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, ReactNode } from 'react'
+import { createContext, useContext, ReactNode, useEffect, useState } from 'react'
 import type { Language } from '@/lib/translations'
 
 interface LanguageContextType {
@@ -12,13 +12,30 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  // Always use English only
-  const language: Language = 'en'
-  const dir = 'ltr'
+  const [language, setLanguage] = useState<Language>('en')
 
-  const setLanguage = () => {
-    // Language switching is disabled
-  }
+  useEffect(() => {
+    try {
+      const savedLanguage = localStorage.getItem('language')
+      if (savedLanguage === 'en' || savedLanguage === 'ar') {
+        setLanguage(savedLanguage)
+      }
+    } catch {
+      // Keep English when local storage is unavailable.
+    }
+  }, [])
+
+  useEffect(() => {
+    document.documentElement.lang = language
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr'
+    try {
+      localStorage.setItem('language', language)
+    } catch {
+      // Language still applies for the current session.
+    }
+  }, [language])
+
+  const dir = language === 'ar' ? 'rtl' : 'ltr'
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, dir }}>

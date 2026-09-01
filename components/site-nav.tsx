@@ -2,12 +2,13 @@
 
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Menu, Moon, Sun, X } from 'lucide-react'
+import { Globe, Menu, Moon, Sun, X } from 'lucide-react'
 import { GithubIcon, LinkedinIcon } from '@/components/brand-icons'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
 import { cn } from '@/lib/utils'
 import { translations } from '@/lib/translations'
+import { useLanguage } from '@/contexts/language-context'
 
 type Props = {
   active: SectionId
@@ -29,7 +30,8 @@ export function SiteNav({
   wordmark = 'IKRAM',
 }: Props) {
   const [open, setOpen] = useState(false)
-  const t = translations.en
+  const { language, setLanguage } = useLanguage()
+  const t = translations[language]
 
   const circleBtn =
     'flex size-10 items-center justify-center rounded-full border border-border bg-card/85 text-foreground shadow-[0_0_18px_rgba(240,170,205,0.2)] transition-colors hover:border-accent hover:text-accent dark:border-[#f5d2e3]/80 dark:bg-[#100d12]/80 dark:text-[#f8eff4] dark:hover:border-[#f8d9e6] dark:hover:text-[#ffd9eb]'
@@ -39,17 +41,17 @@ export function SiteNav({
 
   return (
     <header className="fixed inset-x-0 top-4 z-50 px-4 sm:px-6">
-      <nav className="mx-auto flex max-w-[1100px] items-center justify-start gap-6 rounded-full border border-border bg-card/90 py-2.5 pl-5 pr-2.5 shadow-[0_0_25px_rgba(242,160,200,0.22)] backdrop-blur-xl dark:border-[#f5d2e3]/80 dark:bg-[#0d0b0f]/90">
+      <nav className="mx-auto flex min-w-0 max-w-[1100px] items-center justify-start gap-2 rounded-full border border-border bg-card/90 py-2 pl-3 pr-2 shadow-[0_0_25px_rgba(242,160,200,0.22)] backdrop-blur-xl sm:gap-4 sm:py-2.5 sm:pl-5 sm:pr-2.5 md:gap-6 dark:border-[#f5d2e3]/80 dark:bg-[#0d0b0f]/90">
         <button
           onClick={() => onNavigate('home')}
           aria-label="Go to home"
-          className="font-serif text-[1.6rem] font-medium tracking-tight text-foreground sm:text-[1.8rem] whitespace-nowrap"
+          className="shrink-0 whitespace-nowrap font-serif text-[1.1rem] font-medium tracking-tight text-foreground min-[360px]:text-[1.25rem] sm:text-[1.8rem]"
         >
           Ikram Hamdani
         </button>
 
         {/* Desktop navigation */}
-        <div className="flex items-center gap-1">
+        <div className="hidden items-center gap-1 md:flex">
           {navItems.map((item) => {
             const translatedLabel = t.nav[item.id as keyof typeof t.nav] || item.label
             return (
@@ -80,6 +82,13 @@ export function SiteNav({
               <LinkedinIcon className="size-4" />
             </a>
           )}
+          <button
+            onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+            aria-label={language === 'ar' ? 'Switch to English' : 'Switch to Arabic'}
+            className={cn(circleBtn, 'hidden sm:flex')}
+          >
+            <Globe className="size-4" />
+          </button>
           <button
             onClick={onToggleTheme}
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -128,7 +137,17 @@ export function SiteNav({
                   </li>
                 )
               })}
-              <li className="mt-1 flex gap-2 border-t border-border px-4 pt-3 sm:hidden">
+              <li className="mt-1 flex flex-wrap gap-2 border-t border-border px-4 pt-3">
+                <button
+                  onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+                  aria-label={language === 'ar' ? 'Switch to English' : 'Switch to Arabic'}
+                  className={cn(circleBtn, 'gap-2 px-3 text-[10px] font-mono uppercase')}
+                >
+                  <Globe className="size-4" />
+                  {language === 'ar' ? 'EN' : 'AR'}
+                </button>
+              </li>
+              <li className="flex gap-2 px-4 pt-3 sm:hidden">
                 {githubUrl && (
                   <a href={githubUrl} target="_blank" rel="noreferrer" aria-label="GitHub" className={circleBtn}>
                     <GithubIcon className="size-4" />
