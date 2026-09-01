@@ -27,6 +27,10 @@ export const metadata: Metadata = {
   description:
     'I love turning ideas into digital experiences while exploring software, web technologies, databases, and information systems.',
   generator: 'v0.app',
+  icons: {
+    icon: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 }
 
 export const viewport: Viewport = {
