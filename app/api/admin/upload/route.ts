@@ -35,11 +35,11 @@ export async function POST(req: Request) {
 
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       const blob = await put(`uploads/${fileName}`, buffer, {
-        access: 'public',
+        access: 'private',
         token: process.env.BLOB_READ_WRITE_TOKEN,
         contentType: file.type || 'application/octet-stream',
       })
-      return NextResponse.json({ success: true, path: blob.url })
+      return NextResponse.json({ success: true, path: `/api/media?pathname=${encodeURIComponent(blob.pathname)}` })
     }
 
     const filePath = path.join(uploadDir, fileName)

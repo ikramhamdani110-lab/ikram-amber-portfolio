@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { list, put } from '@vercel/blob'
+import { get, put } from '@vercel/blob'
 
 // Define DB Types
 export interface Skill {
@@ -321,8 +321,11 @@ const DEFAULT_DATA: DbSchema = {
 export async function readDb(): Promise<DbSchema> {
   if (usesBlobStorage()) {
     try {
-      const result = await list({ prefix: BLOB_DB_NAME, token: process.env.BLOB_READ_WRITE_TOKEN })
-      const blob = result.blobs.find((item) => item.pathname === BLOB_DB_NAME)
+      const blob = await get(BLOB_DB_NAME, {
+        access: 'private',
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+        useCache: false,
+      })
       if (!blob) {
         let initialData = DEFAULT_DATA
         if (fs.existsSync(DB_PATH)) {
@@ -334,7 +337,7 @@ export async function readDb(): Promise<DbSchema> {
         }
 
         await put(BLOB_DB_NAME, JSON.stringify(initialData, null, 2), {
-          access: 'public',
+          access: 'private',
           addRandomSuffix: false,
           token: process.env.BLOB_READ_WRITE_TOKEN,
           contentType: 'application/json',
@@ -342,9 +345,7 @@ export async function readDb(): Promise<DbSchema> {
         return initialData
       }
 
-      const response = await fetch(`${blob.url}?v=${blob.uploadedAt}`, { cache: 'no-store' })
-      if (!response.ok) throw new Error(`Blob database read failed (${response.status})`)
-      return await response.json() as DbSchema
+      return await new Response(blob.stream).json() as DbSchema
     } catch (error) {
       console.error('Error reading Vercel Blob database:', error)
       throw new Error('Persistent database is unavailable. Check BLOB_READ_WRITE_TOKEN and Blob configuration.')
@@ -372,7 +373,7 @@ export async function writeDb(data: DbSchema): Promise<boolean> {
   if (usesBlobStorage()) {
     try {
       await put(BLOB_DB_NAME, JSON.stringify(data, null, 2), {
-        access: 'public',
+        access: 'private',
         addRandomSuffix: false,
         token: process.env.BLOB_READ_WRITE_TOKEN,
         contentType: 'application/json',
