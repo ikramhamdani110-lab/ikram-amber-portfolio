@@ -91,7 +91,7 @@ export default function AdminPage() {
   async function loadPortfolioData() {
     setLoadingDb(true)
     try {
-      const res = await fetch('/api/portfolio')
+      const res = await fetch('/api/portfolio', { cache: 'no-store' })
       if (res.ok) {
         const data = await res.json()
         setDb(data)
@@ -159,15 +159,18 @@ export default function AdminPage() {
         body: JSON.stringify(payload),
       })
       if (res.ok) {
+        const result = await res.json()
         setSaveStatus('success')
         setTimeout(() => setSaveStatus(''), 2000)
         // Refresh local DB
         loadPortfolioData()
+        return result
       } else {
-        setSaveStatus('error')
+        const result = await res.json().catch(() => null)
+        setSaveStatus(`error:${result?.error || `Save failed (${res.status})`}`)
       }
     } catch (err) {
-      setSaveStatus('error')
+      setSaveStatus(`error:${err instanceof Error ? err.message : 'Unable to reach the server while saving'}`)
     }
   }
 
@@ -322,9 +325,9 @@ export default function AdminPage() {
                 <Check className="size-3.5" /> Saved!
               </span>
             )}
-            {saveStatus === 'error' && (
+            {saveStatus.startsWith('error:') && (
               <span className="text-xs font-mono text-red-400 flex items-center gap-1">
-                <AlertCircle className="size-3.5" /> Save failed
+                <AlertCircle className="size-3.5" /> {saveStatus.slice(6)}
               </span>
             )}
             <button
@@ -1283,10 +1286,11 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
         setCerts(json.certifications || [])
         setIsEditing(false)
       } else {
-        alert('Failed to save certification')
+        const json = await res.json().catch(() => null)
+        alert(json?.error || `Failed to save certification (${res.status})`)
       }
     } catch (err) {
-      console.error(err)
+      alert(err instanceof Error ? err.message : 'Unable to reach the server while saving certification')
     }
   }
 
@@ -1633,10 +1637,8 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
 
   const handleSavePredefined = (e: React.FormEvent) => {
     e.preventDefault()
-    save('socials', {
-      github, linkedin, email, fiverr
-    })
     save('profile', {
+      socials: { github, linkedin, email, fiverr },
       connect: {
         sectionLabel: connectSectionLabel,
         title: connectTitle,
@@ -1691,10 +1693,11 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
         setCustomLinks(json.links || [])
         setIsEditingCustom(false)
       } else {
-        alert('Save error')
+        const json = await res.json().catch(() => null)
+        alert(json?.error || `Failed to save social link (${res.status})`)
       }
     } catch (err) {
-      console.error(err)
+      alert(err instanceof Error ? err.message : 'Unable to reach the server while saving social link')
     }
   }
 
@@ -2155,10 +2158,11 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
         setUpdates(json.updates || [])
         setIsEditing(false)
       } else {
-        alert('Save error')
+        const json = await res.json().catch(() => null)
+        alert(json?.error || `Failed to save update (${res.status})`)
       }
     } catch (err) {
-      console.error(err)
+      alert(err instanceof Error ? err.message : 'Unable to reach the server while saving update')
     }
   }
 

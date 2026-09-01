@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth'
 import fs from 'fs/promises'
 import path from 'path'
+import { put } from '@vercel/blob'
 
 export async function POST(req: Request) {
   const session = await getSession()
@@ -31,6 +32,16 @@ export async function POST(req: Request) {
       .substring(0, 30)
     
     const fileName = `${Date.now()}-${sanitizedName}${ext}`
+
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      const blob = await put(`uploads/${fileName}`, buffer, {
+        access: 'public',
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+        contentType: file.type || 'application/octet-stream',
+      })
+      return NextResponse.json({ success: true, path: blob.url })
+    }
+
     const filePath = path.join(uploadDir, fileName)
 
     await fs.writeFile(filePath, buffer)

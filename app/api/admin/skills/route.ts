@@ -9,16 +9,17 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { title, description, dbTextBadge, aboutSkills, groups } = await req.json()
-    const db = readDb()
+    const { title, description, dbTextBadge, aboutSkills, groups, sectionLabel } = await req.json()
+    const db = await readDb()
 
     if (title !== undefined) db.skills.title = title
     if (description !== undefined) db.skills.description = description
     if (dbTextBadge !== undefined) db.skills.dbTextBadge = dbTextBadge
     if (aboutSkills !== undefined) db.skills.aboutSkills = aboutSkills
     if (groups !== undefined) db.skills.groups = groups
+    if (sectionLabel !== undefined) db.skills.sectionLabel = sectionLabel
 
-    const success = writeDb(db)
+    const success = await writeDb(db)
     if (!success) {
       return NextResponse.json({ error: 'Failed to write to database' }, { status: 500 })
     }

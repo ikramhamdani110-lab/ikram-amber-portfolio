@@ -9,15 +9,16 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { hero, about, socials, siteSettings } = await req.json()
-    const db = readDb()
+    const { hero, about, socials, connect, siteSettings } = await req.json()
+    const db = await readDb()
 
     if (hero) db.hero = { ...db.hero, ...hero }
     if (about) db.about = { ...db.about, ...about }
     if (socials) db.socials = { ...db.socials, ...socials }
+    if (connect) db.connect = { ...db.connect, ...connect }
     if (siteSettings) db.siteSettings = { ...db.siteSettings, ...siteSettings }
 
-    const success = writeDb(db)
+    const success = await writeDb(db)
     if (!success) {
       return NextResponse.json({ error: 'Failed to write to database' }, { status: 500 })
     }

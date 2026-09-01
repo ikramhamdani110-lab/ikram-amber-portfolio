@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { list, put } from '@vercel/blob'
 
 // Define DB Types
 export interface Skill {
@@ -136,7 +137,13 @@ export interface DbSchema {
   }
 }
 
-const DB_PATH = path.join(process.cwd(), 'data', 'db.json')
+// Set PORTFOLIO_DB_PATH to a persistent mounted file in production.
+const DB_PATH = process.env.PORTFOLIO_DB_PATH || path.join(process.cwd(), 'data', 'db.json')
+const BLOB_DB_NAME = 'portfolio-db.json'
+
+function usesBlobStorage() {
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN)
+}
 
 const D = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons'
 
@@ -311,7 +318,39 @@ const DEFAULT_DATA: DbSchema = {
   }
 }
 
-export function readDb(): DbSchema {
+export async function readDb(): Promise<DbSchema> {
+  if (usesBlobStorage()) {
+    try {
+      const result = await list({ prefix: BLOB_DB_NAME, token: process.env.BLOB_READ_WRITE_TOKEN })
+      const blob = result.blobs.find((item) => item.pathname === BLOB_DB_NAME)
+      if (!blob) {
+        let initialData = DEFAULT_DATA
+        if (fs.existsSync(DB_PATH)) {
+          try {
+            initialData = JSON.parse(fs.readFileSync(DB_PATH, 'utf-8')) as DbSchema
+          } catch (error) {
+            console.error('Error importing local database into Vercel Blob:', error)
+          }
+        }
+
+        await put(BLOB_DB_NAME, JSON.stringify(initialData, null, 2), {
+          access: 'public',
+          addRandomSuffix: false,
+          token: process.env.BLOB_READ_WRITE_TOKEN,
+          contentType: 'application/json',
+        })
+        return initialData
+      }
+
+      const response = await fetch(`${blob.url}?v=${blob.uploadedAt}`, { cache: 'no-store' })
+      if (!response.ok) throw new Error(`Blob database read failed (${response.status})`)
+      return await response.json() as DbSchema
+    } catch (error) {
+      console.error('Error reading Vercel Blob database:', error)
+      throw new Error('Persistent database is unavailable. Check BLOB_READ_WRITE_TOKEN and Blob configuration.')
+    }
+  }
+
   try {
     if (!fs.existsSync(DB_PATH)) {
       const dir = path.dirname(DB_PATH)
@@ -329,13 +368,30 @@ export function readDb(): DbSchema {
   }
 }
 
-export function writeDb(data: DbSchema): boolean {
+export async function writeDb(data: DbSchema): Promise<boolean> {
+  if (usesBlobStorage()) {
+    try {
+      await put(BLOB_DB_NAME, JSON.stringify(data, null, 2), {
+        access: 'public',
+        addRandomSuffix: false,
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+        contentType: 'application/json',
+      })
+      return true
+    } catch (error) {
+      console.error('Error writing Vercel Blob database:', error)
+      return false
+    }
+  }
+
   try {
     const dir = path.dirname(DB_PATH)
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true })
     }
-    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf-8')
+    const tempPath = `${DB_PATH}.${process.pid}.${Date.now()}.tmp`
+    fs.writeFileSync(tempPath, JSON.stringify(data, null, 2), 'utf-8')
+    fs.renameSync(tempPath, DB_PATH)
     return true
   } catch (error) {
     console.error('Error writing DB:', error)

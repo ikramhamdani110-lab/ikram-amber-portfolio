@@ -10,14 +10,14 @@ export async function POST(req: Request) {
 
   try {
     const { github, linkedin, email, fiverr } = await req.json()
-    const db = readDb()
+    const db = await readDb()
 
     if (github !== undefined) db.socials.github = github
     if (linkedin !== undefined) db.socials.linkedin = linkedin
     if (email !== undefined) db.socials.email = email
     if (fiverr !== undefined) db.socials.fiverr = fiverr
 
-    const success = writeDb(db)
+    const success = await writeDb(db)
     if (!success) {
       return NextResponse.json({ error: 'Failed to write to database' }, { status: 500 })
     }

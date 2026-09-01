@@ -58,7 +58,7 @@ export default function Page() {
   useEffect(() => {
     async function loadPortfolio() {
       try {
-        const res = await fetch('/api/portfolio')
+        const res = await fetch('/api/portfolio', { cache: 'no-store' })
         if (res.ok) {
           const fetchedData = await res.json()
           setData(fetchedData)
@@ -146,7 +146,7 @@ export default function Page() {
                 {active === 'home' && <Hero onNavigate={navigate} data={data.hero} />}
                 {active === 'about' && <About data={data.about} aboutSkills={data.skills?.aboutSkills} />}
                 {active === 'skills' && <Skills data={data.skills} />}
-                {active === 'certifications' && <Certifications certifications={data.certifications} num={certNum} />}
+                {active === 'certifications' && <Certifications certifications={data.certifications} certificationsSettings={data.certificationsSettings} num={certNum} />}
                 {active === 'journey' && <Journey data={data.journey} linkedinUrl={data.socials?.linkedin} num={journeyNum} />}
                 {active === 'updates' && <Updates updates={data.updates} num={updatesNum} />}
                 {active === 'connect' && <Connect socials={data.socials} connect={data.connect} num={connectNum} />}

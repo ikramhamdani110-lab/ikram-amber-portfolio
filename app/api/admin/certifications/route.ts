@@ -7,7 +7,7 @@ export async function GET() {
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  const db = readDb()
+  const db = await readDb()
   return NextResponse.json(db.certifications || [])
 }
 
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
   try {
     const certData = await req.json()
-    const db = readDb()
+    const db = await readDb()
     if (!db.certifications) db.certifications = []
 
     const newCert: Certification = {
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     }
 
     db.certifications.push(newCert)
-    writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist certification changes. Check persistent storage configuration.' }, { status: 500 })
 
     return NextResponse.json({ success: true, certification: newCert, certifications: db.certifications })
   } catch (error: any) {
@@ -52,12 +52,12 @@ export async function PUT(req: Request) {
 
   try {
     const body = await req.json()
-    const db = readDb()
+    const db = await readDb()
 
     // If body is an array, treat it as a bulk reorder operation
     if (Array.isArray(body)) {
       db.certifications = body.map((c, index) => ({ ...c, order: index }))
-      writeDb(db)
+      if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist certification changes. Check persistent storage configuration.' }, { status: 500 })
       return NextResponse.json({ success: true, certifications: db.certifications })
     }
 
@@ -84,7 +84,7 @@ export async function PUT(req: Request) {
       visible: visible !== undefined ? visible : db.certifications[index].visible,
     }
 
-    writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist certification changes. Check persistent storage configuration.' }, { status: 500 })
     return NextResponse.json({ success: true, certification: db.certifications[index], certifications: db.certifications })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
@@ -105,12 +105,12 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: 'Certification ID is required' }, { status: 400 })
     }
 
-    const db = readDb()
+    const db = await readDb()
     db.certifications = db.certifications.filter((c) => c.id !== id)
     
     // Normalize order
     db.certifications = db.certifications.map((c, i) => ({ ...c, order: i }))
-    writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist certification changes. Check persistent storage configuration.' }, { status: 500 })
 
     return NextResponse.json({ success: true, certifications: db.certifications })
   } catch (error: any) {

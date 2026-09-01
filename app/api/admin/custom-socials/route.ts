@@ -7,7 +7,7 @@ export async function GET() {
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  const db = readDb()
+  const db = await readDb()
   return NextResponse.json(db.customSocialLinks || [])
 }
 
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
   try {
     const linkData = await req.json()
-    const db = readDb()
+    const db = await readDb()
     if (!db.customSocialLinks) db.customSocialLinks = []
 
     const newLink: CustomSocialLink = {
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     }
 
     db.customSocialLinks.push(newLink)
-    writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist social link changes. Check persistent storage configuration.' }, { status: 500 })
 
     return NextResponse.json({ success: true, link: newLink, links: db.customSocialLinks })
   } catch (error: any) {
@@ -47,12 +47,12 @@ export async function PUT(req: Request) {
 
   try {
     const body = await req.json()
-    const db = readDb()
+    const db = await readDb()
 
     // If body is an array, treat it as a bulk reorder operation
     if (Array.isArray(body)) {
       db.customSocialLinks = body.map((l, index) => ({ ...l, order: index }))
-      writeDb(db)
+      if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist social link changes. Check persistent storage configuration.' }, { status: 500 })
       return NextResponse.json({ success: true, links: db.customSocialLinks })
     }
 
@@ -74,7 +74,7 @@ export async function PUT(req: Request) {
       icon: icon !== undefined ? icon : db.customSocialLinks[index].icon,
     }
 
-    writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist social link changes. Check persistent storage configuration.' }, { status: 500 })
     return NextResponse.json({ success: true, link: db.customSocialLinks[index], links: db.customSocialLinks })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
@@ -95,12 +95,12 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: 'Link ID is required' }, { status: 400 })
     }
 
-    const db = readDb()
+    const db = await readDb()
     db.customSocialLinks = db.customSocialLinks.filter((l) => l.id !== id)
     
     // Normalize order
     db.customSocialLinks = db.customSocialLinks.map((l, i) => ({ ...l, order: i }))
-    writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist social link changes. Check persistent storage configuration.' }, { status: 500 })
 
     return NextResponse.json({ success: true, links: db.customSocialLinks })
   } catch (error: any) {

@@ -7,7 +7,7 @@ export async function GET() {
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  const db = readDb()
+  const db = await readDb()
   return NextResponse.json(db.updates || [])
 }
 
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
   try {
     const data = await req.json()
-    const db = readDb()
+    const db = await readDb()
     if (!db.updates) db.updates = []
 
     const newUpdate: PortfolioUpdate = {
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     db.updates.push(newUpdate)
     // Sort updates by date descending by default
     db.updates.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist update changes. Check persistent storage configuration.' }, { status: 500 })
 
     return NextResponse.json({ success: true, update: newUpdate, updates: db.updates })
   } catch (error: any) {
@@ -51,12 +51,12 @@ export async function PUT(req: Request) {
 
   try {
     const body = await req.json()
-    const db = readDb()
+    const db = await readDb()
 
     // Bulk update/reorder list
     if (Array.isArray(body)) {
       db.updates = body
-      writeDb(db)
+      if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist update changes. Check persistent storage configuration.' }, { status: 500 })
       return NextResponse.json({ success: true, updates: db.updates })
     }
 
@@ -82,7 +82,7 @@ export async function PUT(req: Request) {
 
     // Sort by date descending
     db.updates.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist update changes. Check persistent storage configuration.' }, { status: 500 })
 
     return NextResponse.json({ success: true, update: db.updates[index], updates: db.updates })
   } catch (error: any) {
@@ -104,9 +104,9 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: 'Update ID is required' }, { status: 400 })
     }
 
-    const db = readDb()
+    const db = await readDb()
     db.updates = db.updates.filter((u) => u.id !== id)
-    writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist update changes. Check persistent storage configuration.' }, { status: 500 })
 
     return NextResponse.json({ success: true, updates: db.updates })
   } catch (error: any) {

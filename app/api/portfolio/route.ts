@@ -6,8 +6,10 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    const data = readDb()
-    return NextResponse.json(data)
+    const data = await readDb()
+    return NextResponse.json(data, {
+      headers: { 'Cache-Control': 'no-store, max-age=0' },
+    })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
