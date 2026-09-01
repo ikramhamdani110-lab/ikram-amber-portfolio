@@ -14,12 +14,16 @@ import { Updates } from '@/components/sections/updates'
 import { Connect } from '@/components/sections/connect'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
+import { useLanguage } from '@/contexts/language-context'
+import { translations } from '@/lib/translations'
 
 export default function Page() {
   const [active, setActive] = useState<SectionId>('home')
   const [theme, setTheme] = useState<'dark' | 'light'>('light')
   const [data, setData] = useState<DbSchema | null>(null)
   const [introFinished, setIntroFinished] = useState(false)
+  const { language } = useLanguage()
+  const t = translations[language]
 
   // Synchronize with stored theme on mount if present
   useEffect(() => {
@@ -77,24 +81,24 @@ export default function Page() {
 
   // Build nav items — only show sections that have content
   const rawNavItems: { id: SectionId; label: string }[] = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About' },
-    { id: 'skills', label: 'Skills' },
+    { id: 'home', label: t.nav.home },
+    { id: 'about', label: t.nav.about },
+    { id: 'skills', label: t.nav.skills },
   ]
 
   const visibleCerts = data?.certifications?.filter((c) => c.visible !== false) || []
   if (visibleCerts.length > 0) {
-    rawNavItems.push({ id: 'certifications', label: 'Certifications' })
+    rawNavItems.push({ id: 'certifications', label: t.nav.certifications })
   }
 
-  rawNavItems.push({ id: 'journey', label: 'Journey' })
+  rawNavItems.push({ id: 'journey', label: t.nav.journey })
 
   const visibleUpdates = data?.updates?.filter((u) => u.visible !== false) || []
   if (visibleUpdates.length > 0) {
-    rawNavItems.push({ id: 'updates', label: 'Updates' })
+    rawNavItems.push({ id: 'updates', label: t.nav.updates })
   }
 
-  rawNavItems.push({ id: 'connect', label: 'Connect' })
+  rawNavItems.push({ id: 'connect', label: t.nav.connect })
 
   const navItems = rawNavItems.map((item, index) => ({
     id: item.id,

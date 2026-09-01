@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Award, ArrowUpRight, X, ZoomIn } from 'lucide-react'
 import type { Certification, DbSchema } from '@/lib/db'
 import { SectionLabel } from '@/components/section-label'
+import { useLanguage } from '@/contexts/language-context'
+import { translations } from '@/lib/translations'
 
 interface Props {
   certifications: Certification[]
@@ -13,13 +15,15 @@ interface Props {
 }
 
 export function Certifications({ certifications, certificationsSettings, num = '04' }: Props) {
+  const { language } = useLanguage()
+  const t = translations[language]
   const [viewerImage, setViewerImage] = useState<string | null>(null)
   const [viewerName, setViewerName] = useState<string>('')
 
-  const sectionLabel = certificationsSettings?.sectionLabel || 'Certifications'
-  const title = certificationsSettings?.title || 'Validated expertise.'
-  const description = certificationsSettings?.description || 'Certificates and credentials I have earned through coursework and examinations.'
-  const emptyMessage = certificationsSettings?.emptyMessage || 'No certifications added yet.'
+  const sectionLabel = certificationsSettings?.sectionLabel || t.certifications.label
+  const title = certificationsSettings?.title || t.certifications.title
+  const description = t.certifications.description
+  const emptyMessage = t.certifications.emptyMessage
 
   const visibleCerts = certifications.filter((c) => c.visible !== false)
 
@@ -44,14 +48,14 @@ export function Certifications({ certifications, certificationsSettings, num = '
   return (
     <>
       <div>
-        <SectionLabel num={num} label="Certifications" />
+        <SectionLabel num={num} label={sectionLabel} />
 
         <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
           <h2 className="font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
-            Validated <span className="text-accent italic">expertise.</span>
+            {title}
           </h2>
           <p className="max-w-xs leading-relaxed text-muted-foreground">
-            Certificates and credentials I have earned through coursework and examinations.
+            {description}
           </p>
         </div>
 
@@ -124,9 +128,9 @@ export function Certifications({ certifications, certificationsSettings, num = '
               </p>
 
               <div className="mt-4 flex flex-col gap-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/80">
-                <span>Issued: {cert.date}</span>
+                <span>{t.certifications.issued}: {cert.date}</span>
                 {cert.credentialId && (
-                  <span className="truncate">ID: {cert.credentialId}</span>
+                  <span className="truncate">{t.certifications.id}: {cert.credentialId}</span>
                 )}
               </div>
 
@@ -138,7 +142,7 @@ export function Certifications({ certifications, certificationsSettings, num = '
 
               {cert.image && (
                 <p className="mt-4 font-mono text-[9px] uppercase tracking-widest text-accent/60">
-                  Click to view full certificate
+                  {t.certifications.clickToView}
                 </p>
               )}
             </motion.div>
@@ -165,7 +169,7 @@ export function Certifications({ certifications, certificationsSettings, num = '
             <button
               onClick={closeViewer}
               className="absolute right-4 top-4 sm:right-6 sm:top-6 flex size-11 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white backdrop-blur-sm transition-colors hover:border-white/60 hover:bg-black/80 z-10"
-              aria-label="Close certificate viewer"
+              aria-label={t.certifications.closeViewer}
             >
               <X className="size-5" />
             </button>
@@ -173,7 +177,7 @@ export function Certifications({ certifications, certificationsSettings, num = '
             {/* Certificate name */}
             <div className="absolute left-4 top-4 sm:left-6 sm:top-6 z-10">
               <p className="font-mono text-[10px] uppercase tracking-widest text-white/50">
-                Certificate
+                {t.certifications.certificate}
               </p>
               <p className="font-serif text-base text-white/90 mt-0.5">{viewerName}</p>
             </div>
@@ -197,7 +201,7 @@ export function Certifications({ certifications, certificationsSettings, num = '
 
             {/* Tap-outside hint on mobile */}
             <p className="absolute bottom-4 left-0 right-0 text-center font-mono text-[9px] uppercase tracking-widest text-white/30">
-              Tap outside to close
+              {t.certifications.tapToClose}
             </p>
           </motion.div>
         )}

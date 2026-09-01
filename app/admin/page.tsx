@@ -26,7 +26,9 @@ import {
   Sparkles,
   RefreshCw,
   FolderPlus,
-  Code
+  Code,
+  Moon,
+  Sun
 } from 'lucide-react'
 import type { DbSchema, Certification, PortfolioUpdate, Skill, SkillGroup, JourneyStage } from '@/lib/db'
 
@@ -38,11 +40,35 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<
     'overview' | 'profile' | 'skills' | 'journey' | 'certifications' | 'socials' | 'updates' | 'settings' | 'security'
   >('overview')
+  const [theme, setTheme] = useState<'dark' | 'light'>('light')
 
   // Db State
   const [db, setDb] = useState<DbSchema | null>(null)
   const [loadingDb, setLoadingDb] = useState(false)
   const [saveStatus, setSaveStatus] = useState<string>('')
+
+  // Initialize theme - default to light for admin dashboard
+  useEffect(() => {
+    try {
+      const savedAdminTheme = localStorage.getItem('admin-theme')
+      if (savedAdminTheme === 'dark' || savedAdminTheme === 'light') {
+        setTheme(savedAdminTheme)
+      } else {
+        // Default to light mode for admin dashboard
+        setTheme('light')
+        localStorage.setItem('admin-theme', 'light')
+      }
+    } catch (err) {
+      console.error('Error reading admin theme from localStorage:', err)
+    }
+  }, [])
+
+  // Apply theme to document
+  useEffect(() => {
+    const root = document.documentElement
+    root.classList.toggle('dark', theme === 'dark')
+    root.classList.toggle('light', theme === 'light')
+  }, [theme])
 
   // Check auth
   useEffect(() => {
@@ -111,6 +137,18 @@ export default function AdminPage() {
     }
   }
 
+  const handleToggleTheme = () => {
+    setTheme((prev) => {
+      const nextTheme = prev === 'dark' ? 'light' : 'dark'
+      try {
+        localStorage.setItem('admin-theme', nextTheme)
+      } catch (err) {
+        console.error('Error saving admin theme to localStorage:', err)
+      }
+      return nextTheme
+    })
+  }
+
   // Generic Save Helper
   const saveSectionData = async (section: string, payload: any) => {
     setSaveStatus('saving')
@@ -149,7 +187,7 @@ export default function AdminPage() {
   // Render Login Screen
   if (isAuthenticated === null) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#141013] text-foreground font-mono text-xs">
+      <div className="flex min-h-screen items-center justify-center bg-background text-foreground font-mono text-xs">
         Checking secure session...
       </div>
     )
@@ -157,10 +195,10 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#141013] px-4">
-        <div className="w-full max-w-sm rounded-3xl border border-border bg-[#0e0b0d] p-8 shadow-2xl">
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <div className="w-full max-w-sm rounded-3xl border border-border bg-card p-8 shadow-2xl dark:bg-[#0e0b0d]">
           <div className="flex flex-col items-center text-center">
-            <div className="flex size-14 items-center justify-center rounded-2xl bg-accent-soft text-[#201319] mb-4">
+            <div className="flex size-14 items-center justify-center rounded-2xl bg-accent-soft text-[#201319] mb-4 dark:text-[#201319]">
               <Lock className="size-6" />
             </div>
             <h1 className="font-serif text-3xl font-light">Admin Access</h1>
@@ -180,12 +218,12 @@ export default function AdminPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full rounded-2xl border border-border bg-card p-4 text-sm focus:border-accent outline-none transition-colors text-foreground"
+                className="w-full rounded-2xl border border-border bg-background p-4 text-sm focus:border-accent outline-none transition-colors text-foreground dark:bg-[#0e0b0d]"
               />
             </div>
 
             {loginError && (
-              <div className="flex items-center gap-2 rounded-xl bg-red-950/30 border border-red-900/50 p-3 text-xs text-red-400">
+              <div className="flex items-center gap-2 rounded-xl bg-red-950/30 border border-red-900/50 p-3 text-xs text-red-400 dark:bg-red-950/30 dark:border-red-900/50">
                 <AlertCircle className="size-4 shrink-0" />
                 <span>{loginError}</span>
               </div>
@@ -193,7 +231,7 @@ export default function AdminPage() {
 
             <button
               type="submit"
-              className="w-full rounded-full bg-accent-soft py-4 text-sm font-medium text-[#201319] transition-transform hover:-translate-y-0.5"
+              className="w-full rounded-full bg-accent-soft py-4 text-sm font-medium text-[#201319] transition-transform hover:-translate-y-0.5 dark:text-[#201319]"
             >
               Sign In
             </button>
@@ -205,16 +243,16 @@ export default function AdminPage() {
 
   if (loadingDb || !db) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#141013] text-foreground font-mono text-xs">
+      <div className="flex min-h-screen items-center justify-center bg-background text-foreground font-mono text-xs">
         Loading CMS configurations...
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#141013] text-foreground flex flex-col md:flex-row">
+    <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row">
       {/* Sidebar Panel */}
-      <aside className="w-full md:w-64 border-b md:border-b-0 md:border-r border-border bg-[#0e0b0d] p-6 flex flex-col justify-between shrink-0">
+      <aside className="w-full md:w-64 border-b md:border-b-0 md:border-r border-border bg-card p-6 flex flex-col justify-between shrink-0 dark:bg-[#0e0b0d]">
         <div>
           <div className="font-serif text-2xl font-medium tracking-tight mb-8">
             IKRAM<span className="text-accent">.</span> Dashboard
@@ -240,8 +278,8 @@ export default function AdminPage() {
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`w-full flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-xs font-mono uppercase tracking-wider transition-colors ${
                     isActive
-                      ? 'bg-accent-soft text-[#201319]'
-                      : 'text-muted-foreground hover:bg-card hover:text-foreground'
+                      ? 'bg-accent-soft text-[#201319] dark:text-[#201319]'
+                      : 'text-muted-foreground hover:bg-background hover:text-foreground dark:hover:bg-card dark:hover:text-foreground'
                   }`}
                 >
                   <Icon className="size-4 shrink-0" />
@@ -255,7 +293,7 @@ export default function AdminPage() {
         <div className="mt-8 pt-4 border-t border-border/40">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-xs font-mono uppercase tracking-wider text-red-400 hover:bg-red-950/20 transition-colors"
+            className="w-full flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-xs font-mono uppercase tracking-wider text-red-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/20 dark:text-red-400 dark:hover:text-red-400 transition-colors"
           >
             <LogOut className="size-4 shrink-0" />
             Sign Out
@@ -290,6 +328,14 @@ export default function AdminPage() {
                 <AlertCircle className="size-3.5" /> Save failed
               </span>
             )}
+            <button
+              onClick={handleToggleTheme}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="rounded-full border border-border px-3 py-2 text-[10px] font-mono uppercase tracking-wider hover:border-accent hover:text-accent transition-colors flex items-center gap-2"
+            >
+              {theme === 'dark' ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
+              {theme === 'dark' ? 'Light' : 'Dark'}
+            </button>
             <a
               href="/"
               target="_blank"
@@ -317,7 +363,7 @@ export default function AdminPage() {
           <CertificationsTab db={db} save={saveSectionData} uploadImage={uploadImage} />
         )}
         {activeTab === 'socials' && (
-          <SocialsTab db={db} save={saveSectionData} />
+          <SocialsTab db={db} save={saveSectionData} uploadImage={uploadImage} />
         )}
         {activeTab === 'updates' && (
           <UpdatesTab db={db} save={saveSectionData} uploadImage={uploadImage} />
@@ -353,7 +399,7 @@ function OverviewTab({ db, setActiveTab }: { db: DbSchema; setActiveTab: any }) 
           <button
             key={i}
             onClick={() => setActiveTab(stat.tab)}
-            className="text-left rounded-3xl border border-border bg-[#0e0b0d] p-6 hover:border-accent transition-colors"
+            className="text-left rounded-3xl border border-border bg-card p-6 hover:border-accent transition-colors shadow-sm dark:bg-[#0e0b0d] dark:shadow-none"
           >
             <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
               {stat.label}
@@ -365,26 +411,26 @@ function OverviewTab({ db, setActiveTab }: { db: DbSchema; setActiveTab: any }) 
 
       {/* Quick actions */}
       <div className="grid gap-6 md:grid-cols-1">
-        <div className="rounded-3xl border border-border bg-card/40 p-7">
+        <div className="rounded-3xl border border-border bg-card/40 p-7 dark:bg-card/40">
           <h3 className="font-serif text-xl font-light mb-4">Quick Content Creator</h3>
           <div className="grid gap-3">
             <button
               onClick={() => setActiveTab('certifications')}
-              className="flex items-center justify-between rounded-2xl border border-border bg-[#0e0b0d] p-4 text-xs font-mono uppercase tracking-wider hover:border-accent text-left"
+              className="flex items-center justify-between rounded-2xl border border-border bg-card p-4 text-xs font-mono uppercase tracking-wider hover:border-accent text-left dark:bg-[#0e0b0d]"
             >
               Add New Certification
               <Plus className="size-4 text-accent" />
             </button>
             <button
               onClick={() => setActiveTab('updates')}
-              className="flex items-center justify-between rounded-2xl border border-border bg-[#0e0b0d] p-4 text-xs font-mono uppercase tracking-wider hover:border-accent text-left"
+              className="flex items-center justify-between rounded-2xl border border-border bg-card p-4 text-xs font-mono uppercase tracking-wider hover:border-accent text-left dark:bg-[#0e0b0d]"
             >
               Post a What&apos;s New Update
               <Plus className="size-4 text-accent" />
             </button>
             <button
               onClick={() => setActiveTab('skills')}
-              className="flex items-center justify-between rounded-2xl border border-border bg-[#0e0b0d] p-4 text-xs font-mono uppercase tracking-wider hover:border-accent text-left"
+              className="flex items-center justify-between rounded-2xl border border-border bg-card p-4 text-xs font-mono uppercase tracking-wider hover:border-accent text-left dark:bg-[#0e0b0d]"
             >
               Add New Technical Skill
               <Plus className="size-4 text-accent" />
@@ -460,7 +506,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {/* Hero section group */}
-      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3 flex items-center gap-2">
           <Sparkles className="size-4 text-accent" /> Hero Section Title & Bio
         </h3>
@@ -472,7 +518,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               type="text"
               value={hello}
               onChange={(e) => setHello(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -481,7 +527,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
             />
           </div>
         </div>
@@ -492,7 +538,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif text-lg"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif text-lg dark:bg-[#0e0b0d]"
           />
         </div>
 
@@ -502,7 +548,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={4}
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-4 text-sm focus:border-accent outline-none text-foreground leading-relaxed"
+            className="w-full rounded-2xl border border-border bg-background p-4 text-sm focus:border-accent outline-none text-foreground leading-relaxed dark:bg-[#0e0b0d]"
           />
         </div>
 
@@ -513,7 +559,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -522,14 +568,14 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               type="text"
               value={creative}
               onChange={(e) => setCreative(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
         </div>
       </div>
 
       {/* Code window emulator */}
-      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3 flex items-center gap-2">
           <Code className="size-4 text-accent" /> Hero Code Simulator Window
         </h3>
@@ -541,7 +587,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               type="text"
               value={codeFilename}
               onChange={(e) => setCodeFilename(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -550,22 +596,22 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               type="text"
               value={codeCaption}
               onChange={(e) => setCodeCaption(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground italic"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground italic dark:bg-[#0e0b0d]"
             />
           </div>
         </div>
 
         <div>
           <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Interactive Code Lines</label>
-          <div className="space-y-2 bg-[#0e0b0d] border border-border/60 rounded-2xl p-5">
+          <div className="space-y-2 bg-background border border-border/60 rounded-2xl p-5 dark:bg-[#0e0b0d]">
             {codeLines.map((line, i) => (
               <div key={line.n} className="flex items-center gap-4">
-                <span className="font-mono text-xs text-[#5a4750] w-4 text-right">{line.n}</span>
+                <span className="font-mono text-xs text-muted-foreground w-4 text-right">{line.n}</span>
                 <input
                   type="text"
                   value={line.code}
                   onChange={(e) => handleCodeLineChange(i, e.target.value)}
-                  className="flex-1 bg-transparent border-b border-white/5 outline-none focus:border-accent font-mono text-sm text-[#e6a4c4] py-1"
+                  className="flex-1 bg-transparent border-b border-border/30 outline-none focus:border-accent font-mono text-sm text-accent py-1 dark:border-white/5 dark:text-[#e6a4c4]"
                 />
               </div>
             ))}
@@ -574,7 +620,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
       </div>
 
       {/* About Section details */}
-      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3 flex items-center gap-2">
           <User className="size-4 text-accent" /> About Section Card Info
         </h3>
@@ -586,7 +632,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             value={currently}
             onChange={(e) => setCurrently(e.target.value)}
             placeholder="Learning → Building → Experimenting"
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
           />
         </div>
 
@@ -597,7 +643,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               type="text"
               value={aboutLocation}
               onChange={(e) => setAboutLocation(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -607,7 +653,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={focusInput}
               onChange={(e) => setFocusInput(e.target.value)}
               placeholder="Web, Software, Databases"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
         </div>
@@ -620,7 +666,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={profileLabel}
               onChange={(e) => setProfileLabel(e.target.value)}
               placeholder="Profile"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -630,7 +676,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={currentlyLabel}
               onChange={(e) => setCurrentlyLabel(e.target.value)}
               placeholder="Currently"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -640,7 +686,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={basedInLabel}
               onChange={(e) => setBasedInLabel(e.target.value)}
               placeholder="Based in"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -650,7 +696,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={focusLabel}
               onChange={(e) => setFocusLabel(e.target.value)}
               placeholder="Focus"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
         </div>
@@ -662,14 +708,14 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             value={aboutSectionLabel}
             onChange={(e) => setAboutSectionLabel(e.target.value)}
             placeholder="About"
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
           />
         </div>
       </div>
 
       <button
         type="submit"
-        className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5"
+        className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 dark:text-[#201319]"
       >
         Save Profile Configurations
       </button>
@@ -748,7 +794,7 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
 
   return (
     <form onSubmit={handleSave} className="space-y-8">
-      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Skills Page Text</h3>
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
@@ -757,7 +803,7 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -767,7 +813,7 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
               value={sectionLabel}
               onChange={(e) => setSectionLabel(e.target.value)}
               placeholder="Skills"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -776,7 +822,7 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
               type="text"
               value={dbTextBadge}
               onChange={(e) => setDbTextBadge(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
             />
           </div>
         </div>
@@ -786,19 +832,19 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
           />
         </div>
       </div>
 
       {/* Main highlight skills */}
-      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
         <div className="flex items-center justify-between border-b border-border/40 pb-3">
           <h3 className="font-serif text-xl font-light">About section badges (Main highlights)</h3>
           <button
             type="button"
             onClick={addAboutSkill}
-            className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-[#201319]"
+            className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-[#201319] dark:text-[#201319]"
           >
             <Plus className="size-3" /> Add Highlight Badge
           </button>
@@ -806,7 +852,7 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
 
         <div className="grid gap-5 sm:grid-cols-2">
           {aboutSkills.map((skill, index) => (
-            <div key={index} className="flex gap-4 p-4 border border-border/60 bg-[#0e0b0d] rounded-2xl relative">
+            <div key={index} className="flex gap-4 p-4 border border-border/60 bg-background rounded-2xl relative dark:bg-[#0e0b0d]">
               <button
                 type="button"
                 onClick={() => deleteAboutSkill(index)}
@@ -821,21 +867,21 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
                   value={skill.name}
                   onChange={(e) => updateAboutSkill(index, 'name', e.target.value)}
                   placeholder="SKILL NAME"
-                  className="bg-transparent border-b border-white/5 font-mono text-xs focus:border-accent outline-none"
+                  className="bg-transparent border-b border-border/30 font-mono text-xs focus:border-accent outline-none dark:border-white/5"
                 />
                 <input
                   type="text"
                   value={skill.note}
                   onChange={(e) => updateAboutSkill(index, 'note', e.target.value)}
                   placeholder="Hover details"
-                  className="bg-transparent border-b border-white/5 text-xs text-muted-foreground focus:border-accent outline-none"
+                  className="bg-transparent border-b border-border/30 text-xs text-muted-foreground focus:border-accent outline-none dark:border-white/5"
                 />
                 <input
                   type="text"
                   value={skill.icon}
                   onChange={(e) => updateAboutSkill(index, 'icon', e.target.value)}
                   placeholder="Icon url"
-                  className="bg-transparent border-b border-white/5 text-[10px] text-muted-foreground/60 focus:border-accent outline-none"
+                  className="bg-transparent border-b border-border/30 text-[10px] text-muted-foreground/60 focus:border-accent outline-none dark:border-white/5"
                 />
               </div>
             </div>
@@ -846,7 +892,7 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
       {/* Categorized Skills list */}
       <div className="space-y-6">
         {groups.map((group, groupIndex) => (
-          <div key={group.num} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+          <div key={group.num} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
             <div className="flex items-center justify-between border-b border-border/40 pb-3">
               <div className="flex items-center gap-2">
                 <span className="font-mono text-xs text-accent">{group.num}</span>
@@ -856,7 +902,7 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
               <button
                 type="button"
                 onClick={() => addGroupSkill(groupIndex)}
-                className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-[#201319]"
+                className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-[#201319] dark:text-[#201319]"
               >
                 <Plus className="size-3" /> Add Skill
               </button>
@@ -864,7 +910,7 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
 
             <div className="grid gap-5 sm:grid-cols-2">
               {group.skills.map((skill, skillIndex) => (
-                <div key={skillIndex} className="flex gap-4 p-4 border border-border/60 bg-[#0e0b0d] rounded-2xl relative">
+                <div key={skillIndex} className="flex gap-4 p-4 border border-border/60 bg-background rounded-2xl relative dark:bg-[#0e0b0d]">
                   <button
                     type="button"
                     onClick={() => deleteGroupSkill(groupIndex, skillIndex)}
@@ -879,21 +925,21 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
                       value={skill.name}
                       onChange={(e) => updateGroupSkill(groupIndex, skillIndex, 'name', e.target.value)}
                       placeholder="SKILL NAME"
-                      className="bg-transparent border-b border-white/5 font-mono text-xs focus:border-accent outline-none"
+                      className="bg-transparent border-b border-border/30 font-mono text-xs focus:border-accent outline-none dark:border-white/5"
                     />
                     <input
                       type="text"
                       value={skill.note}
                       onChange={(e) => updateGroupSkill(groupIndex, skillIndex, 'note', e.target.value)}
                       placeholder="Hover details"
-                      className="bg-transparent border-b border-white/5 text-xs text-muted-foreground focus:border-accent outline-none"
+                      className="bg-transparent border-b border-border/30 text-xs text-muted-foreground focus:border-accent outline-none dark:border-white/5"
                     />
                     <input
                       type="text"
                       value={skill.icon}
                       onChange={(e) => updateGroupSkill(groupIndex, skillIndex, 'icon', e.target.value)}
                       placeholder="Icon url"
-                      className="bg-transparent border-b border-white/5 text-[10px] text-muted-foreground/60 focus:border-accent outline-none"
+                      className="bg-transparent border-b border-border/30 text-[10px] text-muted-foreground/60 focus:border-accent outline-none dark:border-white/5"
                     />
                   </div>
                 </div>
@@ -905,7 +951,7 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
 
       <button
         type="submit"
-        className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5"
+        className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 dark:text-[#201319]"
       >
         Save Skills Configuration
       </button>
@@ -991,7 +1037,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
   return (
     <form onSubmit={handleSave} className="space-y-8">
       {/* Journey Settings */}
-      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Journey Section Text</h3>
         <div>
           <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Section title</label>
@@ -999,7 +1045,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
           />
         </div>
 
@@ -1010,7 +1056,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
             value={sectionLabel}
             onChange={(e) => setSectionLabel(e.target.value)}
             placeholder="Journey"
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
           />
         </div>
 
@@ -1021,7 +1067,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
               type="text"
               value={ctaTitle}
               onChange={(e) => setCtaTitle(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -1030,20 +1076,20 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
               type="text"
               value={ctaButtonText}
               onChange={(e) => setCtaButtonText(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
         </div>
       </div>
 
       {/* Stepper list */}
-      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-6">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-6 dark:bg-card/40">
         <div className="flex items-center justify-between border-b border-border/40 pb-3">
           <h3 className="font-serif text-xl font-light">Journey Stages / Timeline</h3>
           <button
             type="button"
             onClick={addStage}
-            className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-[#201319]"
+            className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-[#201319] dark:text-[#201319]"
           >
             <Plus className="size-3" /> Add Stage
           </button>
@@ -1051,7 +1097,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
 
         <div className="space-y-6">
           {stages.map((s, index) => (
-            <div key={index} className="border border-border/60 bg-[#0e0b0d] rounded-2xl p-5 relative space-y-4">
+            <div key={index} className="border border-border/60 bg-background rounded-2xl p-5 relative space-y-4 dark:bg-[#0e0b0d]">
               <div className="flex items-center justify-between border-b border-border/20 pb-3">
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-xs text-accent">{s.num}</span>
@@ -1093,7 +1139,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
                     type="text"
                     value={s.short}
                     onChange={(e) => handleStageChange(index, 'short', e.target.value)}
-                    className="w-full bg-[#141013] border border-border/60 rounded-xl p-2.5 text-xs text-foreground font-serif"
+                    className="w-full bg-background border border-border/60 rounded-xl p-2.5 text-xs text-foreground font-serif dark:bg-[#141013]"
                   />
                 </div>
                 <div>
@@ -1102,7 +1148,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
                     type="text"
                     value={s.title}
                     onChange={(e) => handleStageChange(index, 'title', e.target.value)}
-                    className="w-full bg-[#141013] border border-border/60 rounded-xl p-2.5 text-xs text-foreground font-serif"
+                    className="w-full bg-background border border-border/60 rounded-xl p-2.5 text-xs text-foreground font-serif dark:bg-[#141013]"
                   />
                 </div>
               </div>
@@ -1113,7 +1159,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
                   value={s.body}
                   onChange={(e) => handleStageChange(index, 'body', e.target.value)}
                   rows={2}
-                  className="w-full bg-[#141013] border border-border/60 rounded-xl p-3 text-xs text-foreground leading-relaxed"
+                  className="w-full bg-background border border-border/60 rounded-xl p-3 text-xs text-foreground leading-relaxed dark:bg-[#141013]"
                 />
               </div>
 
@@ -1124,7 +1170,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
                   value={s.tags?.join(', ') || ''}
                   onChange={(e) => handleStageChange(index, 'tags', e.target.value.split(',').map(t => t.trim()).filter(Boolean))}
                   placeholder="e.g. Relational Databases, MySQL"
-                  className="w-full bg-[#141013] border border-border/60 rounded-xl p-2.5 text-xs text-foreground"
+                  className="w-full bg-background border border-border/60 rounded-xl p-2.5 text-xs text-foreground dark:bg-[#141013]"
                 />
               </div>
             </div>
@@ -1134,7 +1180,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
 
       <button
         type="submit"
-        className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5"
+        className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 dark:text-[#201319]"
       >
         Save Journey Changes
       </button>
@@ -1311,7 +1357,7 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
   // Render Form view
   if (isEditing) {
     return (
-      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-6">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-6 dark:bg-card/40">
         <div className="flex items-center justify-between border-b border-border/40 pb-3">
           <h3 className="font-serif text-xl font-light">
             {editForm.id ? 'Edit Certification' : 'Add Certification'}
@@ -1334,7 +1380,7 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
                 required
                 value={editForm.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
               />
             </div>
             <div>
@@ -1344,7 +1390,7 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
                 required
                 value={editForm.organization}
                 onChange={(e) => handleInputChange('organization', e.target.value)}
-                className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
               />
             </div>
           </div>
@@ -1358,7 +1404,7 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
                 value={editForm.date}
                 onChange={(e) => handleInputChange('date', e.target.value)}
                 placeholder="August 2026"
-                className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
               />
             </div>
             <div>
@@ -1367,7 +1413,7 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
                 type="text"
                 value={editForm.credentialId}
                 onChange={(e) => handleInputChange('credentialId', e.target.value)}
-                className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
               />
             </div>
           </div>
@@ -1378,7 +1424,7 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
               type="url"
               value={editForm.credentialUrl}
               onChange={(e) => handleInputChange('credentialUrl', e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
 
@@ -1391,7 +1437,7 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
                   value={editForm.image}
                   onChange={(e) => handleInputChange('image', e.target.value)}
                   placeholder="/uploads/file.png"
-                  className="flex-1 rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+                  className="flex-1 rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
                 />
                 <button
                   type="button"
@@ -1410,7 +1456,7 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
               </div>
             </div>
             {editForm.image && (
-              <div className="size-16 rounded-xl border border-border bg-[#0e0b0d] flex items-center justify-center p-2">
+              <div className="size-16 rounded-xl border border-border bg-background flex items-center justify-center p-2 dark:bg-[#0e0b0d]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={editForm.image} alt="" className="size-full object-contain" />
               </div>
@@ -1423,7 +1469,7 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
               value={editForm.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
               rows={3}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-4 text-sm focus:border-accent outline-none text-foreground leading-relaxed"
+              className="w-full rounded-2xl border border-border bg-background p-4 text-sm focus:border-accent outline-none text-foreground leading-relaxed dark:bg-[#0e0b0d]"
             />
           </div>
 
@@ -1447,7 +1493,7 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
 
           <button
             type="submit"
-            className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5"
+            className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 dark:text-[#201319]"
           >
             Save Certification
           </button>
@@ -1463,7 +1509,7 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
         <h3 className="font-serif text-xl font-light">My Credentials ({certs.length})</h3>
         <button
           onClick={handleAddClick}
-          className="flex items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 text-xs font-mono uppercase tracking-wider text-[#201319]"
+          className="flex items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 text-xs font-mono uppercase tracking-wider text-[#201319] dark:text-[#201319]"
         >
           <Plus className="size-4" /> Add Certification
         </button>
@@ -1478,11 +1524,11 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
           {certs.map((c, index) => (
             <div
               key={c.id}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border bg-[#0e0b0d] p-6"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border bg-card p-6 shadow-sm dark:bg-[#0e0b0d] dark:shadow-none"
             >
               <div className="flex items-center gap-4">
                 {c.image ? (
-                  <div className="flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-white to-[#ffeaf3] p-2.5 shrink-0">
+                  <div className="flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-white to-[#ffeaf3] p-2.5 shrink-0 dark:from-white dark:to-[#ffeaf3]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={c.image} alt="" className="size-full object-contain" />
                   </div>
@@ -1691,7 +1737,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
 
   if (isEditingCustom) {
     return (
-      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-6">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-6 dark:bg-card/40">
         <div className="flex items-center justify-between border-b border-border/40 pb-3">
           <h3 className="font-serif text-xl font-light">
             {customForm.id ? 'Edit Custom Link' : 'Add Custom Link'}
@@ -1710,7 +1756,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={customForm.name}
               onChange={(e) => setCustomForm({ ...customForm, name: e.target.value })}
               placeholder="e.g., Behance, Dribbble, Mostaql"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
             />
           </div>
 
@@ -1722,7 +1768,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={customForm.url}
               onChange={(e) => setCustomForm({ ...customForm, url: e.target.value })}
               placeholder="https://..."
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
             />
           </div>
 
@@ -1733,7 +1779,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
                 type="text"
                 value={customForm.icon}
                 onChange={(e) => setCustomForm({ ...customForm, icon: e.target.value })}
-                className="flex-1 rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+                className="flex-1 rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
               />
               <button
                 type="button"
@@ -1754,7 +1800,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
 
           <button
             type="submit"
-            className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5"
+            className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 dark:text-[#201319]"
           >
             {customForm.id ? 'Update Link' : 'Add Link'}
           </button>
@@ -1766,7 +1812,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   return (
     <div className="space-y-8">
       {/* Predefined social links */}
-      <form onSubmit={handleSavePredefined} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+      <form onSubmit={handleSavePredefined} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Predefined Social Channels</h3>
 
         <div>
@@ -1776,7 +1822,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             value={github}
             onChange={(e) => setGithub(e.target.value)}
             placeholder="https://github.com/..."
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
           />
         </div>
 
@@ -1787,7 +1833,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             value={linkedin}
             onChange={(e) => setLinkedin(e.target.value)}
             placeholder="https://linkedin.com/in/..."
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
           />
         </div>
 
@@ -1798,7 +1844,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="email@example.com"
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
           />
         </div>
 
@@ -1809,20 +1855,20 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             value={fiverr}
             onChange={(e) => setFiverr(e.target.value)}
             placeholder="https://fiverr.com/..."
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
           />
         </div>
 
         <button
           type="submit"
-          className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5"
+          className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 dark:text-[#201319]"
         >
           Save Social & Connect Settings
         </button>
       </form>
 
       {/* Connect section labels */}
-      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Connect Section Labels</h3>
         
         <div>
@@ -1832,7 +1878,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             value={connectSectionLabel}
             onChange={(e) => setConnectSectionLabel(e.target.value)}
             placeholder="Connect"
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
           />
         </div>
         
@@ -1843,7 +1889,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             value={connectTitle}
             onChange={(e) => setConnectTitle(e.target.value)}
             placeholder="Find me around the web."
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif text-lg"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif text-lg dark:bg-[#0e0b0d]"
           />
         </div>
         
@@ -1853,7 +1899,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             value={connectDescription}
             onChange={(e) => setConnectDescription(e.target.value)}
             rows={2}
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
           />
         </div>
 
@@ -1865,7 +1911,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={githubLabel}
               onChange={(e) => setGithubLabel(e.target.value)}
               placeholder="GitHub"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -1875,7 +1921,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={githubSubtitle}
               onChange={(e) => setGithubSubtitle(e.target.value)}
               placeholder="Explore my code"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -1885,7 +1931,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={githubCta}
               onChange={(e) => setGithubCta(e.target.value)}
               placeholder="Visit GitHub"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -1895,7 +1941,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={linkedinLabel}
               onChange={(e) => setLinkedinLabel(e.target.value)}
               placeholder="LinkedIn"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -1905,7 +1951,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={linkedinSubtitle}
               onChange={(e) => setLinkedinSubtitle(e.target.value)}
               placeholder="See my journey & experiences"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -1915,7 +1961,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={linkedinCta}
               onChange={(e) => setLinkedinCta(e.target.value)}
               placeholder="Visit LinkedIn"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -1925,7 +1971,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={emailLabel}
               onChange={(e) => setEmailLabel(e.target.value)}
               placeholder="Email"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -1935,7 +1981,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={emailSubtitle}
               onChange={(e) => setEmailSubtitle(e.target.value)}
               placeholder="Say hello directly"
-              className="w-full rounded-2xl border border-divider bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
           <div>
@@ -1945,19 +1991,19 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={emailCta}
               onChange={(e) => setEmailCta(e.target.value)}
               placeholder="Send Email"
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
         </div>
       </div>
 
       {/* Custom social links */}
-      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
         <div className="flex items-center justify-between border-b border-border/40 pb-3">
           <h3 className="font-serif text-xl font-light">Custom Social Links ({customLinks.length})</h3>
           <button
             onClick={handleAddCustom}
-            className="flex items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 text-xs font-mono uppercase tracking-wider text-[#201319]"
+            className="flex items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 text-xs font-mono uppercase tracking-wider text-[#201319] dark:text-[#201319]"
           >
             <Plus className="size-4" /> Add Custom Link
           </button>
@@ -1972,7 +2018,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             {customLinks.map((link, index) => (
               <div
                 key={link.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border bg-[#0e0b0d] p-6"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border bg-card p-6 shadow-sm dark:bg-[#0e0b0d] dark:shadow-none"
               >
                 <div className="flex items-center gap-4">
                   {link.icon ? (
@@ -2148,7 +2194,7 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
 
   if (isEditing) {
     return (
-      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-6">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-6 dark:bg-card/40">
         <div className="flex items-center justify-between border-b border-border/40 pb-3">
           <h3 className="font-serif text-xl font-light">
             {editForm.id ? 'Edit Update Log' : 'Post New Update'}
@@ -2167,7 +2213,7 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
                 required
                 value={editForm.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
-                className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
               />
             </div>
             <div>
@@ -2175,7 +2221,7 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               <select
                 value={editForm.category}
                 onChange={(e) => handleInputChange('category', e.target.value)}
-                className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
               >
                 <option value="update">Update</option>
                 <option value="certification">Certification</option>
@@ -2194,7 +2240,7 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
                 required
                 value={editForm.date}
                 onChange={(e) => handleInputChange('date', e.target.value)}
-                className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
               />
             </div>
 
@@ -2205,7 +2251,7 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
                   type="text"
                   value={editForm.image}
                   onChange={(e) => handleInputChange('image', e.target.value)}
-                  className="flex-1 rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+                  className="flex-1 rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
                 />
                 <button
                   type="button"
@@ -2232,7 +2278,7 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={editForm.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
               rows={4}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-4 text-sm focus:border-accent outline-none text-foreground leading-relaxed"
+              className="w-full rounded-2xl border border-border bg-background p-4 text-sm focus:border-accent outline-none text-foreground leading-relaxed dark:bg-[#0e0b0d]"
             />
           </div>
 
@@ -2256,7 +2302,7 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
 
           <button
             type="submit"
-            className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5"
+            className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 dark:text-[#201319]"
           >
             Publish Update
           </button>
@@ -2271,7 +2317,7 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
         <h3 className="font-serif text-xl font-light">Updates Log ({updates.length})</h3>
         <button
           onClick={handleAddClick}
-          className="flex items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 text-xs font-mono uppercase tracking-wider text-[#201319]"
+          className="flex items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 text-xs font-mono uppercase tracking-wider text-[#201319] dark:text-[#201319]"
         >
           <Plus className="size-4" /> Add Update
         </button>
@@ -2286,7 +2332,7 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
           {updates.map((u) => (
             <div
               key={u.id}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border bg-[#0e0b0d] p-6"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border bg-card p-6 shadow-sm dark:bg-[#0e0b0d] dark:shadow-none"
             >
               <div>
                 <h4 className="font-serif text-lg font-medium leading-tight">{u.title}</h4>
@@ -2348,7 +2394,7 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
   }
 
   return (
-    <form onSubmit={handleSave} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+    <form onSubmit={handleSave} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
       <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Global SEO & settings</h3>
 
       <div>
@@ -2357,7 +2403,7 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
           type="text"
           value={wordmark}
           onChange={(e) => setWordmark(e.target.value)}
-          className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-serif"
+          className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
         />
       </div>
 
@@ -2367,7 +2413,7 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
           type="text"
           value={copyright}
           onChange={(e) => setCopyright(e.target.value)}
-          className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground font-mono"
+          className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
         />
       </div>
 
@@ -2377,7 +2423,7 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
           type="text"
           value={metaTitle}
           onChange={(e) => setMetaTitle(e.target.value)}
-          className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+          className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
         />
       </div>
 
@@ -2387,13 +2433,13 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
           value={metaDescription}
           onChange={(e) => setMetaDescription(e.target.value)}
           rows={3}
-          className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-4 text-sm focus:border-accent outline-none text-foreground leading-relaxed"
+          className="w-full rounded-2xl border border-border bg-background p-4 text-sm focus:border-accent outline-none text-foreground leading-relaxed dark:bg-[#0e0b0d]"
         />
       </div>
 
       <button
         type="submit"
-        className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5"
+        className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 dark:text-[#201319]"
       >
         Save Site Settings
       </button>
@@ -2562,7 +2608,7 @@ function SecurityTab() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-3xl border border-border bg-card/40 p-7">
+      <div className="rounded-3xl border border-border bg-card/40 p-7 dark:bg-card/40">
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Account Security</h3>
 
         <div className="mt-5 flex flex-wrap items-center gap-3 text-xs font-mono uppercase tracking-widest text-muted-foreground">
@@ -2570,7 +2616,7 @@ function SecurityTab() {
           <button
             type="button"
             onClick={handleSetupTotp}
-            className="rounded-full bg-accent-soft px-4 py-2 text-[#201319] transition-transform hover:-translate-y-0.5"
+            className="rounded-full bg-accent-soft px-4 py-2 text-[#201319] transition-transform hover:-translate-y-0.5 dark:text-[#201319]"
           >
             {verificationEnabled ? 'Reset Authenticator' : 'Set Up Verification'}
           </button>
@@ -2587,10 +2633,10 @@ function SecurityTab() {
       </div>
 
       {pendingSetupUrl && (
-        <form onSubmit={handleConfirmSetup} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+        <form onSubmit={handleConfirmSetup} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
           <h3 className="font-serif text-xl font-light">Confirm authenticator setup</h3>
           <div className="flex flex-col gap-4 md:flex-row md:items-center">
-            <div className="rounded-2xl border border-border bg-[#0e0b0d] p-3">
+            <div className="rounded-2xl border border-border bg-background p-3 dark:bg-[#0e0b0d]">
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(pendingSetupUrl)}`}
                 alt="Authenticator QR code"
@@ -2605,12 +2651,12 @@ function SecurityTab() {
                 maxLength={6}
                 value={setupCode}
                 onChange={(e) => setSetupCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
               />
               <button
                 type="submit"
                 disabled={loading}
-                className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 disabled:opacity-70"
+                className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 disabled:opacity-70 dark:text-[#201319]"
               >
                 Confirm Setup
               </button>
@@ -2620,11 +2666,11 @@ function SecurityTab() {
       )}
 
       {recoveryCodes.length > 0 && (
-        <div className="rounded-3xl border border-border bg-card/40 p-7">
+        <div className="rounded-3xl border border-border bg-card/40 p-7 dark:bg-card/40">
           <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Recovery Codes</h3>
           <div className="mt-4 grid gap-2 sm:grid-cols-2">
             {recoveryCodes.map((code) => (
-              <div key={code} className="rounded-2xl border border-border bg-[#0e0b0d] p-3 font-mono text-xs tracking-widest text-foreground">
+              <div key={code} className="rounded-2xl border border-border bg-background p-3 font-mono text-xs tracking-widest text-foreground dark:bg-[#0e0b0d]">
                 {code}
               </div>
             ))}
@@ -2632,7 +2678,7 @@ function SecurityTab() {
         </div>
       )}
 
-      <form onSubmit={handlePasswordChange} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5">
+      <form onSubmit={handlePasswordChange} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Change Password</h3>
 
         <div>
@@ -2642,7 +2688,7 @@ function SecurityTab() {
               type={showCurrent ? 'text' : 'password'}
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 pr-11 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 pr-11 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
             <button type="button" onClick={() => setShowCurrent((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
               {showCurrent ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -2657,7 +2703,7 @@ function SecurityTab() {
               type={showNew ? 'text' : 'password'}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 pr-11 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 pr-11 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
             <button type="button" onClick={() => setShowNew((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
               {showNew ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -2689,7 +2735,7 @@ function SecurityTab() {
               type={showConfirm ? 'text' : 'password'}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 pr-11 text-sm focus:border-accent outline-none text-foreground"
+              className="w-full rounded-2xl border border-border bg-background p-3 pr-11 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
             <button type="button" onClick={() => setShowConfirm((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
               {showConfirm ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -2705,7 +2751,7 @@ function SecurityTab() {
             maxLength={6}
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-            className="w-full rounded-2xl border border-border bg-[#0e0b0d] p-3 text-sm focus:border-accent outline-none text-foreground"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
           />
         </div>
 
@@ -2718,7 +2764,7 @@ function SecurityTab() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 disabled:opacity-70"
+          className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 disabled:opacity-70 dark:text-[#201319]"
         >
           Change Password
         </button>

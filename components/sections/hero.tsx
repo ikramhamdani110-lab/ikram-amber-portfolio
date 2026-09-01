@@ -6,6 +6,8 @@ import { ArrowRight, ArrowUpRight, Sparkle } from 'lucide-react'
 import { GithubIcon, Html5Icon, Css3Icon, JavascriptIcon } from '@/components/brand-icons'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
+import { useLanguage } from '@/contexts/language-context'
+import { translations } from '@/lib/translations'
 
 // 4 Corner Floating Tech Icons around the Hero Code Window
 const FLOATING_HERO_ICONS = [
@@ -73,6 +75,8 @@ interface Props {
 }
 
 export function Hero({ onNavigate, data }: Props) {
+  const { language } = useLanguage()
+  const t = translations[language]
   const codeLines = data?.codeLines || []
   const name = data?.name || 'IKRAM'
 
@@ -98,7 +102,7 @@ export function Hero({ onNavigate, data }: Props) {
         transition={{ duration: 0.6 }}
       >
         <div className="mb-5 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
-          {data?.hello || "Hello, I'm"} <Sparkle className="size-4 text-accent" />
+          {data?.hello || t.hero.hello} <Sparkle className="size-4 text-accent" />
         </div>
 
         {/* IKRAM with premium shine sweep */}
@@ -117,9 +121,9 @@ export function Hero({ onNavigate, data }: Props) {
           <button
             onClick={() => onNavigate('skills')}
             aria-label="Explore skills"
-            className="group flex items-center gap-2 rounded-full bg-accent-soft px-6 py-3 text-sm font-semibold text-foreground transition-transform hover:-translate-y-0.5"
+            className="group flex items-center gap-2 rounded-full bg-accent-soft px-6 py-3 text-sm font-semibold text-foreground dark:text-black transition-transform hover:-translate-y-0.5"
           >
-            Explore
+            {t.hero.explore}
             <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </button>
           <button
@@ -127,7 +131,7 @@ export function Hero({ onNavigate, data }: Props) {
             aria-label="About me"
             className="group flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors hover:border-accent"
           >
-            About Me
+            {t.hero.aboutMe}
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </button>
         </div>
@@ -208,7 +212,7 @@ export function Hero({ onNavigate, data }: Props) {
         </div>
 
         <p className="mt-4 flex items-center justify-center gap-1.5 text-center font-serif italic text-muted-foreground">
-          <Sparkle className="size-3.5 text-accent" /> {data?.codeWindowCaption || 'built with curiosity'}
+          <Sparkle className="size-3.5 text-accent" /> {data?.codeWindowCaption || t.hero.codeWindowCaption}
         </p>
       </motion.div>
     </div>
@@ -218,23 +222,19 @@ export function Hero({ onNavigate, data }: Props) {
 // ─────────────────────────────────────────────────────
 // Typewriter title — cycles through roles
 // ─────────────────────────────────────────────────────
-const HERO_TITLES = [
-  'Information Science Student',
-  'Web Developer',
-  'Curious Learner',
-  'Database Explorer',
-  'Designer',
-]
-
 function TypewriterTitle() {
   const reducedMotion = useReducedMotion()
+  const { language } = useLanguage()
+  const t = translations[language]
   const [titleIndex, setTitleIndex] = useState(0)
   const [text, setText] = useState('')
   const [phase, setPhase] = useState<'typing' | 'pausing' | 'deleting'>('typing')
 
+  const titles = t.hero.typewriterTitles
+
   useEffect(() => {
     if (reducedMotion) return
-    const full = HERO_TITLES[titleIndex % HERO_TITLES.length]
+    const full = titles[titleIndex % titles.length]
     let timer: ReturnType<typeof setTimeout> | undefined
 
     if (phase === 'typing') {
@@ -247,18 +247,18 @@ function TypewriterTitle() {
       if (text.length > 0) {
         timer = setTimeout(() => setText(text.slice(0, -1)), 28)
       } else {
-        setTitleIndex((i) => (i + 1) % HERO_TITLES.length)
+        setTitleIndex((i) => (i + 1) % titles.length)
         setPhase('typing')
       }
     }
 
     return () => clearTimeout(timer)
-  }, [text, phase, titleIndex, reducedMotion])
+  }, [text, phase, titleIndex, reducedMotion, titles])
 
   if (reducedMotion) {
     return (
       <p className="mt-6 min-h-[4.6rem] font-serif text-2xl italic sm:min-h-[3.2rem] sm:text-3xl">
-        {HERO_TITLES[0]}
+        {titles[0]}
       </p>
     )
   }
@@ -266,7 +266,7 @@ function TypewriterTitle() {
   return (
     <p
       className="mt-6 min-h-[4.6rem] font-serif text-2xl italic sm:min-h-[3.2rem] sm:text-3xl"
-      aria-label={HERO_TITLES[titleIndex % HERO_TITLES.length]}
+      aria-label={titles[titleIndex % titles.length]}
     >
       <span aria-hidden="true">{text}</span>
       <motion.span

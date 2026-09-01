@@ -3,18 +3,34 @@
 import type { DbSchema } from '@/lib/db'
 import { SkillBadge } from '@/components/skill-badge'
 import { SectionLabel } from '@/components/section-label'
+import { useLanguage } from '@/contexts/language-context'
+import { translations } from '@/lib/translations'
 
 interface Props {
   data: DbSchema['skills']
 }
 
 export function Skills({ data }: Props) {
+  const { language } = useLanguage()
+  const t = translations[language]
   const groups = data?.groups || []
-  const title = data?.title || 'My digital toolbox.'
-  const sectionLabel = data?.sectionLabel || 'Skills'
+  const title = data?.title || (language === 'ar' ? 'صندوق أدواتي الرقمي.' : 'My digital toolbox.')
+  const sectionLabel = data?.sectionLabel || t.skills.label
 
   // Render title with custom accent styling
   const renderTitle = () => {
+    if (language === 'ar') {
+      const lastWordIndex = title.lastIndexOf(' ')
+      if (lastWordIndex !== -1) {
+        return (
+          <>
+            {title.substring(0, lastWordIndex)}
+            <span className="text-accent italic"> {title.substring(lastWordIndex + 1)}</span>
+          </>
+        )
+      }
+      return title
+    }
     if (title.includes('toolbox.')) {
       const parts = title.split('toolbox.')
       return (

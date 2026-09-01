@@ -5,6 +5,8 @@ import { Layers, MapPin, Sparkles, User } from 'lucide-react'
 import type { Skill, DbSchema } from '@/lib/db'
 import { SkillBadge } from '@/components/skill-badge'
 import { SectionLabel } from '@/components/section-label'
+import { useLanguage } from '@/contexts/language-context'
+import { translations } from '@/lib/translations'
 
 interface Props {
   data: DbSchema['about']
@@ -12,12 +14,14 @@ interface Props {
 }
 
 export function About({ data, aboutSkills }: Props) {
+  const { language } = useLanguage()
+  const t = translations[language]
   const focusItems = data?.focus || ['Web', 'Software', 'Databases']
   const title = data?.title || 'Curious by nature. Always learning.'
-  const profileLabel = data?.profileLabel || 'Profile'
-  const currentlyLabel = data?.currentlyLabel || 'Currently'
-  const basedInLabel = data?.basedInLabel || 'Based in'
-  const focusLabel = data?.focusLabel || 'Focus'
+  const profileLabel = data?.profileLabel || t.about.profile
+  const currentlyLabel = data?.currentlyLabel || t.about.currently
+  const basedInLabel = data?.basedInLabel || t.about.basedIn
+  const focusLabel = data?.focusLabel || t.about.focus
 
   // Render title with custom accent styling
   const renderTitle = () => {
@@ -48,7 +52,7 @@ export function About({ data, aboutSkills }: Props) {
 
   return (
     <div>
-      <SectionLabel num="02" label="About" />
+      <SectionLabel num="02" label={t.about.label} />
 
       <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
         {/* Left */}
@@ -98,7 +102,7 @@ export function About({ data, aboutSkills }: Props) {
                     data.currently
                   )
                 ) : (
-                  'Learning → Building → Experimenting'
+                  language === 'ar' ? 'أتعلم → أبني → أجرب' : 'Learning → Building → Experimenting'
                 )}
               </p>
             </div>
@@ -109,7 +113,7 @@ export function About({ data, aboutSkills }: Props) {
               <div className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent">
                 <MapPin className="size-3.5" /> {basedInLabel}
               </div>
-              <p className="font-serif text-xl">{data?.location || 'Chlef, Algeria'}</p>
+              <p className="font-serif text-xl">{data?.location || (language === 'ar' ? 'الشلف، الجزائر' : 'Chlef, Algeria')}</p>
             </div>
 
             <div className="h-px bg-border" />
