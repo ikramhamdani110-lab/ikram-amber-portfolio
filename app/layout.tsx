@@ -28,8 +28,14 @@ export const metadata: Metadata = {
     'I love turning ideas into digital experiences while exploring software, web technologies, databases, and information systems.',
   generator: 'v0.app',
   icons: {
-    icon: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: {
+      url: '/uploads/%23fyp.jpg',
+      type: 'image/jpeg',
+    },
+    apple: {
+      url: '/uploads/%23fyp.jpg',
+      type: 'image/jpeg',
+    },
   },
 }
 
