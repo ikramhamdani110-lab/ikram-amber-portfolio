@@ -1,138 +1,59 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Layers, MapPin, Sparkles, User } from 'lucide-react'
-import type { Skill, DbSchema } from '@/lib/db'
-import { SkillBadge } from '@/components/skill-badge'
+import { BriefcaseBusiness, CalendarDays, GraduationCap, Languages, MapPin, UserRound } from 'lucide-react'
+import type { DbSchema } from '@/lib/db'
 import { SectionLabel } from '@/components/section-label'
 import { useLanguage } from '@/contexts/language-context'
 import { translations } from '@/lib/translations'
 
 interface Props {
   data: DbSchema['about']
-  aboutSkills: Skill[]
+  aboutSkills?: DbSchema['skills']['aboutSkills']
 }
 
-export function About({ data, aboutSkills }: Props) {
+const profileRows = [
+  ['Date of Birth', 'dateOfBirth', CalendarDays],
+  ['Age', 'age', UserRound],
+  ['Location', 'location', MapPin],
+  ['Nationality', 'nationality', UserRound],
+  ['Current Education', 'education', GraduationCap],
+  ['University', 'university', GraduationCap],
+  ['Expected Graduation', 'expectedGraduation', CalendarDays],
+  ['Languages', 'languages', Languages],
+] as const
+
+export function About({ data }: Props) {
   const { language } = useLanguage()
   const t = translations[language]
-  const focusItems = data?.focus || ['Web', 'Software', 'Databases']
-  const title = data?.title || 'Curious by nature. Always learning.'
-  const profileLabel = data?.profileLabel || t.about.profile
-  const currentlyLabel = data?.currentlyLabel || t.about.currently
-  const basedInLabel = data?.basedInLabel || t.about.basedIn
-  const focusLabel = data?.focusLabel || t.about.focus
-
-  // Render title with custom accent styling
-  const renderTitle = () => {
-    if (title.includes('Always learning.')) {
-      const parts = title.split('Always learning.')
-      return (
-        <>
-          {parts[0]}
-          <br />
-          <span className="text-accent italic">Always learning.</span>
-          {parts[1]}
-        </>
-      )
-    }
-    // General fallback: if title has a dot, make everything after the first dot italic/accent
-    const dotIndex = title.indexOf('.')
-    if (dotIndex !== -1 && dotIndex < title.length - 1) {
-      return (
-        <>
-          {title.substring(0, dotIndex + 1)}
-          <br />
-          <span className="text-accent italic">{title.substring(dotIndex + 1).trim()}</span>
-        </>
-      )
-    }
-    return title
-  }
+  const profile = data || ({} as DbSchema['about'])
 
   return (
-    <div>
-      <SectionLabel num="02" label={t.about.label} />
-
-      <div className="grid min-w-0 gap-10 lg:grid-cols-2 lg:gap-16">
-        {/* Left */}
-        <div className="min-w-0">
-          <h2 className="max-w-full break-words font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
-            {renderTitle()}
-          </h2>
-
-          <p className="mt-8 max-w-lg break-words leading-relaxed text-muted-foreground">
-            {data?.bio || ''}
-          </p>
-
-          <div className="mt-10 flex flex-wrap gap-6">
-            {(aboutSkills || []).map((skill, i) => (
-              <SkillBadge key={skill.name} skill={skill} index={i} />
+    <div className="min-w-0">
+      <SectionLabel num="02" label={profile.sectionLabel || t.about.label} />
+      <div className="grid min-w-0 items-start gap-12 lg:grid-cols-[minmax(280px,400px)_1fr] lg:gap-20">
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.55 }} className="mx-auto w-full max-w-[280px] sm:max-w-[320px] lg:mx-0 lg:max-w-[400px]">
+          <div className="rounded-[1.25rem] border border-[#e6a4c4]/60 bg-[#e6a4c4]/10 p-1.5 shadow-[0_0_32px_rgba(230,164,196,0.14)]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={profile.photo || '/uploads/photo_2026-09-01_06-34-10.jpg'} alt={profile.fullName || 'Ikram Hamdani'} className="aspect-[4/5] w-full rounded-[0.9rem] object-cover object-center" />
+          </div>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.12 }} className="min-w-0">
+          <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent">Professional profile</p>
+          <h2 className="mt-3 max-w-2xl break-words font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">{profile.fullName || 'Ikram Hamdani'}</h2>
+          <div className="mt-9 grid min-w-0 gap-x-8 gap-y-5 sm:grid-cols-2">
+            {profileRows.map(([label, key, Icon]) => (
+              <div key={key} className="min-w-0 border-b border-border/70 pb-4">
+                <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-accent"><Icon className="size-3.5" /> {label}</div>
+                <p className="mt-2 break-words text-sm leading-relaxed text-foreground/90">{profile[key] || '—'}</p>
+              </div>
             ))}
           </div>
-        </div>
-
-        {/* Right — profile card */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="min-w-0 rounded-3xl border border-border bg-card/50 p-7 sm:p-9"
-        >
-          <div className="mb-8 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            <User className="size-3.5" /> {profileLabel}
+          <div className="mt-8 grid gap-5 sm:grid-cols-2">
+            <div className="border-l-2 border-[#e6a4c4] pl-4"><p className="font-mono text-[10px] uppercase tracking-widest text-accent">Status</p><p className="mt-2 break-words text-sm leading-relaxed">{profile.status || '—'}</p></div>
+            <div className="border-l-2 border-[#e6a4c4] pl-4"><p className="font-mono text-[10px] uppercase tracking-widest text-accent">Interests</p><p className="mt-2 break-words text-sm leading-relaxed">{profile.interests || '—'}</p></div>
           </div>
-
-          <div className="space-y-7">
-            <div>
-              <div className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent">
-                <Sparkles className="size-3.5" /> {currentlyLabel}
-              </div>
-              <p className="break-words font-serif text-xl">
-                {data?.currently ? (
-                  data.currently.includes('→') ? (
-                    data.currently.split('→').map((part, index, arr) => (
-                      <span key={index}>
-                        {part.trim()}
-                        {index < arr.length - 1 && <span className="text-muted-foreground mx-1.5">→</span>}
-                      </span>
-                    ))
-                  ) : (
-                    data.currently
-                  )
-                ) : (
-                  'Learning → Building → Experimenting'
-                )}
-              </p>
-            </div>
-
-            <div className="h-px bg-border" />
-
-            <div>
-              <div className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent">
-                <MapPin className="size-3.5" /> {basedInLabel}
-              </div>
-              <p className="font-serif text-xl">{data?.location || 'Chlef, Algeria'}</p>
-            </div>
-
-            <div className="h-px bg-border" />
-
-            <div>
-              <div className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent">
-                <Layers className="size-3.5" /> {focusLabel}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {focusItems.map((f) => (
-                  <span
-                    key={f}
-                    className="rounded-full border border-border px-4 py-1.5 text-sm"
-                  >
-                    {f}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
+          <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#e6a4c4]/40 bg-[#e6a4c4]/10 p-4"><BriefcaseBusiness className="mt-0.5 size-4 shrink-0 text-accent" /><p className="break-words text-sm leading-relaxed">{profile.availability || '—'}</p></div>
         </motion.div>
       </div>
     </div>

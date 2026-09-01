@@ -69,6 +69,18 @@ export interface DbSchema {
     floaters?: { icon: string; className: string; delay: string }[]
   }
   about: {
+    photo: string
+    fullName: string
+    dateOfBirth: string
+    age: string
+    nationality: string
+    education: string
+    university: string
+    expectedGraduation: string
+    languages: string
+    status: string
+    interests: string
+    availability: string
     title: string
     bio: string
     currently: string
@@ -152,6 +164,25 @@ function safeErrorMessage(error: unknown) {
     : message
 }
 
+function normalizeDbData(data: Partial<DbSchema>): DbSchema {
+  return {
+    ...DEFAULT_DATA,
+    ...data,
+    hero: { ...DEFAULT_DATA.hero, ...data.hero },
+    about: { ...DEFAULT_DATA.about, ...data.about },
+    skills: { ...DEFAULT_DATA.skills, ...data.skills },
+    journey: { ...DEFAULT_DATA.journey, ...data.journey },
+    socials: { ...DEFAULT_DATA.socials, ...data.socials },
+    connect: { ...DEFAULT_DATA.connect, ...data.connect },
+    siteSettings: { ...DEFAULT_DATA.siteSettings, ...data.siteSettings },
+    certificationsSettings: { ...DEFAULT_DATA.certificationsSettings, ...data.certificationsSettings },
+    updatesSettings: { ...DEFAULT_DATA.updatesSettings, ...data.updatesSettings },
+    customSocialLinks: data.customSocialLinks || DEFAULT_DATA.customSocialLinks,
+    certifications: data.certifications || DEFAULT_DATA.certifications,
+    updates: data.updates || DEFAULT_DATA.updates,
+  }
+}
+
 const D = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons'
 
 const DEFAULT_DATA: DbSchema = {
@@ -173,6 +204,18 @@ const DEFAULT_DATA: DbSchema = {
     ]
   },
   about: {
+    photo: '/uploads/photo_2026-09-01_06-34-10.jpg',
+    fullName: 'Ikram Hamdani',
+    dateOfBirth: '08 December 2006',
+    age: '19',
+    nationality: 'Algerian',
+    education: 'Licence 3 — Information Science',
+    university: 'Hassiba Benbouali University of Chlef',
+    expectedGraduation: '2027',
+    languages: 'Arabic · French · English',
+    status: 'Information Science Student',
+    interests: 'Web Development · Software · Databases · Digital Design',
+    availability: 'Open to internships, freelance opportunities, and collaborations',
     title: "Curious by nature. Always learning.",
     bio: "I'm an Information Science student interested in software development, web technologies, databases, and information systems. I enjoy learning through experimentation and building practical things that turn ideas into working digital experiences.",
     currently: "Learning → Building → Experimenting",
@@ -343,17 +386,18 @@ export async function readDb(): Promise<DbSchema> {
           }
         }
 
-        await put(BLOB_DB_NAME, JSON.stringify(initialData, null, 2), {
+        const normalizedData = normalizeDbData(initialData)
+        await put(BLOB_DB_NAME, JSON.stringify(normalizedData, null, 2), {
           access: 'private',
           addRandomSuffix: false,
           allowOverwrite: true,
           token: process.env.BLOB_READ_WRITE_TOKEN,
           contentType: 'application/json',
         })
-        return initialData
+        return normalizedData
       }
 
-      return await new Response(blob.stream).json() as DbSchema
+      return normalizeDbData(await new Response(blob.stream).json() as Partial<DbSchema>)
     } catch (error) {
       console.error('Error reading Vercel Blob database:', safeErrorMessage(error))
       throw new Error(`Persistent database read failed: ${safeErrorMessage(error)}`)
@@ -370,7 +414,7 @@ export async function readDb(): Promise<DbSchema> {
       return DEFAULT_DATA
     }
     const content = fs.readFileSync(DB_PATH, 'utf-8')
-    return JSON.parse(content) as DbSchema
+    return normalizeDbData(JSON.parse(content) as Partial<DbSchema>)
   } catch (error) {
     console.error('Error reading DB:', error)
     return DEFAULT_DATA

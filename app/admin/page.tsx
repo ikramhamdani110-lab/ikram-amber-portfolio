@@ -456,6 +456,18 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   const [creative, setCreative] = useState(db.hero?.creativeTechnologist || '')
   
   // profile card fields
+  const [aboutPhoto, setAboutPhoto] = useState(db.about?.photo || '/uploads/photo_2026-09-01_06-34-10.jpg')
+  const [fullName, setFullName] = useState(db.about?.fullName || 'Ikram Hamdani')
+  const [dateOfBirth, setDateOfBirth] = useState(db.about?.dateOfBirth || '08 December 2006')
+  const [age, setAge] = useState(db.about?.age || '19')
+  const [nationality, setNationality] = useState(db.about?.nationality || 'Algerian')
+  const [education, setEducation] = useState(db.about?.education || 'Licence 3 — Information Science')
+  const [university, setUniversity] = useState(db.about?.university || 'Hassiba Benbouali University of Chlef')
+  const [expectedGraduation, setExpectedGraduation] = useState(db.about?.expectedGraduation || '2027')
+  const [languages, setLanguages] = useState(db.about?.languages || 'Arabic · French · English')
+  const [status, setStatus] = useState(db.about?.status || 'Information Science Student')
+  const [interests, setInterests] = useState(db.about?.interests || 'Web Development · Software · Databases · Digital Design')
+  const [availability, setAvailability] = useState(db.about?.availability || 'Open to internships, freelance opportunities, and collaborations')
   const [currently, setCurrently] = useState(db.about?.currently || '')
   const [aboutLocation, setAboutLocation] = useState(db.about?.location || '')
   const [focusInput, setFocusInput] = useState(db.about?.focus?.join(', ') || '')
@@ -477,6 +489,16 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
     setCodeLines(lines)
   }
 
+  const handleAboutPhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    try {
+      setAboutPhoto(await uploadImage(file))
+    } catch (error) {
+      console.error('About photo upload failed', error)
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     save('profile', {
@@ -492,6 +514,18 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
         codeWindowCaption: codeCaption,
       },
       about: {
+        photo: aboutPhoto,
+        fullName,
+        dateOfBirth,
+        age,
+        nationality,
+        education,
+        university,
+        expectedGraduation,
+        languages,
+        status,
+        interests,
+        availability,
         currently,
         location: aboutLocation,
         focus: focusInput.split(',').map(f => f.trim()).filter(Boolean),
@@ -626,6 +660,36 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3 flex items-center gap-2">
           <User className="size-4 text-accent" /> About Section Card Info
         </h3>
+
+        <div className="flex flex-col gap-4 rounded-2xl border border-border/60 bg-background p-4 sm:flex-row sm:items-center dark:bg-[#0e0b0d]">
+          <img src={aboutPhoto} alt="About portrait preview" className="size-24 rounded-xl border border-[#e6a4c4]/60 object-cover object-center" />
+          <div className="space-y-2">
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">About portrait</label>
+            <input type="file" accept="image/*" onChange={handleAboutPhotoChange} className="block max-w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border-0 file:bg-accent-soft file:px-3 file:py-2 file:text-[10px] file:font-mono file:uppercase file:text-[#201319]" />
+            <p className="break-all text-[10px] text-muted-foreground">{aboutPhoto}</p>
+          </div>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          {[
+            ['Full Name', fullName, setFullName],
+            ['Date of Birth', dateOfBirth, setDateOfBirth],
+            ['Age', age, setAge],
+            ['Nationality', nationality, setNationality],
+            ['Current Education', education, setEducation],
+            ['University', university, setUniversity],
+            ['Expected Graduation', expectedGraduation, setExpectedGraduation],
+            ['Languages', languages, setLanguages],
+            ['Status', status, setStatus],
+            ['Interests', interests, setInterests],
+            ['Availability', availability, setAvailability],
+          ].map(([label, value, setter]) => (
+            <div key={label as string} className={label === 'Availability' ? 'sm:col-span-2' : ''}>
+              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">{label as string}</label>
+              <input type="text" value={value as string} onChange={(e) => (setter as (value: string) => void)(e.target.value)} className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]" />
+            </div>
+          ))}
+        </div>
 
         <div>
           <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Currently doing</label>
