@@ -1,4 +1,4 @@
-export type Language = 'en'
+export type Language = 'en' | 'ar'
 export type TranslationKey = keyof typeof translations.en
 
 export const translations = {
@@ -34,6 +34,18 @@ export const translations = {
       currently: 'Currently',
       basedIn: 'Based in',
       focus: 'Focus',
+      professionalProfile: 'Professional profile',
+      dateOfBirth: 'Date of Birth',
+      age: 'Age',
+      location: 'Location',
+      nationality: 'Nationality',
+      education: 'Current Education',
+      university: 'University',
+      graduation: 'Expected Graduation',
+      languages: 'Languages',
+      status: 'Status',
+      interests: 'Interests',
+      availability: 'Availability',
     },
     // Skills
     skills: {
@@ -88,6 +100,16 @@ export const translations = {
       emailSubtitle: 'Say hello directly',
       emailCta: 'Send Email',
     },
+  },
+  ar: {
+    nav: { home: 'الرئيسية', about: 'نبذة', skills: 'المهارات', certifications: 'الشهادات', journey: 'المسيرة', updates: 'التحديثات', connect: 'تواصل' },
+    hero: { hello: 'مرحبًا، أنا', explore: 'استكشف', aboutMe: 'نبذة عني', codeWindowCaption: 'بُني بفضول', typewriterTitles: ['طالب علوم المعلومات', 'مطور ويب', 'متعلم فضولي', 'مستكشف قواعد البيانات', 'مصمم'] },
+    about: { label: 'نبذة', profile: 'الملف الشخصي', currently: 'حاليًا', basedIn: 'الموقع', focus: 'التركيز', professionalProfile: 'الملف الشخصي المهني', dateOfBirth: 'تاريخ الميلاد', age: 'العمر', location: 'الموقع', nationality: 'الجنسية', education: 'التعليم الحالي', university: 'الجامعة', graduation: 'التخرج المتوقع', languages: 'اللغات', status: 'الحالة', interests: 'الاهتمامات', availability: 'التوفر' },
+    skills: { label: 'المهارات' },
+    certifications: { label: 'الشهادات', title: 'خبرة موثقة.', description: 'الشهادات والاعتمادات التي حصلت عليها.', emptyMessage: 'لا توجد شهادات بعد.', issued: 'تاريخ الإصدار', id: 'المعرف', clickToView: 'اضغط لعرض الشهادة كاملة', certificate: 'شهادة', closeViewer: 'إغلاق عرض الشهادة', tapToClose: 'اضغط خارجًا للإغلاق', viewCredential: 'عرض اعتماد' },
+    journey: { label: 'المسيرة', title: 'أتعلم. أبني. أنمو.', ctaTitle: 'شاهد مسيرتي كاملة على LinkedIn', ctaButton: 'زيارة LinkedIn' },
+    updates: { label: 'التحديثات', title: 'ما الجديد.', description: 'أحدث الإنجازات والمشاريع والتحديثات.', categories: { certification: 'شهادة', achievement: 'إنجاز', experience: 'خبرة', skill: 'مهارة', update: 'تحديث' } },
+    connect: { label: 'تواصل', title: 'تجدني حول الويب.', description: 'تابعني أو تواصل معي في أي وقت.', github: 'GitHub', githubSubtitle: 'استكشف شيفرتي', githubCta: 'زيارة GitHub', linkedin: 'LinkedIn', linkedinSubtitle: 'شاهد مسيرتي وخبراتي', linkedinCta: 'زيارة LinkedIn', email: 'البريد الإلكتروني', emailSubtitle: 'أرسل رسالة مباشرة', emailCta: 'إرسال بريد' },
   },
 }
 

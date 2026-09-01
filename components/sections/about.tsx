@@ -13,14 +13,14 @@ interface Props {
 }
 
 const profileRows = [
-  ['Date of Birth', 'dateOfBirth', CalendarDays],
-  ['Age', 'age', UserRound],
-  ['Location', 'location', MapPin],
-  ['Nationality', 'nationality', UserRound],
-  ['Current Education', 'education', GraduationCap],
-  ['University', 'university', GraduationCap],
-  ['Expected Graduation', 'expectedGraduation', CalendarDays],
-  ['Languages', 'languages', Languages],
+  ['dateOfBirth', CalendarDays],
+  ['age', UserRound],
+  ['location', MapPin],
+  ['nationality', UserRound],
+  ['education', GraduationCap],
+  ['university', GraduationCap],
+  ['graduation', CalendarDays],
+  ['languages', Languages],
 ] as const
 
 export function About({ data }: Props) {
@@ -39,19 +39,19 @@ export function About({ data }: Props) {
           </div>
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.12 }} className="min-w-0">
-          <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent">Professional profile</p>
+          <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent">{t.about.professionalProfile}</p>
           <h2 className="mt-3 max-w-2xl break-words font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">{profile.fullName || 'Ikram Hamdani'}</h2>
           <div className="mt-9 grid min-w-0 gap-x-8 gap-y-5 sm:grid-cols-2">
-            {profileRows.map(([label, key, Icon]) => (
+            {profileRows.map(([key, Icon]) => (
               <div key={key} className="min-w-0 border-b border-border/70 pb-4">
-                <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-accent"><Icon className="size-3.5" /> {label}</div>
+                <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-accent"><Icon className="size-3.5" /> {t.about[key]}</div>
                 <p className="mt-2 break-words text-sm leading-relaxed text-foreground/90">{profile[key] || '—'}</p>
               </div>
             ))}
           </div>
           <div className="mt-8 grid gap-5 sm:grid-cols-2">
-            <div className="border-l-2 border-[#e6a4c4] pl-4"><p className="font-mono text-[10px] uppercase tracking-widest text-accent">Status</p><p className="mt-2 break-words text-sm leading-relaxed">{profile.status || '—'}</p></div>
-            <div className="border-l-2 border-[#e6a4c4] pl-4"><p className="font-mono text-[10px] uppercase tracking-widest text-accent">Interests</p><p className="mt-2 break-words text-sm leading-relaxed">{profile.interests || '—'}</p></div>
+            <div className="border-l-2 border-[#e6a4c4] pl-4"><p className="font-mono text-[10px] uppercase tracking-widest text-accent">{t.about.status}</p><p className="mt-2 break-words text-sm leading-relaxed">{profile.status || '—'}</p></div>
+            <div className="border-l-2 border-[#e6a4c4] pl-4"><p className="font-mono text-[10px] uppercase tracking-widest text-accent">{t.about.interests}</p><p className="mt-2 break-words text-sm leading-relaxed">{profile.interests || '—'}</p></div>
           </div>
           <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#e6a4c4]/40 bg-[#e6a4c4]/10 p-4"><BriefcaseBusiness className="mt-0.5 size-4 shrink-0 text-accent" /><p className="break-words text-sm leading-relaxed">{profile.availability || '—'}</p></div>
         </motion.div>

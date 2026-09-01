@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Menu, Moon, Sun, X } from 'lucide-react'
+import { Languages, Menu, Moon, Sun, X } from 'lucide-react'
 import { GithubIcon, LinkedinIcon } from '@/components/brand-icons'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
@@ -17,6 +17,8 @@ type Props = {
   socials: DbSchema['socials']
   navItems: { id: SectionId; num: string; label: string }[]
   wordmark?: string
+  language: 'en' | 'ar'
+  onToggleLanguage: () => void
 }
 
 export function SiteNav({
@@ -27,9 +29,11 @@ export function SiteNav({
   socials,
   navItems,
   wordmark = 'IKRAM',
+  language,
+  onToggleLanguage,
 }: Props) {
   const [open, setOpen] = useState(false)
-  const t = translations.en
+  const t = translations[language]
 
   const circleBtn =
     'flex size-10 items-center justify-center rounded-full border border-border bg-card/85 text-foreground shadow-[0_0_18px_rgba(240,170,205,0.2)] transition-colors hover:border-accent hover:text-accent dark:border-[#f5d2e3]/80 dark:bg-[#100d12]/80 dark:text-[#f8eff4] dark:hover:border-[#f8d9e6] dark:hover:text-[#ffd9eb]'
@@ -80,6 +84,13 @@ export function SiteNav({
               <LinkedinIcon className="size-4" />
             </a>
           )}
+          <button
+            onClick={onToggleLanguage}
+            aria-label={language === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'}
+            className={circleBtn}
+          >
+            <Languages className="size-4" />
+          </button>
           <button
             onClick={onToggleTheme}
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}

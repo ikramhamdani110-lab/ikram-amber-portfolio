@@ -22,7 +22,7 @@ export default function Page() {
   const [theme, setTheme] = useState<'dark' | 'light'>('light')
   const [data, setData] = useState<DbSchema | null>(null)
   const [introFinished, setIntroFinished] = useState(false)
-  const { language } = useLanguage()
+  const { language, setLanguage } = useLanguage()
   const t = translations[language]
 
   // Synchronize with stored theme on mount if present
@@ -54,6 +54,8 @@ export default function Page() {
       return nextTheme
     })
   }
+
+  const handleToggleLanguage = () => setLanguage(language === 'en' ? 'ar' : 'en')
 
   useEffect(() => {
     async function loadPortfolio() {
@@ -112,7 +114,7 @@ export default function Page() {
   const connectNum = navItems.find((n) => n.id === 'connect')?.num || '07'
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div dir={language === 'ar' ? 'rtl' : 'ltr'} className="min-h-screen bg-background text-foreground">
       <AnimatePresence>
         {!isReady && (
           <IntroLoader
@@ -132,6 +134,8 @@ export default function Page() {
             socials={data.socials}
             navItems={navItems}
             wordmark={data.siteSettings?.wordmark}
+            language={language}
+            onToggleLanguage={handleToggleLanguage}
           />
 
           <main className="mx-auto min-w-0 max-w-6xl overflow-x-clip px-4 pb-16 pt-28 sm:px-6 sm:pt-36">
@@ -148,7 +152,7 @@ export default function Page() {
                 {active === 'skills' && <Skills data={data.skills} />}
                 {active === 'certifications' && <Certifications certifications={data.certifications} certificationsSettings={data.certificationsSettings} num={certNum} />}
                 {active === 'journey' && <Journey data={data.journey} linkedinUrl={data.socials?.linkedin} num={journeyNum} />}
-                {active === 'updates' && <Updates updates={data.updates} num={updatesNum} />}
+                {active === 'updates' && <Updates updates={data.updates} updatesSettings={data.updatesSettings} num={updatesNum} />}
                 {active === 'connect' && <Connect socials={data.socials} connect={data.connect} num={connectNum} />}
               </motion.section>
             </AnimatePresence>

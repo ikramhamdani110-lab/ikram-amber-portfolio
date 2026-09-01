@@ -3,14 +3,20 @@
 import { motion } from 'framer-motion'
 import { Bell, Sparkles, Award, GraduationCap, Briefcase, RefreshCw } from 'lucide-react'
 import type { PortfolioUpdate } from '@/lib/db'
+import type { DbSchema } from '@/lib/db'
 import { SectionLabel } from '@/components/section-label'
+import { useLanguage } from '@/contexts/language-context'
+import { translations } from '@/lib/translations'
 
 interface Props {
   updates: PortfolioUpdate[]
+  updatesSettings?: DbSchema['updatesSettings']
   num?: string
 }
 
-export function Updates({ updates, num = '05' }: Props) {
+export function Updates({ updates, updatesSettings, num = '05' }: Props) {
+  const { language } = useLanguage()
+  const t = translations[language]
   const visibleUpdates = updates.filter((u) => u.visible !== false)
 
   if (visibleUpdates.length === 0) {
@@ -34,14 +40,14 @@ export function Updates({ updates, num = '05' }: Props) {
 
   return (
     <div className="min-w-0">
-      <SectionLabel num={num} label="Updates" />
+      <SectionLabel num={num} label={updatesSettings?.sectionLabel || t.updates.label} />
 
       <div className="grid min-w-0 gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
         <h2 className="max-w-full break-words font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
-          What&apos;s <span className="text-accent italic">new.</span>
+          {updatesSettings?.title || t.updates.title}
         </h2>
         <p className="max-w-xs leading-relaxed text-muted-foreground">
-          Recent highlights, completed projects, and notifications of my progress.
+          {t.updates.description}
         </p>
       </div>
 
