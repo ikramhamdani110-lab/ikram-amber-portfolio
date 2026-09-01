@@ -145,6 +145,13 @@ function usesBlobStorage() {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN)
 }
 
+function safeErrorMessage(error: unknown) {
+  const message = error instanceof Error ? error.message : 'Unknown storage error'
+  return process.env.BLOB_READ_WRITE_TOKEN
+    ? message.replaceAll(process.env.BLOB_READ_WRITE_TOKEN, '[redacted]')
+    : message
+}
+
 const D = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons'
 
 const DEFAULT_DATA: DbSchema = {
@@ -339,6 +346,7 @@ export async function readDb(): Promise<DbSchema> {
         await put(BLOB_DB_NAME, JSON.stringify(initialData, null, 2), {
           access: 'private',
           addRandomSuffix: false,
+          allowOverwrite: true,
           token: process.env.BLOB_READ_WRITE_TOKEN,
           contentType: 'application/json',
         })
@@ -347,8 +355,8 @@ export async function readDb(): Promise<DbSchema> {
 
       return await new Response(blob.stream).json() as DbSchema
     } catch (error) {
-      console.error('Error reading Vercel Blob database:', error)
-      throw new Error('Persistent database is unavailable. Check BLOB_READ_WRITE_TOKEN and Blob configuration.')
+      console.error('Error reading Vercel Blob database:', safeErrorMessage(error))
+      throw new Error(`Persistent database read failed: ${safeErrorMessage(error)}`)
     }
   }
 
@@ -375,13 +383,15 @@ export async function writeDb(data: DbSchema): Promise<boolean> {
       await put(BLOB_DB_NAME, JSON.stringify(data, null, 2), {
         access: 'private',
         addRandomSuffix: false,
+        allowOverwrite: true,
         token: process.env.BLOB_READ_WRITE_TOKEN,
         contentType: 'application/json',
       })
       return true
     } catch (error) {
-      console.error('Error writing Vercel Blob database:', error)
-      return false
+      const message = safeErrorMessage(error)
+      console.error('Error writing Vercel Blob database:', message)
+      throw new Error(`Persistent database write failed: ${message}`)
     }
   }
 

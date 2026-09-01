@@ -10,6 +10,13 @@ export async function POST(req: Request) {
 
   try {
     const { hero, about, socials, connect, siteSettings } = await req.json()
+    console.info('[admin/profile] save request received', {
+      hasHero: Boolean(hero),
+      hasAbout: Boolean(about),
+      hasSocials: Boolean(socials),
+      hasConnect: Boolean(connect),
+      hasSiteSettings: Boolean(siteSettings),
+    })
     const db = await readDb()
 
     if (hero) db.hero = { ...db.hero, ...hero }
@@ -18,10 +25,7 @@ export async function POST(req: Request) {
     if (connect) db.connect = { ...db.connect, ...connect }
     if (siteSettings) db.siteSettings = { ...db.siteSettings, ...siteSettings }
 
-    const success = await writeDb(db)
-    if (!success) {
-      return NextResponse.json({ error: 'Failed to write to database' }, { status: 500 })
-    }
+    await writeDb(db)
 
     return NextResponse.json({ success: true, data: db })
   } catch (error: any) {

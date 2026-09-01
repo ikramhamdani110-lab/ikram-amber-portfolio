@@ -18,10 +18,7 @@ export async function POST(req: Request) {
     if (ctaButtonText !== undefined) db.journey.ctaButtonText = ctaButtonText
     if (sectionLabel !== undefined) db.journey.sectionLabel = sectionLabel
 
-    const success = await writeDb(db)
-    if (!success) {
-      return NextResponse.json({ error: 'Failed to write to database' }, { status: 500 })
-    }
+    await writeDb(db)
 
     return NextResponse.json({ success: true, data: db.journey })
   } catch (error: any) {

@@ -17,10 +17,7 @@ export async function POST(req: Request) {
     if (email !== undefined) db.socials.email = email
     if (fiverr !== undefined) db.socials.fiverr = fiverr
 
-    const success = await writeDb(db)
-    if (!success) {
-      return NextResponse.json({ error: 'Failed to write to database' }, { status: 500 })
-    }
+    await writeDb(db)
 
     return NextResponse.json({ success: true, data: db.socials })
   } catch (error: any) {

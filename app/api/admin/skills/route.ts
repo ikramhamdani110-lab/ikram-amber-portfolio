@@ -19,10 +19,7 @@ export async function POST(req: Request) {
     if (groups !== undefined) db.skills.groups = groups
     if (sectionLabel !== undefined) db.skills.sectionLabel = sectionLabel
 
-    const success = await writeDb(db)
-    if (!success) {
-      return NextResponse.json({ error: 'Failed to write to database' }, { status: 500 })
-    }
+    await writeDb(db)
 
     return NextResponse.json({ success: true, data: db.skills })
   } catch (error: any) {
