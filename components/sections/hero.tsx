@@ -2,16 +2,17 @@
 
 import { motion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, Sparkle } from 'lucide-react'
-import { GithubIcon, Html5Icon, Css3Icon, JavascriptIcon } from '@/components/brand-icons'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
+
+const DEVICON_ASSET_BASE = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons'
 
 // 4 Corner Floating Tech Icons around the Hero Code Window
 const FLOATING_HERO_ICONS = [
   {
     id: 'html5',
     name: 'HTML5',
-    icon: Html5Icon,
+    icon: `${DEVICON_ASSET_BASE}/html5/html5-original.svg`,
     side: 'left',
     size: 'large',
     className: '-top-5 -left-3 sm:-top-6 sm:-left-5',
@@ -25,7 +26,7 @@ const FLOATING_HERO_ICONS = [
   {
     id: 'css3',
     name: 'CSS3',
-    icon: Css3Icon,
+    icon: `${DEVICON_ASSET_BASE}/css3/css3-original.svg`,
     side: 'left',
     size: 'small',
     className: '-bottom-4 -left-2 sm:-bottom-5 sm:-left-4',
@@ -39,7 +40,7 @@ const FLOATING_HERO_ICONS = [
   {
     id: 'github',
     name: 'GitHub',
-    icon: GithubIcon,
+    icon: `${DEVICON_ASSET_BASE}/github/github-original.svg`,
     side: 'right',
     size: 'small',
     className: '-top-4 -right-2 sm:-top-5 sm:-right-4',
@@ -53,7 +54,7 @@ const FLOATING_HERO_ICONS = [
   {
     id: 'javascript',
     name: 'JavaScript',
-    icon: JavascriptIcon,
+    icon: `${DEVICON_ASSET_BASE}/javascript/javascript-original.svg`,
     side: 'right',
     size: 'large',
     className: '-bottom-5 -right-3 sm:-bottom-6 sm:-right-5',
@@ -170,7 +171,6 @@ export function Hero({ onNavigate, data }: Props) {
 
           {/* 4 Floating Programming Icons (White Containers + Authentic Logos + Baby-Pink Glow) */}
           {FLOATING_HERO_ICONS.map((item) => {
-            const Icon = item.icon
             return (
               <motion.div
                 key={item.id}
@@ -196,7 +196,8 @@ export function Hero({ onNavigate, data }: Props) {
                 <div className="pointer-events-none absolute -inset-1 -z-10 rounded-2xl bg-[#f3c9dc]/45 blur-md transition-all group-hover:bg-[#f3c9dc]/70 group-hover:blur-lg" />
 
                 {/* Recognizable Logo / Icon */}
-                <Icon className={`${item.iconClass} ${item.id === 'github' ? 'text-[#24292e]' : ''} drop-shadow-[0_2px_8px_rgba(243,201,220,0.4)] transition-transform group-hover:scale-105`} />
+                {/* Official Devicon original logo asset */}
+                <img src={item.icon} alt="" className={`${item.iconClass} ${item.id === 'github' ? 'text-[#24292e]' : ''} drop-shadow-[0_2px_8px_rgba(243,201,220,0.4)] transition-transform group-hover:scale-105`} />
 
                 {/* Decorative subtle accent dot */}
                 <span className="absolute -right-1 -top-1 size-2 rounded-full bg-accent-soft ring-2 ring-card" />
