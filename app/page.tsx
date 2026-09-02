@@ -90,15 +90,15 @@ export default function Page() {
   const rawNavItems: { id: SectionId; label: string }[] = [
     { id: 'home', label: 'Home' },
     { id: 'about', label: data?.about?.sectionLabel || 'About' },
-    { id: 'skills', label: data?.skills?.sectionLabel || 'Skills' },
   ]
+
+  rawNavItems.push({ id: 'journey', label: data?.journey?.sectionLabel || 'Journey' })
+  rawNavItems.push({ id: 'skills', label: data?.skills?.sectionLabel || 'Skills' })
 
   const visibleCerts = data?.certifications?.filter((c) => c.visible !== false) || []
   if (visibleCerts.length > 0) {
     rawNavItems.push({ id: 'certifications', label: data?.certificationsSettings?.sectionLabel || 'Certifications' })
   }
-
-  rawNavItems.push({ id: 'journey', label: data?.journey?.sectionLabel || 'Journey' })
 
   const visibleUpdates = data?.updates?.filter((u) => u.visible !== false) || []
   if (visibleUpdates.length > 0) {

@@ -2594,13 +2594,6 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
 }
 
 function SecurityTab() {
-  const [currentPassword, setCurrentPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [verificationCode, setVerificationCode] = useState('')
-  const [showCurrent, setShowCurrent] = useState(false)
-  const [showNew, setShowNew] = useState(false)
-  const [showConfirm, setShowConfirm] = useState(false)
   const [status, setStatus] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null)
   const [verificationEnabled, setVerificationEnabled] = useState(false)
   const [pendingSetupUrl, setPendingSetupUrl] = useState('')
@@ -2621,65 +2614,6 @@ function SecurityTab() {
     }
     loadSecurityStatus()
   }, [])
-
-  const passwordStrength = (() => {
-    if (!newPassword) return { label: 'Empty', score: 0, valid: false }
-    const checks = [/.{12,}/, /[a-z]/, /[A-Z]/, /\d/, /[^A-Za-z0-9]/]
-    const score = checks.filter((rule) => rule.test(newPassword)).length
-    if (score <= 2) return { label: 'Weak', score, valid: false }
-    if (score === 3 || score === 4) return { label: 'Good', score, valid: true }
-    return { label: 'Strong', score, valid: true }
-  })()
-
-  const handlePasswordChange = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setStatus(null)
-
-    if (!currentPassword || !newPassword || !confirmPassword || !verificationCode) {
-      setStatus({ type: 'error', message: 'Please complete all fields.' })
-      return
-    }
-
-    if (newPassword !== confirmPassword) {
-      setStatus({ type: 'error', message: 'New passwords do not match.' })
-      return
-    }
-
-    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{12,}$/.test(newPassword)) {
-      setStatus({ type: 'error', message: 'Password does not meet the required strength rules.' })
-      return
-    }
-
-    if (!/^\d{6}$/.test(verificationCode)) {
-      setStatus({ type: 'error', message: 'Verification code must be 6 digits.' })
-      return
-    }
-
-    setLoading(true)
-    try {
-      const res = await fetch('/api/auth/change-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentPassword, newPassword, verificationCode }),
-      })
-      const data = await res.json()
-
-      if (!res.ok) {
-        setStatus({ type: 'error', message: data.error || 'Password change failed.' })
-        return
-      }
-
-      setStatus({ type: 'success', message: 'Password changed successfully.' })
-      setCurrentPassword('')
-      setNewPassword('')
-      setConfirmPassword('')
-      setVerificationCode('')
-    } catch {
-      setStatus({ type: 'error', message: 'Unable to update password.' })
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleSetupTotp = async () => {
     setStatus(null)
@@ -2824,97 +2758,11 @@ function SecurityTab() {
         </div>
       )}
 
-      <form onSubmit={handlePasswordChange} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
-        <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Change Password</h3>
-
-        <div>
-          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Current password</label>
-          <div className="relative">
-            <input
-              type={showCurrent ? 'text' : 'password'}
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-background p-3 pr-11 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
-            />
-            <button type="button" onClick={() => setShowCurrent((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-              {showCurrent ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-            </button>
-          </div>
+      {status && (
+        <div className={`rounded-2xl border p-3 text-sm ${status.type === 'success' ? 'border-emerald-500/40 bg-emerald-950/20 text-emerald-300' : status.type === 'error' ? 'border-red-500/40 bg-red-950/20 text-red-300' : 'border-accent/40 bg-accent/10 text-accent'}`}>
+          {status.message}
         </div>
-
-        <div>
-          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">New password</label>
-          <div className="relative">
-            <input
-              type={showNew ? 'text' : 'password'}
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-background p-3 pr-11 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
-            />
-            <button type="button" onClick={() => setShowNew((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-              {showNew ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-            </button>
-          </div>
-          <div className="mt-3 flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-            <span>Password strength: {passwordStrength.label}</span>
-            <span>{passwordStrength.score}/5</span>
-          </div>
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-border">
-            <div
-              className={`h-full rounded-full ${passwordStrength.valid ? 'bg-emerald-400' : passwordStrength.score > 0 ? 'bg-amber-400' : 'bg-border'}`}
-              style={{ width: `${Math.max(10, (passwordStrength.score / 5) * 100)}%` }}
-            />
-          </div>
-          <ul className="mt-3 list-disc space-y-1 pl-5 text-xs text-muted-foreground">
-            <li>At least 12 characters</li>
-            <li>One uppercase letter</li>
-            <li>One lowercase letter</li>
-            <li>One number</li>
-            <li>One special character</li>
-          </ul>
-        </div>
-
-        <div>
-          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Confirm new password</label>
-          <div className="relative">
-            <input
-              type={showConfirm ? 'text' : 'password'}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-background p-3 pr-11 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
-            />
-            <button type="button" onClick={() => setShowConfirm((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-              {showConfirm ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">6-digit verification code</label>
-          <input
-            type="text"
-            inputMode="numeric"
-            maxLength={6}
-            value={verificationCode}
-            onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
-          />
-        </div>
-
-        {status && (
-          <div className={`rounded-2xl border p-3 text-sm ${status.type === 'success' ? 'border-emerald-500/40 bg-emerald-950/20 text-emerald-300' : status.type === 'error' ? 'border-red-500/40 bg-red-950/20 text-red-300' : 'border-accent/40 bg-accent/10 text-accent'}`}>
-            {status.message}
-          </div>
-        )}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 disabled:opacity-70 dark:text-[#201319]"
-        >
-          Change Password
-        </button>
-      </form>
+      )}
     </div>
   )
 }
