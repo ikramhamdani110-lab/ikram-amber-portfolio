@@ -20,6 +20,7 @@ export async function POST() {
     const otpauthUrl = getTotpAuthUrl(secret, 'Ikram Admin', 'Ikram Portfolio Admin')
     return NextResponse.json({ otpauthUrl })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('TOTP setup failed:', error)
+    return NextResponse.json({ error: 'Two-factor setup could not be completed.' }, { status: 500 })
   }
 }

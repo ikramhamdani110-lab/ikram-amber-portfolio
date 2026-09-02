@@ -24,6 +24,7 @@ export async function POST() {
 
     return NextResponse.json({ success: true, recoveryCodes })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Recovery code request failed:', error)
+    return NextResponse.json({ error: 'Recovery codes could not be generated.' }, { status: 500 })
   }
 }

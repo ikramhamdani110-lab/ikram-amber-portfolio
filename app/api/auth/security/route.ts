@@ -17,6 +17,7 @@ export async function GET() {
       hasRecoveryCodes: Boolean(state.recoveryCodesEncrypted),
     })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Security status request failed:', error)
+    return NextResponse.json({ error: 'Security status is unavailable.' }, { status: 500 })
   }
 }

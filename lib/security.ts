@@ -20,7 +20,7 @@ const TOTP_DIGITS = 6
 const TOTP_PERIOD_SECONDS = 30
 const MAX_VERIFICATION_ATTEMPTS = 5
 const LOCKOUT_MS = 10 * 60 * 1000
-const DEFAULT_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123'
+const DEFAULT_PASSWORD = process.env.ADMIN_PASSWORD
 const ENCRYPTION_KEY = process.env.SECURITY_KEY || process.env.SESSION_SECRET || 'development-security-key-change-me'
 
 function toBase32(value: Buffer): string {
@@ -123,8 +123,8 @@ export function generateTotpCode(secret: string, timestamp = Date.now()): string
   let value = BigInt(counter)
 
   for (let i = 7; i >= 0; i--) {
-    buffer[i] = Number(value & 0xffn)
-    value >>= 8n
+    buffer[i] = Number(value & BigInt(0xff))
+    value >>= BigInt(8)
   }
 
   const hmac = crypto.createHmac('sha1', key)
@@ -228,7 +228,8 @@ export function writeAuthState(state: AuthState): void {
 }
 
 export function createDefaultAuthState(): AuthState {
-  const { hash, salt } = hashPassword(DEFAULT_PASSWORD)
+  const password = DEFAULT_PASSWORD || crypto.randomBytes(32).toString('hex')
+  const { hash, salt } = hashPassword(password)
   return {
     passwordHash: hash,
     passwordSalt: salt,

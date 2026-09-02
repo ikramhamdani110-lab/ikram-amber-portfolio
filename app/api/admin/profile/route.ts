@@ -9,14 +9,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { hero, about, socials, connect, siteSettings } = await req.json()
-    console.info('[admin/profile] save request received', {
-      hasHero: Boolean(hero),
-      hasAbout: Boolean(about),
-      hasSocials: Boolean(socials),
-      hasConnect: Boolean(connect),
-      hasSiteSettings: Boolean(siteSettings),
-    })
+    const { hero, about, socials, connect, siteSettings, certificationsSettings, updatesSettings } = await req.json()
     const db = await readDb()
 
     if (hero) db.hero = { ...db.hero, ...hero }
@@ -24,12 +17,15 @@ export async function POST(req: Request) {
     if (socials) db.socials = { ...db.socials, ...socials }
     if (connect) db.connect = { ...db.connect, ...connect }
     if (siteSettings) db.siteSettings = { ...db.siteSettings, ...siteSettings }
+    if (certificationsSettings) db.certificationsSettings = { ...db.certificationsSettings, ...certificationsSettings }
+    if (updatesSettings) db.updatesSettings = { ...db.updatesSettings, ...updatesSettings }
 
-    await writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist profile changes. Check persistent storage configuration.' }, { status: 500 })
 
     return NextResponse.json({ success: true, data: db })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Profile save failed:', error)
+    return NextResponse.json({ error: 'Profile changes could not be saved.' }, { status: 500 })
   }
 }
 

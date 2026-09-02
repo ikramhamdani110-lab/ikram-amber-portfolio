@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     return new NextResponse(result.stream, {
       headers: {
         'Cache-Control': 'public, max-age=31536000, immutable',
-        'Content-Type': result.blob.contentType,
+        'Content-Type': result.blob.contentType || 'application/octet-stream',
       },
     })
   } catch (error) {

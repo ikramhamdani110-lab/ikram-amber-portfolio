@@ -17,10 +17,10 @@ interface Props {
 }
 
 export function SiteFooter({ socials, siteSettings, hero, customSocialLinks, extraSocials = [] }: Props) {
-  const wordmark = siteSettings?.wordmark || 'IKRAM'
-  const copyright = siteSettings?.copyright || '© 2026 Ikram Hamdani'
-  const location = hero?.location || 'Chlef · Algeria'
-  const title = hero?.title || 'Information Science Student · Web Developer'
+  const wordmark = siteSettings?.wordmark ?? ''
+  const copyright = siteSettings?.copyright ?? ''
+  const location = hero?.location ?? ''
+  const title = hero?.title ?? ''
 
   const githubUrl = socials?.github || '#'
   const linkedinUrl = socials?.linkedin || '#'

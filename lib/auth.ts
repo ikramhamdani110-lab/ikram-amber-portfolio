@@ -2,7 +2,15 @@ import crypto from 'crypto'
 import { cookies } from 'next/headers'
 
 const SESSION_COOKIE_NAME = 'admin_session'
-const SECRET_KEY = process.env.SESSION_SECRET || 'fallback-secret-key-please-change-in-production-123456789'
+const SECRET_KEY = process.env.SESSION_SECRET || process.env.SECURITY_KEY
+
+function getSecretKey() {
+  if (SECRET_KEY) return SECRET_KEY
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('SESSION_SECRET or SECURITY_KEY must be configured in production')
+  }
+  return 'local-development-session-secret'
+}
 
 export interface UserSession {
   username: string
@@ -15,7 +23,7 @@ export function signToken(payload: UserSession): string {
   const body = Buffer.from(JSON.stringify(payload)).toString('base64url')
   
   const signature = crypto
-    .createHmac('sha256', SECRET_KEY)
+    .createHmac('sha256', getSecretKey())
     .update(`${header}.${body}`)
     .digest('base64url')
     
@@ -30,7 +38,7 @@ export function verifyToken(token: string): UserSession | null {
     
     const [header, body, signature] = parts
     const expectedSignature = crypto
-      .createHmac('sha256', SECRET_KEY)
+      .createHmac('sha256', getSecretKey())
       .update(`${header}.${body}`)
       .digest('base64url')
       

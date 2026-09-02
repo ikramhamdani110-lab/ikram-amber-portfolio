@@ -8,7 +8,8 @@ export async function GET() {
     const session = await getSession()
     return NextResponse.json({ authenticated: !!session })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Auth status check failed:', error)
+    return NextResponse.json({ error: 'Authentication status is unavailable.' }, { status: 500 })
   }
 }
 

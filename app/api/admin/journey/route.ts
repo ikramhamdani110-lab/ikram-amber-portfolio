@@ -18,11 +18,12 @@ export async function POST(req: Request) {
     if (ctaButtonText !== undefined) db.journey.ctaButtonText = ctaButtonText
     if (sectionLabel !== undefined) db.journey.sectionLabel = sectionLabel
 
-    await writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist journey changes. Check persistent storage configuration.' }, { status: 500 })
 
     return NextResponse.json({ success: true, data: db.journey })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Journey save failed:', error)
+    return NextResponse.json({ error: 'Journey changes could not be saved.' }, { status: 500 })
   }
 }
 

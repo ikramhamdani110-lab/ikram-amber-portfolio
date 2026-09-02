@@ -60,6 +60,8 @@ export interface DbSchema {
     hello: string
     name: string
     title: string
+    exploreLabel: string
+    aboutLabel: string
     bio: string
     location: string
     creativeTechnologist: string
@@ -90,6 +92,8 @@ export interface DbSchema {
     currentlyLabel: string
     basedInLabel: string
     focusLabel: string
+    statusLabel: string
+    interestsLabel: string
     sectionLabel: string
   }
   skills: {
@@ -139,12 +143,20 @@ export interface DbSchema {
   certificationsSettings: {
     sectionLabel: string
     title: string
+    description: string
     emptyMessage: string
+    issuedLabel: string
+    credentialIdLabel: string
+    clickToViewLabel: string
+    certificateLabel: string
+    closeViewerLabel: string
+    tapToCloseLabel: string
   }
   updates: PortfolioUpdate[]
   updatesSettings: {
     sectionLabel: string
     title: string
+    description: string
     emptyMessage: string
   }
 }
@@ -190,6 +202,8 @@ const DEFAULT_DATA: DbSchema = {
     hello: "Hello, I'm",
     name: "IKRAM",
     title: "Information Science Student & Web Developer",
+    exploreLabel: "Explore",
+    aboutLabel: "About Me",
     bio: "I love turning ideas into digital experiences while exploring software, web technologies, databases, and information systems.",
     location: "Chlef · Algeria",
     creativeTechnologist: "Creative Technologist",
@@ -225,6 +239,8 @@ const DEFAULT_DATA: DbSchema = {
     currentlyLabel: "Currently",
     basedInLabel: "Based in",
     focusLabel: "Focus",
+    statusLabel: "Status",
+    interestsLabel: "Interests",
     sectionLabel: "About"
   },
   skills: {
@@ -358,12 +374,20 @@ const DEFAULT_DATA: DbSchema = {
   certificationsSettings: {
     sectionLabel: "Certifications",
     title: "Certifications & Achievements",
+    description: "Certificates and credentials I have earned through coursework and examinations.",
     emptyMessage: "No certifications added yet."
+    ,issuedLabel: "Issued",
+    credentialIdLabel: "ID",
+    clickToViewLabel: "Click to view full certificate",
+    certificateLabel: "Certificate",
+    closeViewerLabel: "Close certificate viewer",
+    tapToCloseLabel: "Tap outside to close"
   },
   updates: [],
   updatesSettings: {
     sectionLabel: "Updates",
     title: "What's New",
+    description: "Recent highlights, completed projects, and notifications of my progress.",
     emptyMessage: "No updates posted yet."
   }
 }
@@ -446,7 +470,15 @@ export async function writeDb(data: DbSchema): Promise<boolean> {
     }
     const tempPath = `${DB_PATH}.${process.pid}.${Date.now()}.tmp`
     fs.writeFileSync(tempPath, JSON.stringify(data, null, 2), 'utf-8')
-    fs.renameSync(tempPath, DB_PATH)
+    try {
+      fs.renameSync(tempPath, DB_PATH)
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'EPERM' && (error as NodeJS.ErrnoException).code !== 'EEXIST') {
+        throw error
+      }
+      fs.copyFileSync(tempPath, DB_PATH)
+      fs.unlinkSync(tempPath)
+    }
     return true
   } catch (error) {
     console.error('Error writing DB:', error)

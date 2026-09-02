@@ -19,11 +19,12 @@ export async function POST(req: Request) {
     if (groups !== undefined) db.skills.groups = groups
     if (sectionLabel !== undefined) db.skills.sectionLabel = sectionLabel
 
-    await writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist skills changes. Check persistent storage configuration.' }, { status: 500 })
 
     return NextResponse.json({ success: true, data: db.skills })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Skills save failed:', error)
+    return NextResponse.json({ error: 'Skills changes could not be saved.' }, { status: 500 })
   }
 }
 

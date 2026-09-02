@@ -35,7 +35,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, link: newLink, links: db.customSocialLinks })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Custom social create failed:', error)
+    return NextResponse.json({ error: 'Social link could not be saved.' }, { status: 500 })
   }
 }
 
@@ -77,7 +78,8 @@ export async function PUT(req: Request) {
     if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist social link changes. Check persistent storage configuration.' }, { status: 500 })
     return NextResponse.json({ success: true, link: db.customSocialLinks[index], links: db.customSocialLinks })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Custom social update failed:', error)
+    return NextResponse.json({ error: 'Social link could not be saved.' }, { status: 500 })
   }
 }
 
@@ -104,6 +106,7 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json({ success: true, links: db.customSocialLinks })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Custom social delete failed:', error)
+    return NextResponse.json({ error: 'Social link could not be deleted.' }, { status: 500 })
   }
 }

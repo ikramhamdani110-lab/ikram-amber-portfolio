@@ -11,7 +11,8 @@ export async function GET() {
       headers: { 'Cache-Control': 'no-store, max-age=0' },
     })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Portfolio read failed:', error)
+    return NextResponse.json({ error: 'Portfolio content is temporarily unavailable.' }, { status: 500 })
   }
 }
 

@@ -4,6 +4,9 @@ import fs from 'fs/promises'
 import path from 'path'
 import { put } from '@vercel/blob'
 
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024
+const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+
 export async function POST(req: Request) {
   const session = await getSession()
   if (!session) {
@@ -17,15 +20,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 })
     }
 
+    if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+      return NextResponse.json({ error: 'Only JPEG, PNG, GIF, and WebP images are allowed' }, { status: 415 })
+    }
+
+    if (file.size > MAX_UPLOAD_BYTES) {
+      return NextResponse.json({ error: 'Image must be 5 MB or smaller' }, { status: 413 })
+    }
+
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
     const uploadDir = path.join(process.cwd(), 'public', 'uploads')
-    
-    // Ensure directory exists
-    await fs.mkdir(uploadDir, { recursive: true })
-
-    const ext = path.extname(file.name)
+    const ext = file.type === 'image/jpeg' ? '.jpg' : `.${file.type.split('/')[1]}`
     const sanitizedName = file.name
       .replace(ext, '')
       .replace(/[^a-zA-Z0-9]/g, '-')
@@ -42,13 +49,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, path: `/api/media?pathname=${encodeURIComponent(blob.pathname)}` })
     }
 
+    await fs.mkdir(uploadDir, { recursive: true })
     const filePath = path.join(uploadDir, fileName)
 
     await fs.writeFile(filePath, buffer)
 
     return NextResponse.json({ success: true, path: `/uploads/${fileName}` })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Media upload failed:', error)
+    return NextResponse.json({ error: 'Image upload failed.' }, { status: 500 })
   }
 }
 

@@ -40,7 +40,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, certification: newCert, certifications: db.certifications })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Certification create failed:', error)
+    return NextResponse.json({ error: 'Certification could not be saved.' }, { status: 500 })
   }
 }
 
@@ -87,7 +88,8 @@ export async function PUT(req: Request) {
     if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist certification changes. Check persistent storage configuration.' }, { status: 500 })
     return NextResponse.json({ success: true, certification: db.certifications[index], certifications: db.certifications })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Certification update failed:', error)
+    return NextResponse.json({ error: 'Certification could not be saved.' }, { status: 500 })
   }
 }
 
@@ -114,7 +116,8 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json({ success: true, certifications: db.certifications })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Certification delete failed:', error)
+    return NextResponse.json({ error: 'Certification could not be deleted.' }, { status: 500 })
   }
 }
 

@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-import { hashPassword, verifyPassword, generateTotpCode, verifyTotpCode } from './security.ts'
+import { hashPassword, verifyPassword, generateTotpCode, verifyTotpCode } from './security'
 
 test('hashPassword verifies the original password and rejects a wrong one', () => {
   const { hash, salt } = hashPassword('StrongPass!123')

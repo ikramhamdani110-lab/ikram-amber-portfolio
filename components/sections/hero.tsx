@@ -1,13 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, Sparkle } from 'lucide-react'
 import { GithubIcon, Html5Icon, Css3Icon, JavascriptIcon } from '@/components/brand-icons'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
-import { useLanguage } from '@/contexts/language-context'
-import { translations } from '@/lib/translations'
 
 // 4 Corner Floating Tech Icons around the Hero Code Window
 const FLOATING_HERO_ICONS = [
@@ -75,10 +72,8 @@ interface Props {
 }
 
 export function Hero({ onNavigate, data }: Props) {
-  const { language } = useLanguage()
-  const t = translations[language]
   const codeLines = data?.codeLines || []
-  const name = data?.name || 'IKRAM'
+  const name = data?.name ?? ''
 
   // Render name: last char in accent colour, with shine class
   const renderName = () => {
@@ -102,7 +97,7 @@ export function Hero({ onNavigate, data }: Props) {
         transition={{ duration: 0.6 }}
       >
         <div className="mb-5 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
-          {data?.hello || t.hero.hello} <Sparkle className="size-4 text-accent" />
+          {data?.hello ?? ''} <Sparkle className="size-4 text-accent" />
         </div>
 
         {/* IKRAM with premium shine sweep */}
@@ -110,8 +105,7 @@ export function Hero({ onNavigate, data }: Props) {
           {renderName()}
         </h1>
 
-        {/* Animated typewriter subtitle */}
-        <TypewriterTitle />
+        <p className="mt-6 min-h-[3.2rem] font-serif text-2xl italic sm:text-3xl">{data?.title ?? ''}</p>
 
         <p className="mt-5 max-w-md leading-relaxed text-muted-foreground">
           {data?.bio || ''}
@@ -123,7 +117,7 @@ export function Hero({ onNavigate, data }: Props) {
             aria-label="Explore skills"
             className="group flex items-center gap-2 rounded-full bg-accent-soft px-6 py-3 text-sm font-semibold text-foreground dark:text-black transition-transform hover:-translate-y-0.5"
           >
-            {t.hero.explore}
+            {data?.exploreLabel ?? ''}
             <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </button>
           <button
@@ -131,7 +125,7 @@ export function Hero({ onNavigate, data }: Props) {
             aria-label="About me"
             className="group flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors hover:border-accent"
           >
-            {t.hero.aboutMe}
+            {data?.aboutLabel ?? ''}
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </button>
         </div>
@@ -212,68 +206,9 @@ export function Hero({ onNavigate, data }: Props) {
         </div>
 
         <p className="mt-4 flex items-center justify-center gap-1.5 text-center font-serif italic text-muted-foreground">
-          <Sparkle className="size-3.5 text-accent" /> {data?.codeWindowCaption || t.hero.codeWindowCaption}
+          <Sparkle className="size-3.5 text-accent" /> {data?.codeWindowCaption ?? ''}
         </p>
       </motion.div>
     </div>
-  )
-}
-
-// ─────────────────────────────────────────────────────
-// Typewriter title — cycles through roles
-// ─────────────────────────────────────────────────────
-function TypewriterTitle() {
-  const reducedMotion = useReducedMotion()
-  const { language } = useLanguage()
-  const t = translations[language]
-  const [titleIndex, setTitleIndex] = useState(0)
-  const [text, setText] = useState('')
-  const [phase, setPhase] = useState<'typing' | 'pausing' | 'deleting'>('typing')
-
-  const titles = t.hero.typewriterTitles
-
-  useEffect(() => {
-    if (reducedMotion) return
-    const full = titles[titleIndex % titles.length]
-    let timer: ReturnType<typeof setTimeout> | undefined
-
-    if (phase === 'typing') {
-      if (text.length < full.length) {
-        timer = setTimeout(() => setText(full.slice(0, text.length + 1)), 60)
-      } else {
-        timer = setTimeout(() => setPhase('deleting'), 1500)
-      }
-    } else if (phase === 'deleting') {
-      if (text.length > 0) {
-        timer = setTimeout(() => setText(text.slice(0, -1)), 28)
-      } else {
-        setTitleIndex((i) => (i + 1) % titles.length)
-        setPhase('typing')
-      }
-    }
-
-    return () => clearTimeout(timer)
-  }, [text, phase, titleIndex, reducedMotion, titles])
-
-  if (reducedMotion) {
-    return (
-      <p className="mt-6 min-h-[4.6rem] font-serif text-2xl italic sm:min-h-[3.2rem] sm:text-3xl">
-        {titles[0]}
-      </p>
-    )
-  }
-
-  return (
-    <p
-      className="mt-6 min-h-[4.6rem] font-serif text-2xl italic sm:min-h-[3.2rem] sm:text-3xl"
-      aria-label={titles[titleIndex % titles.length]}
-    >
-      <span aria-hidden="true">{text}</span>
-      <motion.span
-        animate={{ opacity: [1, 0.15, 1] }}
-        transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut' }}
-        className="ml-1 inline-block h-[1.05em] w-[2px] translate-y-[0.18em] rounded-full bg-accent"
-      />
-    </p>
   )
 }

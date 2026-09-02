@@ -30,6 +30,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, recoveryCodes })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('TOTP confirmation failed:', error)
+    return NextResponse.json({ error: 'Verification could not be completed.' }, { status: 500 })
   }
 }

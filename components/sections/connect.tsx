@@ -13,22 +13,22 @@ interface Props {
 }
 
 export function Connect({ socials, connect, num = '06' }: Props) {
-  const githubUrl = socials?.github || ''
-  const linkedinUrl = socials?.linkedin || ''
-  const emailVal = socials?.email || ''
+  const githubUrl = socials?.github ?? ''
+  const linkedinUrl = socials?.linkedin ?? ''
+  const emailVal = socials?.email ?? ''
   
-  const sectionLabel = connect?.sectionLabel || 'Connect'
-  const title = connect?.title || 'Find me around the web.'
-  const description = connect?.description || 'No forms, no fuss — just the places I actually live online. Follow along, or reach out whenever you like.'
-  const githubLabel = connect?.githubLabel || 'GitHub'
-  const githubSubtitle = connect?.githubSubtitle || 'Explore my code'
-  const githubCta = connect?.githubCta || 'Visit GitHub'
-  const linkedinLabel = connect?.linkedinLabel || 'LinkedIn'
-  const linkedinSubtitle = connect?.linkedinSubtitle || 'See my journey & experiences'
-  const linkedinCta = connect?.linkedinCta || 'Visit LinkedIn'
-  const emailLabel = connect?.emailLabel || 'Email'
-  const emailSubtitle = connect?.emailSubtitle || 'Say hello directly'
-  const emailCta = connect?.emailCta || 'Send Email'
+  const sectionLabel = connect?.sectionLabel ?? ''
+  const title = connect?.title ?? ''
+  const description = connect?.description ?? ''
+  const githubLabel = connect?.githubLabel ?? ''
+  const githubSubtitle = connect?.githubSubtitle ?? ''
+  const githubCta = connect?.githubCta ?? ''
+  const linkedinLabel = connect?.linkedinLabel ?? ''
+  const linkedinSubtitle = connect?.linkedinSubtitle ?? ''
+  const linkedinCta = connect?.linkedinCta ?? ''
+  const emailLabel = connect?.emailLabel ?? ''
+  const emailSubtitle = connect?.emailSubtitle ?? ''
+  const emailCta = connect?.emailCta ?? ''
 
   const getGithubHandle = (url: string) => {
     if (!url) return ''

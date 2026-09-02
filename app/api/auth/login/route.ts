@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const state = readAuthState()
     const configuredPassword = process.env.ADMIN_PASSWORD
 
-    if (configuredPassword && password === configuredPassword) {
+    if (configuredPassword && password === configuredPassword && !verifyPassword(password, state.passwordHash, state.passwordSalt)) {
       const nextPassword = require('@/lib/security').hashPassword(configuredPassword)
       state.passwordHash = nextPassword.hash
       state.passwordSalt = nextPassword.salt
@@ -22,7 +22,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ error: 'Invalid password' }, { status: 401 })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Login failed:', error)
+    return NextResponse.json({ error: 'Sign-in could not be completed.' }, { status: 500 })
   }
 }
 

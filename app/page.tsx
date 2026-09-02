@@ -14,16 +14,13 @@ import { Updates } from '@/components/sections/updates'
 import { Connect } from '@/components/sections/connect'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
-import { useLanguage } from '@/contexts/language-context'
-import { translations } from '@/lib/translations'
 
 export default function Page() {
   const [active, setActive] = useState<SectionId>('home')
   const [theme, setTheme] = useState<'dark' | 'light'>('light')
   const [data, setData] = useState<DbSchema | null>(null)
   const [introFinished, setIntroFinished] = useState(false)
-  const { language, setLanguage } = useLanguage()
-  const t = translations[language]
+  const [loadError, setLoadError] = useState('')
 
   // Synchronize with stored theme on mount if present
   useEffect(() => {
@@ -55,18 +52,22 @@ export default function Page() {
     })
   }
 
-  const handleToggleLanguage = () => setLanguage(language === 'en' ? 'ar' : 'en')
-
   useEffect(() => {
     async function loadPortfolio() {
+      const controller = new AbortController()
+      const timeout = window.setTimeout(() => controller.abort(), 10000)
       try {
-        const res = await fetch('/api/portfolio', { cache: 'no-store' })
+        const res = await fetch('/api/portfolio', { cache: 'no-store', signal: controller.signal })
         if (res.ok) {
           const fetchedData = await res.json()
           setData(fetchedData)
+        } else {
+          setLoadError('Portfolio content is temporarily unavailable.')
         }
-      } catch (err) {
-        console.error('Error fetching portfolio data:', err)
+      } catch {
+        setLoadError('Portfolio content is temporarily unavailable.')
+      } finally {
+        window.clearTimeout(timeout)
       }
     }
     loadPortfolio()
@@ -81,26 +82,30 @@ export default function Page() {
 
   const isReady = introFinished && data !== null
 
+  if (loadError) {
+    return <main className="flex min-h-screen items-center justify-center px-6 text-center font-mono text-sm text-muted-foreground">{loadError}</main>
+  }
+
   // Build nav items — only show sections that have content
   const rawNavItems: { id: SectionId; label: string }[] = [
-    { id: 'home', label: t.nav.home },
-    { id: 'about', label: t.nav.about },
-    { id: 'skills', label: t.nav.skills },
+    { id: 'home', label: 'Home' },
+    { id: 'about', label: data?.about?.sectionLabel || 'About' },
+    { id: 'skills', label: data?.skills?.sectionLabel || 'Skills' },
   ]
 
   const visibleCerts = data?.certifications?.filter((c) => c.visible !== false) || []
   if (visibleCerts.length > 0) {
-    rawNavItems.push({ id: 'certifications', label: t.nav.certifications })
+    rawNavItems.push({ id: 'certifications', label: data?.certificationsSettings?.sectionLabel || 'Certifications' })
   }
 
-  rawNavItems.push({ id: 'journey', label: t.nav.journey })
+  rawNavItems.push({ id: 'journey', label: data?.journey?.sectionLabel || 'Journey' })
 
   const visibleUpdates = data?.updates?.filter((u) => u.visible !== false) || []
   if (visibleUpdates.length > 0) {
-    rawNavItems.push({ id: 'updates', label: t.nav.updates })
+    rawNavItems.push({ id: 'updates', label: data?.updatesSettings?.sectionLabel || 'Updates' })
   }
 
-  rawNavItems.push({ id: 'connect', label: t.nav.connect })
+  rawNavItems.push({ id: 'connect', label: data?.connect?.sectionLabel || 'Connect' })
 
   const navItems = rawNavItems.map((item, index) => ({
     id: item.id,
@@ -114,7 +119,7 @@ export default function Page() {
   const connectNum = navItems.find((n) => n.id === 'connect')?.num || '07'
 
   return (
-    <div dir={language === 'ar' ? 'rtl' : 'ltr'} className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <AnimatePresence>
         {!isReady && (
           <IntroLoader
@@ -134,8 +139,6 @@ export default function Page() {
             socials={data.socials}
             navItems={navItems}
             wordmark={data.siteSettings?.wordmark}
-            language={language}
-            onToggleLanguage={handleToggleLanguage}
           />
 
           <main className="mx-auto min-w-0 max-w-6xl overflow-x-clip px-4 pb-16 pt-28 sm:px-6 sm:pt-36">

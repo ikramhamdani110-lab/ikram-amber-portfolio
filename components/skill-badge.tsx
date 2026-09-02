@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import type { Skill } from '@/lib/data'
+import type { Skill } from '@/lib/db'
 
 export function SkillBadge({ skill, index = 0 }: { skill: Skill; index?: number }) {
   return (

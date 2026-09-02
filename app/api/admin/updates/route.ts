@@ -39,7 +39,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, update: newUpdate, updates: db.updates })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Update create failed:', error)
+    return NextResponse.json({ error: 'Update could not be saved.' }, { status: 500 })
   }
 }
 
@@ -86,7 +87,8 @@ export async function PUT(req: Request) {
 
     return NextResponse.json({ success: true, update: db.updates[index], updates: db.updates })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Update save failed:', error)
+    return NextResponse.json({ error: 'Update could not be saved.' }, { status: 500 })
   }
 }
 
@@ -110,7 +112,8 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json({ success: true, updates: db.updates })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Update delete failed:', error)
+    return NextResponse.json({ error: 'Update could not be deleted.' }, { status: 500 })
   }
 }
 

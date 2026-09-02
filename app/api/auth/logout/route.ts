@@ -6,7 +6,8 @@ export async function POST() {
     await clearSessionCookie()
     return NextResponse.json({ success: true })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Logout failed:', error)
+    return NextResponse.json({ error: 'Sign-out could not be completed.' }, { status: 500 })
   }
 }
 

@@ -151,6 +151,7 @@ export default function AdminPage() {
 
   // Generic Save Helper
   const saveSectionData = async (section: string, payload: any) => {
+    if (saveStatus === 'saving') return
     setSaveStatus('saving')
     try {
       const res = await fetch(`/api/admin/${section}`, {
@@ -163,7 +164,7 @@ export default function AdminPage() {
         setSaveStatus('success')
         setTimeout(() => setSaveStatus(''), 2000)
         // Refresh local DB
-        loadPortfolioData()
+        await loadPortfolioData()
         return result
       } else {
         const result = await res.json().catch(() => null)
@@ -176,6 +177,10 @@ export default function AdminPage() {
 
   // Image Upload helper
   const uploadImage = async (file: File): Promise<string> => {
+    if (file.size > 5 * 1024 * 1024) throw new Error('Image must be 5 MB or smaller')
+    if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type)) {
+      throw new Error('Only JPEG, PNG, GIF, and WebP images are allowed')
+    }
     const formData = new FormData()
     formData.append('file', file)
     const res = await fetch('/api/admin/upload', {
@@ -454,10 +459,14 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   const [bio, setBio] = useState(db.hero?.bio || '')
   const [location, setLocation] = useState(db.hero?.location || '')
   const [creative, setCreative] = useState(db.hero?.creativeTechnologist || '')
+  const [exploreLabel, setExploreLabel] = useState(db.hero?.exploreLabel || 'Explore')
+  const [aboutLabel, setAboutLabel] = useState(db.hero?.aboutLabel || 'About Me')
   
   // profile card fields
   const [aboutPhoto, setAboutPhoto] = useState(db.about?.photo || '/uploads/photo_2026-09-01_06-34-10.jpg')
   const [fullName, setFullName] = useState(db.about?.fullName || 'Ikram Hamdani')
+  const [aboutTitle, setAboutTitle] = useState(db.about?.title || '')
+  const [aboutBio, setAboutBio] = useState(db.about?.bio || '')
   const [dateOfBirth, setDateOfBirth] = useState(db.about?.dateOfBirth || '08 December 2006')
   const [age, setAge] = useState(db.about?.age || '19')
   const [nationality, setNationality] = useState(db.about?.nationality || 'Algerian')
@@ -475,6 +484,8 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   const [currentlyLabel, setCurrentlyLabel] = useState(db.about?.currentlyLabel || 'Currently')
   const [basedInLabel, setBasedInLabel] = useState(db.about?.basedInLabel || 'Based in')
   const [focusLabel, setFocusLabel] = useState(db.about?.focusLabel || 'Focus')
+  const [statusLabel, setStatusLabel] = useState(db.about?.statusLabel || 'Status')
+  const [interestsLabel, setInterestsLabel] = useState(db.about?.interestsLabel || 'Interests')
   const [aboutSectionLabel, setAboutSectionLabel] = useState(db.about?.sectionLabel || 'About')
 
   // Code editor lines
@@ -509,6 +520,8 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
         bio,
         location,
         creativeTechnologist: creative,
+        exploreLabel,
+        aboutLabel,
         codeLines,
         codeWindowFilename: codeFilename,
         codeWindowCaption: codeCaption,
@@ -529,11 +542,14 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
         currently,
         location: aboutLocation,
         focus: focusInput.split(',').map(f => f.trim()).filter(Boolean),
-        bio: bio, // Sync bio for consistency
+        title: aboutTitle,
+        bio: aboutBio,
         profileLabel,
         currentlyLabel,
         basedInLabel,
         focusLabel,
+        statusLabel,
+        interestsLabel,
         sectionLabel: aboutSectionLabel
       }
     })
@@ -546,6 +562,17 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3 flex items-center gap-2">
           <Sparkles className="size-4 text-accent" /> Hero Section Title & Bio
         </h3>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Explore button label</label>
+            <input type="text" value={exploreLabel} onChange={(e) => setExploreLabel(e.target.value)} className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]" />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">About button label</label>
+            <input type="text" value={aboutLabel} onChange={(e) => setAboutLabel(e.target.value)} className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]" />
+          </div>
+        </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
@@ -660,6 +687,27 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3 flex items-center gap-2">
           <User className="size-4 text-accent" /> About Section Card Info
         </h3>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Status label</label>
+            <input type="text" value={statusLabel} onChange={(e) => setStatusLabel(e.target.value)} className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]" />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Interests label</label>
+            <input type="text" value={interestsLabel} onChange={(e) => setInterestsLabel(e.target.value)} className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]" />
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">About section title</label>
+          <input type="text" value={aboutTitle} onChange={(e) => setAboutTitle(e.target.value)} className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]" />
+        </div>
+
+        <div>
+          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">About section bio</label>
+          <textarea value={aboutBio} onChange={(e) => setAboutBio(e.target.value)} rows={4} className="w-full rounded-2xl border border-border bg-background p-4 text-sm focus:border-accent outline-none text-foreground leading-relaxed dark:bg-[#0e0b0d]" />
+        </div>
 
         <div className="flex flex-col gap-4 rounded-2xl border border-border/60 bg-background p-4 sm:flex-row sm:items-center dark:bg-[#0e0b0d]">
           <img src={aboutPhoto} alt="About portrait preview" className="size-24 rounded-xl border border-[#e6a4c4]/60 object-cover object-center" />
@@ -2448,6 +2496,8 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
   const [wordmark, setWordmark] = useState(db.siteSettings?.wordmark || '')
   const [copyright, setCopyright] = useState(db.siteSettings?.copyright || '')
   const [favicon, setFavicon] = useState(db.siteSettings?.favicon || '/uploads/BCO.4a8408d8-a19f-4b25-84fa-5e00fbb1e8db.png')
+  const [certificationDescription, setCertificationDescription] = useState(db.certificationsSettings?.description || '')
+  const [updateDescription, setUpdateDescription] = useState(db.updatesSettings?.description || '')
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault()
@@ -2458,7 +2508,9 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
         wordmark,
         copyright,
         favicon
-      }
+      },
+      certificationsSettings: { ...db.certificationsSettings, description: certificationDescription },
+      updatesSettings: { ...db.updatesSettings, description: updateDescription }
     })
   }
 
@@ -2479,6 +2531,16 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
             className="min-w-0 flex-1 bg-transparent p-1 text-sm font-mono outline-none focus:border-accent"
           />
         </div>
+      </div>
+
+      <div>
+        <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Certifications description</label>
+        <textarea value={certificationDescription} onChange={(e) => setCertificationDescription(e.target.value)} rows={2} className="w-full rounded-2xl border border-border bg-background p-4 text-sm focus:border-accent outline-none text-foreground leading-relaxed dark:bg-[#0e0b0d]" />
+      </div>
+
+      <div>
+        <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Updates description</label>
+        <textarea value={updateDescription} onChange={(e) => setUpdateDescription(e.target.value)} rows={2} className="w-full rounded-2xl border border-border bg-background p-4 text-sm focus:border-accent outline-none text-foreground leading-relaxed dark:bg-[#0e0b0d]" />
       </div>
 
       <div>

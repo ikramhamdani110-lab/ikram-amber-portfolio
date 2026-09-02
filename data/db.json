@@ -3,6 +3,8 @@
     "hello": "Hello, I'm",
     "name": "IKRAM",
     "title": "Information Science Student & Web Developer",
+    "exploreLabel": "Explore",
+    "aboutLabel": "About Me",
     "bio": "I love turning ideas into digital experiences while exploring software, web technologies, databases, and information systems.",
     "location": "Chlef · Algeria",
     "creativeTechnologist": "Creative Technologist",
@@ -32,6 +34,18 @@
     ]
   },
   "about": {
+    "photo": "/uploads/photo_2026-09-01_06-34-10.jpg",
+    "fullName": "Ikram Hamdani",
+    "dateOfBirth": "08 December 2006",
+    "age": "19",
+    "nationality": "Algerian",
+    "education": "Licence 3 — Information Science",
+    "university": "Hassiba Benbouali University of Chlef",
+    "expectedGraduation": "2027",
+    "languages": "Arabic · French · English",
+    "status": "Information Science Student",
+    "interests": "Web Development · Software · Databases · Digital Design",
+    "availability": "Open to internships, freelance opportunities, and collaborations",
     "title": "Curious by nature. Always learning.",
     "bio": "I'm an Information Science student interested in software development, web technologies, databases, and information systems. I enjoy learning through experimentation and building practical things that turn ideas into working digital experiences.",
     "currently": "Learning → Building → Experimenting",
@@ -45,13 +59,15 @@
     "currentlyLabel": "Currently",
     "basedInLabel": "Based in",
     "focusLabel": "Focus",
+    "statusLabel": "Status",
+    "interestsLabel": "Interests",
     "sectionLabel": "About"
   },
   "skills": {
-    "title": "My digital toolbox.",
-    "description": "A growing ecosystem of languages and tools I use to learn, build and experiment. Hover a badge to see what it means to me.",
-    "dbTextBadge": "Database Design",
-    "sectionLabel": "Skills",
+    "title": "AUDIT_SKILLS_TITLE",
+    "description": "AUDIT_SKILLS_DESCRIPTION",
+    "dbTextBadge": "AUDIT_BADGE",
+    "sectionLabel": "AUDIT_SKILLS_LABEL",
     "aboutSkills": [
       {
         "name": "PYTHON",
@@ -172,10 +188,10 @@
     ]
   },
   "journey": {
-    "title": "Learning. Building. Growing.",
-    "ctaTitle": "Want to see more of my journey?",
-    "ctaButtonText": "Visit my LinkedIn",
-    "sectionLabel": "Journey",
+    "title": "AUDIT_JOURNEY_TITLE",
+    "ctaTitle": "AUDIT_CTA_TITLE",
+    "ctaButtonText": "AUDIT_CTA_BUTTON",
+    "sectionLabel": "AUDIT_JOURNEY_LABEL",
     "stages": [
       {
         "num": "01",
@@ -260,11 +276,6 @@
     "wordmark": "IKRAM HAMDANI",
     "copyright": "© 2026 Ikram Hamdani",
     "favicon": "/uploads/BCO.4a8408d8-a19f-4b25-84fa-5e00fbb1e8db.png"
-  },
-  "certificationsSettings": {
-    "sectionLabel": "Certifications",
-    "title": "Certifications & Achievements",
-    "emptyMessage": "No certifications added yet."
   },
   "certifications": [
     {
@@ -352,10 +363,17 @@
       "order": 6
     }
   ],
-  "updatesSettings": {
-    "sectionLabel": "Updates",
-    "title": "What's New",
-    "emptyMessage": "No updates posted yet."
+  "certificationsSettings": {
+    "sectionLabel": "Certifications",
+    "title": "Certifications & Achievements",
+    "description": "Certificates and credentials I have earned through coursework and examinations.",
+    "emptyMessage": "No certifications added yet.",
+    "issuedLabel": "Issued",
+    "credentialIdLabel": "ID",
+    "clickToViewLabel": "Click to view full certificate",
+    "certificateLabel": "Certificate",
+    "closeViewerLabel": "Close certificate viewer",
+    "tapToCloseLabel": "Tap outside to close"
   },
   "updates": [
     {
@@ -367,5 +385,11 @@
       "visible": true,
       "category": "achievement"
     }
-  ]
+  ],
+  "updatesSettings": {
+    "sectionLabel": "Updates",
+    "title": "What's New",
+    "description": "Recent highlights, completed projects, and notifications of my progress.",
+    "emptyMessage": "No updates posted yet."
+  }
 }

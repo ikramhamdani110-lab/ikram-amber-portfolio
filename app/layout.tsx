@@ -2,7 +2,6 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Fraunces, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-import { LanguageProvider } from '@/contexts/language-context'
 import { readDb } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
@@ -89,9 +88,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-background font-sans antialiased">
-        <LanguageProvider>
-          {children}
-        </LanguageProvider>
+        {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

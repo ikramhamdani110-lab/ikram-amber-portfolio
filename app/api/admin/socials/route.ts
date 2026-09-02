@@ -17,10 +17,11 @@ export async function POST(req: Request) {
     if (email !== undefined) db.socials.email = email
     if (fiverr !== undefined) db.socials.fiverr = fiverr
 
-    await writeDb(db)
+    if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist social changes. Check persistent storage configuration.' }, { status: 500 })
 
     return NextResponse.json({ success: true, data: db.socials })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Social save failed:', error)
+    return NextResponse.json({ error: 'Social changes could not be saved.' }, { status: 500 })
   }
 }

@@ -4,8 +4,6 @@ import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import type { JourneyStage } from '@/lib/db'
 import { SectionLabel } from '@/components/section-label'
-import { useLanguage } from '@/contexts/language-context'
-import { translations } from '@/lib/translations'
 
 interface JourneyData {
   title: string
@@ -22,19 +20,12 @@ interface Props {
 }
 
 export function Journey({ data, linkedinUrl, num = '05' }: Props) {
-  const { language } = useLanguage()
-  const t = translations[language]
-
   return (
     <div className="min-w-0">
-      <SectionLabel num={num} label={data.sectionLabel || t.journey.label} />
+      <SectionLabel num={num} label={data.sectionLabel ?? ''} />
 
       <h2 className="max-w-full break-words font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-6xl">
-        {data.title || (
-          <>
-            Learning. Building. <span className="text-accent italic">Growing.</span>
-          </>
-        )}
+        {data.title ?? ''}
       </h2>
 
       <div className="mt-14 relative before:absolute before:bottom-0 before:left-6 before:top-4 before:w-px before:bg-border/60">
