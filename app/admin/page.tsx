@@ -38,7 +38,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'profile' | 'skills' | 'journey' | 'certifications' | 'socials' | 'updates' | 'settings' | 'security'
+    'overview' | 'profile' | 'skills' | 'journey' | 'certifications' | 'socials' | 'updates' | 'settings'
   >('overview')
   const [theme, setTheme] = useState<'dark' | 'light'>('light')
 
@@ -275,7 +275,6 @@ export default function AdminPage() {
               { id: 'socials', label: 'Social Links', icon: Globe },
               { id: 'updates', label: 'Updates Feed', icon: Bell },
               { id: 'settings', label: 'Site Settings', icon: Settings },
-              { id: 'security', label: 'Security', icon: Lock },
             ].map((tab) => {
               const Icon = tab.icon
               const isActive = activeTab === tab.id
@@ -378,9 +377,6 @@ export default function AdminPage() {
         {activeTab === 'settings' && (
           <SettingsTab db={db} save={saveSectionData} />
         )}
-        {activeTab === 'security' && (
-          <SecurityTab />
-        )}
       </main>
     </div>
   )
@@ -461,7 +457,7 @@ function ProfileTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   const [creative, setCreative] = useState(db.hero?.creativeTechnologist || '')
   const [exploreLabel, setExploreLabel] = useState(db.hero?.exploreLabel || 'Explore')
   const [aboutLabel, setAboutLabel] = useState(db.hero?.aboutLabel || 'About Me')
-  
+
   // profile card fields
   const [aboutPhoto, setAboutPhoto] = useState(db.about?.photo || '/uploads/photo_2026-09-01_06-34-10.jpg')
   const [fullName, setFullName] = useState(db.about?.fullName || 'Ikram Hamdani')
@@ -845,7 +841,7 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
   const [description, setDescription] = useState(db.skills?.description || '')
   const [dbTextBadge, setDbTextBadge] = useState(db.skills?.dbTextBadge || '')
   const [sectionLabel, setSectionLabel] = useState(db.skills?.sectionLabel || 'Skills')
-  
+
   // local copy of skills inside groups
   const [groups, setGroups] = useState<SkillGroup[]>(db.skills?.groups || [])
   const [aboutSkills, setAboutSkills] = useState<Skill[]>(db.skills?.aboutSkills || [])
@@ -1191,7 +1187,7 @@ function JourneyTab({ db, save }: { db: DbSchema; save: any }) {
 
     const newIndex = direction === 'up' ? index - 1 : index + 1
     const updated = [...stages]
-    
+
     // Swap items
     const temp = updated[index]
     updated[index] = updated[newIndex]
@@ -1389,7 +1385,7 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
     description: '',
     visible: true
   })
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleEditClick = (cert: Certification) => {
@@ -1441,17 +1437,17 @@ function CertificationsTab({ db, save, uploadImage }: { db: DbSchema; save: any;
   // Save/Create operation
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const url = '/api/admin/certifications'
     const method = editForm.id ? 'PUT' : 'POST'
-    
+
     try {
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editForm),
       })
-      
+
       if (res.ok) {
         const json = await res.json()
         setCerts(json.certifications || [])
@@ -1781,7 +1777,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   const [linkedin, setLinkedin] = useState(db.socials?.linkedin || '')
   const [email, setEmail] = useState(db.socials?.email || '')
   const [fiverr, setFiverr] = useState(db.socials?.fiverr || '')
-  
+
   // Connect section labels
   const [connectSectionLabel, setConnectSectionLabel] = useState(db.connect?.sectionLabel || 'Connect')
   const [connectTitle, setConnectTitle] = useState(db.connect?.title || 'Find me around the web.')
@@ -1795,7 +1791,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   const [emailLabel, setEmailLabel] = useState(db.connect?.emailLabel || 'Email')
   const [emailSubtitle, setEmailSubtitle] = useState(db.connect?.emailSubtitle || 'Say hello directly')
   const [emailCta, setEmailCta] = useState(db.connect?.emailCta || 'Send Email')
-  
+
   const [customLinks, setCustomLinks] = useState(db.customSocialLinks || [])
   const [isEditingCustom, setIsEditingCustom] = useState(false)
   const [customForm, setCustomForm] = useState<{ id?: string; name: string; url: string; icon: string }>({
@@ -1803,7 +1799,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
     url: '',
     icon: ''
   })
-  
+
   const customFileInputRef = useRef<HTMLInputElement>(null)
 
   const handleSavePredefined = (e: React.FormEvent) => {
@@ -1852,7 +1848,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
     e.preventDefault()
     const url = '/api/admin/custom-socials'
     const method = customForm.id ? 'PUT' : 'POST'
-    
+
     try {
       const res = await fetch(url, {
         method,
@@ -1892,7 +1888,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
     } else if (direction === 'down' && index < newLinks.length - 1) {
       [newLinks[index], newLinks[index + 1]] = [newLinks[index + 1], newLinks[index]]
     }
-    
+
     try {
       const res = await fetch('/api/admin/custom-socials', {
         method: 'PUT',
@@ -2043,7 +2039,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
       {/* Connect section labels */}
       <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
         <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Connect Section Labels</h3>
-        
+
         <div>
           <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Navigation Section Label</label>
           <input
@@ -2054,7 +2050,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
           />
         </div>
-        
+
         <div>
           <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Section Title</label>
           <input
@@ -2065,7 +2061,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
             className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif text-lg dark:bg-[#0e0b0d]"
           />
         </div>
-        
+
         <div>
           <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Section Description</label>
           <textarea
@@ -2270,7 +2266,7 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
     visible: true,
     category: 'update'
   })
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleEditClick = (upd: PortfolioUpdate) => {
@@ -2317,7 +2313,7 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
     e.preventDefault()
     const url = '/api/admin/updates'
     const method = editForm.id ? 'PUT' : 'POST'
-    
+
     try {
       const res = await fetch(url, {
         method,
@@ -2651,178 +2647,3 @@ function SettingsTab({ db, save }: { db: DbSchema; save: any }) {
     </form>
   )
 }
-
-function SecurityTab() {
-  const [status, setStatus] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null)
-  const [verificationEnabled, setVerificationEnabled] = useState(false)
-  const [pendingSetupUrl, setPendingSetupUrl] = useState('')
-  const [setupCode, setSetupCode] = useState('')
-  const [recoveryCodes, setRecoveryCodes] = useState<string[]>([])
-  const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    async function loadSecurityStatus() {
-      try {
-        const res = await fetch('/api/auth/security', { method: 'GET' })
-        if (!res.ok) return
-        const data = await res.json()
-        setVerificationEnabled(Boolean(data.verificationEnabled))
-      } catch {
-        // ignore and keep UI generic
-      }
-    }
-    loadSecurityStatus()
-  }, [])
-
-  const handleSetupTotp = async () => {
-    setStatus(null)
-    setLoading(true)
-    try {
-      const res = await fetch('/api/auth/setup-totp', { method: 'POST' })
-      const data = await res.json()
-      if (!res.ok) {
-        setStatus({ type: 'error', message: data.error || 'Unable to configure verification.' })
-        return
-      }
-      setPendingSetupUrl(data.otpauthUrl || '')
-      setVerificationEnabled(false)
-      setStatus({ type: 'info', message: 'Scan the QR code with your authenticator app, then confirm the setup.' })
-    } catch {
-      setStatus({ type: 'error', message: 'Unable to configure verification.' })
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleConfirmSetup = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!/^\d{6}$/.test(setupCode)) {
-      setStatus({ type: 'error', message: 'Enter the 6-digit authenticator code.' })
-      return
-    }
-
-    setLoading(true)
-    try {
-      const res = await fetch('/api/auth/confirm-totp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: setupCode }),
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setStatus({ type: 'error', message: data.error || 'Verification setup failed.' })
-        return
-      }
-
-      setVerificationEnabled(true)
-      setPendingSetupUrl('')
-      setSetupCode('')
-      setRecoveryCodes(data.recoveryCodes || [])
-      setStatus({ type: 'success', message: 'Authenticator verification enabled.' })
-    } catch {
-      setStatus({ type: 'error', message: 'Unable to confirm verification setup.' })
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleRegenerateCodes = async () => {
-    setStatus(null)
-    setLoading(true)
-    try {
-      const res = await fetch('/api/auth/recovery-codes', { method: 'POST' })
-      const data = await res.json()
-      if (!res.ok) {
-        setStatus({ type: 'error', message: data.error || 'Unable to regenerate codes.' })
-        return
-      }
-      setRecoveryCodes(data.recoveryCodes || [])
-      setStatus({ type: 'success', message: 'Recovery codes regenerated.' })
-    } catch {
-      setStatus({ type: 'error', message: 'Unable to regenerate recovery codes.' })
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <div className="space-y-6">
-      <div className="rounded-3xl border border-border bg-card/40 p-7 dark:bg-card/40">
-        <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Account Security</h3>
-
-        <div className="mt-5 flex flex-wrap items-center gap-3 text-xs font-mono uppercase tracking-widest text-muted-foreground">
-          <span className="rounded-full border border-border px-3 py-1.5">Verification: {verificationEnabled ? 'Enabled' : 'Not Enabled'}</span>
-          <button
-            type="button"
-            onClick={handleSetupTotp}
-            className="rounded-full bg-accent-soft px-4 py-2 text-[#201319] transition-transform hover:-translate-y-0.5 dark:text-[#201319]"
-          >
-            {verificationEnabled ? 'Reset Authenticator' : 'Set Up Verification'}
-          </button>
-          {verificationEnabled && (
-            <button
-              type="button"
-              onClick={handleRegenerateCodes}
-              className="rounded-full border border-border px-4 py-2 hover:border-accent hover:text-accent transition-colors"
-            >
-              Regenerate Recovery Codes
-            </button>
-          )}
-        </div>
-      </div>
-
-      {pendingSetupUrl && (
-        <form onSubmit={handleConfirmSetup} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
-          <h3 className="font-serif text-xl font-light">Confirm authenticator setup</h3>
-          <div className="flex flex-col gap-4 md:flex-row md:items-center">
-            <div className="rounded-2xl border border-border bg-background p-3 dark:bg-[#0e0b0d]">
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(pendingSetupUrl)}`}
-                alt="Authenticator QR code"
-                className="h-44 w-44 object-contain"
-              />
-            </div>
-            <div className="flex-1 space-y-3">
-              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Enter 6-digit code from your app</label>
-              <input
-                type="text"
-                inputMode="numeric"
-                maxLength={6}
-                value={setupCode}
-                onChange={(e) => setSetupCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 disabled:opacity-70 dark:text-[#201319]"
-              >
-                Confirm Setup
-              </button>
-            </div>
-          </div>
-        </form>
-      )}
-
-      {recoveryCodes.length > 0 && (
-        <div className="rounded-3xl border border-border bg-card/40 p-7 dark:bg-card/40">
-          <h3 className="font-serif text-xl font-light border-b border-border/40 pb-3">Recovery Codes</h3>
-          <div className="mt-4 grid gap-2 sm:grid-cols-2">
-            {recoveryCodes.map((code) => (
-              <div key={code} className="rounded-2xl border border-border bg-background p-3 font-mono text-xs tracking-widest text-foreground dark:bg-[#0e0b0d]">
-                {code}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {status && (
-        <div className={`rounded-2xl border p-3 text-sm ${status.type === 'success' ? 'border-emerald-500/40 bg-emerald-950/20 text-emerald-300' : status.type === 'error' ? 'border-red-500/40 bg-red-950/20 text-red-300' : 'border-accent/40 bg-accent/10 text-accent'}`}>
-          {status.message}
-        </div>
-      )}
-    </div>
-  )
-}
-

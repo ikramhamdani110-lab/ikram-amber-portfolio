@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { setSessionCookie } from '@/lib/auth'
-import { readAuthState, verifyPassword } from '@/lib/security'
+import { readAuthState, verifyPassword, hashPassword, writeAuthState } from '@/lib/security'
 
 export async function POST(req: Request) {
   try {
@@ -9,10 +9,15 @@ export async function POST(req: Request) {
     const configuredPassword = process.env.ADMIN_PASSWORD
 
     if (configuredPassword && password === configuredPassword && !verifyPassword(password, state.passwordHash, state.passwordSalt)) {
-      const nextPassword = require('@/lib/security').hashPassword(configuredPassword)
+      const nextPassword = hashPassword(configuredPassword)
       state.passwordHash = nextPassword.hash
       state.passwordSalt = nextPassword.salt
-      require('@/lib/security').writeAuthState(state)
+      // Serverless filesystems can be read-only; never fail login because of a sync attempt.
+      try {
+        writeAuthState(state)
+      } catch (writeError) {
+        console.warn('Auth state sync skipped (read-only filesystem)')
+      }
     }
 
     if (password && verifyPassword(password, state.passwordHash, state.passwordSalt)) {
