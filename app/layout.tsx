@@ -31,8 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: settings?.metaTitle || 'Ikram Hamdani | Information Science Student & Web Developer',
     description: settings?.metaDescription || 'I love turning ideas into digital experiences while exploring software, web technologies, databases, and information systems.',
-    generator: 'v0.app',
-  icons: {
+    icons: {
     icon: {
       url: favicon,
       type: 'image/png',
