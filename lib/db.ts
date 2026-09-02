@@ -345,8 +345,8 @@ const DEFAULT_DATA: DbSchema = {
   },
   socials: {
     github: 'https://github.com/ikramhamdani110-lab',
-    linkedin: 'https://www.linkedin.com/in/REPLACE-WITH-YOUR-LINKEDIN',
-    email: 'your.email@example.com',
+    linkedin: 'https://www.linkedin.com/in/ikram-hamdani',
+    email: 'ikramhamdani110@gmail.com',
   },
   customSocialLinks: [],
   connect: {

@@ -850,6 +850,13 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
   const [groups, setGroups] = useState<SkillGroup[]>(db.skills?.groups || [])
   const [aboutSkills, setAboutSkills] = useState<Skill[]>(db.skills?.aboutSkills || [])
 
+  const normalizeGroupNumbers = (items: SkillGroup[]) =>
+    items.map((group, index) => ({
+      ...group,
+      num: String(index + 1).padStart(2, '0'),
+      skills: group.skills || [],
+    }))
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault()
     save('skills', {
@@ -858,11 +865,20 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
       dbTextBadge,
       sectionLabel,
       aboutSkills,
-      groups,
+      groups: normalizeGroupNumbers(groups),
     })
   }
 
   // Edit fields helper
+  const updateGroupTitle = (groupIndex: number, value: string) => {
+    const updated = [...groups]
+    updated[groupIndex] = {
+      ...updated[groupIndex],
+      title: value,
+    }
+    setGroups(updated)
+  }
+
   const updateGroupSkill = (groupIndex: number, skillIndex: number, key: keyof Skill, value: string) => {
     const updated = [...groups]
     updated[groupIndex].skills[skillIndex] = {
@@ -876,6 +892,20 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
     const updated = [...groups]
     updated[groupIndex].skills = updated[groupIndex].skills.filter((_, idx) => idx !== skillIndex)
     setGroups(updated)
+  }
+
+  const addGroup = () => {
+    const nextGroup: SkillGroup = {
+      num: String(groups.length + 1).padStart(2, '0'),
+      title: 'NEW CATEGORY',
+      skills: [],
+    }
+    setGroups([...groups, nextGroup])
+  }
+
+  const deleteGroup = (groupIndex: number) => {
+    const updated = groups.filter((_, index) => index !== groupIndex)
+    setGroups(normalizeGroupNumbers(updated))
   }
 
   const addGroupSkill = (groupIndex: number) => {
@@ -1004,63 +1034,92 @@ function SkillsTab({ db, save }: { db: DbSchema; save: any }) {
       </div>
 
       {/* Categorized Skills list */}
-      <div className="space-y-6">
-        {groups.map((group, groupIndex) => (
-          <div key={group.num} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
-            <div className="flex items-center justify-between border-b border-border/40 pb-3">
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-xs text-accent">{group.num}</span>
-                <h4 className="font-serif text-lg">{group.title} Skills</h4>
-              </div>
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
+        <div className="flex items-center justify-between border-b border-border/40 pb-3">
+          <h3 className="font-serif text-xl font-light">Skill Categories</h3>
+          <button
+            type="button"
+            onClick={addGroup}
+            className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-[#201319] dark:text-[#201319]"
+          >
+            <Plus className="size-3" /> Add Category
+          </button>
+        </div>
 
-              <button
-                type="button"
-                onClick={() => addGroupSkill(groupIndex)}
-                className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-[#201319] dark:text-[#201319]"
-              >
-                <Plus className="size-3" /> Add Skill
-              </button>
-            </div>
+        <div className="space-y-6">
+          {groups.map((group, groupIndex) => (
+            <div key={group.num} className="rounded-3xl border border-border bg-card/40 p-7 space-y-5 dark:bg-card/40">
+              <div className="flex items-center justify-between border-b border-border/40 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs text-accent">{group.num}</span>
+                  <input
+                    type="text"
+                    value={group.title}
+                    onChange={(e) => updateGroupTitle(groupIndex, e.target.value)}
+                    placeholder="Category name"
+                    className="w-full min-w-0 max-w-[220px] bg-transparent font-serif text-lg text-foreground outline-none placeholder:text-muted-foreground/60"
+                  />
+                </div>
 
-            <div className="grid gap-5 sm:grid-cols-2">
-              {group.skills.map((skill, skillIndex) => (
-                <div key={skillIndex} className="flex gap-4 p-4 border border-border/60 bg-background rounded-2xl relative dark:bg-[#0e0b0d]">
+                <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => deleteGroupSkill(groupIndex, skillIndex)}
-                    className="absolute top-2 right-2 text-muted-foreground hover:text-red-400 p-1"
+                    onClick={() => addGroupSkill(groupIndex)}
+                    className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-[#201319] dark:text-[#201319]"
+                  >
+                    <Plus className="size-3" /> Add Skill
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteGroup(groupIndex)}
+                    className="rounded-full border border-border p-2 text-muted-foreground hover:text-red-400"
+                    aria-label={`Delete category ${group.title || 'category'}`}
                   >
                     <Trash2 className="size-3.5" />
                   </button>
-
-                  <div className="flex flex-col justify-center gap-1.5 flex-1 pr-6">
-                    <input
-                      type="text"
-                      value={skill.name}
-                      onChange={(e) => updateGroupSkill(groupIndex, skillIndex, 'name', e.target.value)}
-                      placeholder="SKILL NAME"
-                      className="bg-transparent border-b border-border/30 font-mono text-xs focus:border-accent outline-none dark:border-white/5"
-                    />
-                    <input
-                      type="text"
-                      value={skill.note}
-                      onChange={(e) => updateGroupSkill(groupIndex, skillIndex, 'note', e.target.value)}
-                      placeholder="Hover details"
-                      className="bg-transparent border-b border-border/30 text-xs text-muted-foreground focus:border-accent outline-none dark:border-white/5"
-                    />
-                    <input
-                      type="text"
-                      value={skill.icon}
-                      onChange={(e) => updateGroupSkill(groupIndex, skillIndex, 'icon', e.target.value)}
-                      placeholder="Icon url"
-                      className="bg-transparent border-b border-border/30 text-[10px] text-muted-foreground/60 focus:border-accent outline-none dark:border-white/5"
-                    />
-                  </div>
                 </div>
-              ))}
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                {group.skills.map((skill, skillIndex) => (
+                  <div key={skillIndex} className="flex gap-4 p-4 border border-border/60 bg-background rounded-2xl relative dark:bg-[#0e0b0d]">
+                    <button
+                      type="button"
+                      onClick={() => deleteGroupSkill(groupIndex, skillIndex)}
+                      className="absolute top-2 right-2 text-muted-foreground hover:text-red-400 p-1"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+
+                    <div className="flex flex-col justify-center gap-1.5 flex-1 pr-6">
+                      <input
+                        type="text"
+                        value={skill.name}
+                        onChange={(e) => updateGroupSkill(groupIndex, skillIndex, 'name', e.target.value)}
+                        placeholder="SKILL NAME"
+                        className="bg-transparent border-b border-border/30 font-mono text-xs focus:border-accent outline-none dark:border-white/5"
+                      />
+                      <input
+                        type="text"
+                        value={skill.note}
+                        onChange={(e) => updateGroupSkill(groupIndex, skillIndex, 'note', e.target.value)}
+                        placeholder="Hover details"
+                        className="bg-transparent border-b border-border/30 text-xs text-muted-foreground focus:border-accent outline-none dark:border-white/5"
+                      />
+                      <input
+                        type="text"
+                        value={skill.icon}
+                        onChange={(e) => updateGroupSkill(groupIndex, skillIndex, 'icon', e.target.value)}
+                        placeholder="Icon url"
+                        className="bg-transparent border-b border-border/30 text-[10px] text-muted-foreground/60 focus:border-accent outline-none dark:border-white/5"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <button

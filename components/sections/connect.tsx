@@ -42,14 +42,13 @@ export function Connect({ socials, connect, num = '06' }: Props) {
   }
 
   const getLinkedinHandle = (url: string) => {
-    if (!url) return ''
-    if (url.includes('REPLACE-WITH-YOUR-LINKEDIN')) return 'Add your LinkedIn URL'
+    if (!url) return 'linkedin'
     try {
       const cleaned = url.replace(/\/$/, '')
       const parts = cleaned.split('/')
-      return parts[parts.length - 1] || ''
+      return parts[parts.length - 1] || 'linkedin'
     } catch {
-      return ''
+      return 'linkedin'
     }
   }
 

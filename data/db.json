@@ -64,10 +64,10 @@
     "sectionLabel": "About"
   },
   "skills": {
-    "title": "AUDIT_SKILLS_TITLE",
-    "description": "AUDIT_SKILLS_DESCRIPTION",
-    "dbTextBadge": "AUDIT_BADGE",
-    "sectionLabel": "AUDIT_SKILLS_LABEL",
+    "title": "My digital toolbox.",
+    "description": "A growing ecosystem of languages and tools I use to learn, build and experiment. Hover a badge to see what it means to me.",
+    "dbTextBadge": "Database Design",
+    "sectionLabel": "Skills",
     "aboutSkills": [
       {
         "name": "PYTHON",
@@ -188,10 +188,10 @@
     ]
   },
   "journey": {
-    "title": "AUDIT_JOURNEY_TITLE",
-    "ctaTitle": "AUDIT_CTA_TITLE",
-    "ctaButtonText": "AUDIT_CTA_BUTTON",
-    "sectionLabel": "AUDIT_JOURNEY_LABEL",
+    "title": "Learning. Building. Growing.",
+    "ctaTitle": "Want to see more of my journey?",
+    "ctaButtonText": "Visit my LinkedIn",
+    "sectionLabel": "Journey",
     "stages": [
       {
         "num": "01",
@@ -252,10 +252,18 @@
   },
   "socials": {
     "github": "https://github.com/ikramhamdani110-lab",
-    "linkedin": "https://www.linkedin.com/in/REPLACE-WITH-YOUR-LINKEDIN",
-    "email": "your.email@example.com"
+    "linkedin": "https://www.linkedin.com/in/ikram-hamdani",
+    "email": "ikramhamdani110@gmail.com"
   },
-  "customSocialLinks": [],
+  "customSocialLinks": [
+    {
+      "id": "social-1788355595500",
+      "name": "instagram",
+      "url": "https://www.instagram.com/kamyy_i08/?hl=en",
+      "icon": "/uploads/1788355590040--fyp.jpg",
+      "order": 0
+    }
+  ],
   "connect": {
     "sectionLabel": "Connect",
     "title": "Find me around the web.",
