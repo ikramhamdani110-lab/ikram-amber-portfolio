@@ -156,7 +156,7 @@ export default function Page() {
                 {active === 'certifications' && <Certifications certifications={data.certifications} certificationsSettings={data.certificationsSettings} num={certNum} />}
                 {active === 'journey' && <Journey data={data.journey} linkedinUrl={data.socials?.linkedin} num={journeyNum} />}
                 {active === 'updates' && <Updates updates={data.updates} updatesSettings={data.updatesSettings} num={updatesNum} />}
-                {active === 'connect' && <Connect socials={data.socials} connect={data.connect} num={connectNum} />}
+                {active === 'connect' && <Connect socials={data.socials} connect={data.connect} customSocialLinks={data.customSocialLinks} num={connectNum} />}
               </motion.section>
             </AnimatePresence>
 

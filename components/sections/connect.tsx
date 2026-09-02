@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowUpRight, Mail } from 'lucide-react'
+import { ArrowUpRight, Mail, Globe } from 'lucide-react'
 import { GithubIcon, LinkedinIcon } from '@/components/brand-icons'
 import type { DbSchema } from '@/lib/db'
 import { SectionLabel } from '@/components/section-label'
@@ -9,14 +9,15 @@ import { SectionLabel } from '@/components/section-label'
 interface Props {
   socials: DbSchema['socials']
   connect: DbSchema['connect']
+  customSocialLinks?: DbSchema['customSocialLinks']
   num?: string
 }
 
-export function Connect({ socials, connect, num = '06' }: Props) {
+export function Connect({ socials, connect, customSocialLinks = [], num = '06' }: Props) {
   const githubUrl = socials?.github ?? ''
   const linkedinUrl = socials?.linkedin ?? ''
   const emailVal = socials?.email ?? ''
-  
+
   const sectionLabel = connect?.sectionLabel ?? ''
   const title = connect?.title ?? ''
   const description = connect?.description ?? ''
@@ -52,6 +53,17 @@ export function Connect({ socials, connect, num = '06' }: Props) {
     }
   }
 
+  const getGenericHandle = (url: string) => {
+    if (!url) return ''
+    try {
+      const cleaned = url.replace(/\/$/, '')
+      const parts = cleaned.split('/')
+      return parts[parts.length - 1] || ''
+    } catch {
+      return ''
+    }
+  }
+
   const cards = [
     {
       icon: GithubIcon,
@@ -77,6 +89,28 @@ export function Connect({ socials, connect, num = '06' }: Props) {
       cta: emailCta,
       href: emailVal ? `mailto:${emailVal}` : '#',
     },
+    // Custom social links from the Admin Dashboard — rendered as full cards
+    // identical in structure and styling to the three cards above.
+    ...(customSocialLinks || []).map((link) => ({
+      icon: link.icon
+        ? function CustomSocialIcon(props: { className?: string }) {
+            return (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={link.icon}
+                alt={`${link.name} icon`}
+                className={props.className ?? 'size-5'}
+                style={{ objectFit: 'contain' as const }}
+              />
+            )
+          }
+        : Globe,
+      title: link.name,
+      sub: `Follow my ${link.name}`,
+      handle: getGenericHandle(link.url) || link.name.toLowerCase(),
+      cta: `Visit ${link.name}`,
+      href: link.url || '#',
+    })),
   ]
 
   return (
@@ -94,7 +128,7 @@ export function Connect({ socials, connect, num = '06' }: Props) {
       <div className="mt-12 grid gap-5 md:grid-cols-3">
         {cards.map((card, i) => (
           <motion.a
-            key={card.title}
+            key={`${card.title}-${i}`}
             href={card.href}
             target="_blank"
             rel="noreferrer"
