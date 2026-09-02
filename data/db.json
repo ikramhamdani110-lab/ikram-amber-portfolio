@@ -176,12 +176,12 @@
           {
             "name": "XAMPP",
             "note": "Local server stack",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xampp/xampp-original.svg"
+            "icon": "/icons/xampp.svg"
           },
           {
             "name": "CODE::BLOCKS",
             "note": "C/C++ IDE",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/codeblocks/codeblocks-original.svg"
+            "icon": "/icons/codeblocks.svg"
           }
         ]
       }
@@ -258,8 +258,8 @@
   "customSocialLinks": [
     {
       "id": "social-1788355595500",
-      "name": "instagram",
-      "url": "https://www.instagram.com/kamyy_i08/?hl=en",
+      "name": "Instagram",
+      "url": "https://www.instagram.com/kamyy_i08/",
       "icon": "/uploads/1788355590040--fyp.jpg",
       "order": 0
     }
@@ -302,7 +302,7 @@
       "id": "cert-1788039713796",
       "name": "Certificate of Excellence",
       "organization": "InfoBrains Club and AI House, Hassiba Ben Bouali University of Chlef",
-      "date": "march 2026",
+      "date": "March 2026",
       "credentialId": "",
       "credentialUrl": "",
       "image": "/uploads/1788039310255-photo-2026-08-29-14-41-26.jpg",
@@ -314,11 +314,11 @@
       "id": "cert-1788039889896",
       "name": "Certificate of Achievement",
       "organization": "InfoBrains Club",
-      "date": "march 2026",
+      "date": "March 2026",
       "credentialId": "",
       "credentialUrl": "",
       "image": "/uploads/1788039839679-photo-2026-08-29-14-41-30.jpg",
-      "description": "For outstanding performance, creativity, and excellence in the Media Category during the Infobrains Challenge.",
+      "description": "For outstanding performance, creativity, and excellence in the Media Category during the InfoBrains Challenge.",
       "visible": true,
       "order": 2
     },
@@ -330,7 +330,7 @@
       "credentialId": "",
       "credentialUrl": "",
       "image": "/uploads/1788039963769-photo-2026-08-29-14-41-22.jpg",
-      "description": "For successful participation and wining the first place in BrainHack, a Problem Solving & Coding Hackathon.",
+      "description": "For successful participation and winning first place in BrainHack, a Problem Solving & Coding Hackathon.",
       "visible": true,
       "order": 3
     },
@@ -338,7 +338,7 @@
       "id": "cert-1788040113456",
       "name": "Certificate of Appreciation",
       "organization": "InfoBrains Scientific Club, Hassiba Ben Bouali University of Chlef",
-      "date": "april 2026",
+      "date": "April 2026",
       "credentialId": "",
       "credentialUrl": "",
       "image": "/uploads/1788040074201-photo-2026-08-29-14-41-13.jpg",
@@ -366,7 +366,7 @@
       "credentialId": "",
       "credentialUrl": "",
       "image": "/uploads/1788040255092-photo-2026-08-29-22-50-36.jpg",
-      "description": "For attending the free workshop \"Mobile Journalism & Content Creation\" ",
+      "description": "For attending the free workshop \"Mobile Journalism & Content Creation\"",
       "visible": true,
       "order": 6
     }
@@ -383,17 +383,7 @@
     "closeViewerLabel": "Close certificate viewer",
     "tapToCloseLabel": "Tap outside to close"
   },
-  "updates": [
-    {
-      "id": "update-1788126547149",
-      "title": "wwwwwwwwwwwwww",
-      "description": "wwwwwwwwwwwwwww",
-      "date": "2026-08-30",
-      "image": "/uploads/1788126545277-shot-anim.png",
-      "visible": true,
-      "category": "achievement"
-    }
-  ],
+  "updates": [],
   "updatesSettings": {
     "sectionLabel": "Updates",
     "title": "What's New",

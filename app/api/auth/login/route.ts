@@ -1,10 +1,26 @@
 import { NextResponse } from 'next/server'
 import { setSessionCookie } from '@/lib/auth'
-import { readAuthState, verifyPassword, hashPassword, writeAuthState } from '@/lib/security'
+import {
+  clearVerificationAttempts,
+  getVerificationAttemptState,
+  readAuthState,
+  registerFailedVerificationAttempt,
+  verifyPassword,
+  hashPassword,
+  writeAuthState,
+} from '@/lib/security'
+
+const LOGIN_RATE_LIMIT_KEY = 'admin:login'
 
 export async function POST(req: Request) {
   try {
     const { password } = await req.json()
+
+    const attemptState = getVerificationAttemptState(LOGIN_RATE_LIMIT_KEY)
+    if (attemptState.blocked) {
+      return NextResponse.json({ error: 'Too many failed sign-in attempts. Please wait a moment and try again.' }, { status: 429 })
+    }
+
     const state = readAuthState()
     const configuredPassword = process.env.ADMIN_PASSWORD
 
@@ -21,8 +37,13 @@ export async function POST(req: Request) {
     }
 
     if (password && verifyPassword(password, state.passwordHash, state.passwordSalt)) {
+      clearVerificationAttempts(LOGIN_RATE_LIMIT_KEY)
       await setSessionCookie('admin')
       return NextResponse.json({ success: true })
+    }
+
+    if (password) {
+      registerFailedVerificationAttempt(LOGIN_RATE_LIMIT_KEY)
     }
 
     return NextResponse.json({ error: 'Invalid password' }, { status: 401 })

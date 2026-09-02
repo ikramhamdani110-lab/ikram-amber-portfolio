@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Award, ArrowUpRight, X, ZoomIn } from 'lucide-react'
 import type { Certification, DbSchema } from '@/lib/db'
@@ -34,11 +34,24 @@ export function Certifications({ certifications, certificationsSettings, num = '
     document.body.style.overflow = 'hidden'
   }
 
-  const closeViewer = () => {
+  const closeViewer = useCallback(() => {
     setViewerImage(null)
     setViewerName('')
     document.body.style.overflow = ''
-  }
+  }, [])
+
+  // Escape-to-close + always restore body scroll on close/unmount
+  useEffect(() => {
+    if (!viewerImage) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeViewer()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = ''
+    }
+  }, [viewerImage, closeViewer])
 
   return (
     <>
