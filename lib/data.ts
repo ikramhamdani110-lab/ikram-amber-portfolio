@@ -1,1 +1,1 @@
-export type SectionId = 'home' | 'about' | 'skills' | 'certifications' | 'journey' | 'updates' | 'connect'
+export type SectionId = 'home' | 'about' | 'skills' | 'certifications' | 'journey' | 'updates' | 'projects' | 'connect'

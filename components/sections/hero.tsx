@@ -114,18 +114,7 @@ export function Hero({ onNavigate, data }: Props) {
     return () => clearTimeout(timer)
   }, [])
 
-  // Render name: last char in accent colour, with shine class
-  const renderName = () => {
-    if (name.length <= 1) return name
-    const main = name.slice(0, -1)
-    const last = name.slice(-1)
-    return (
-      <>
-        {main}
-        <span className="text-accent">{last}</span>
-      </>
-    )
-  }
+
 
   return (
     <div className="grid min-w-0 items-center gap-12 lg:grid-cols-2 lg:gap-8">
@@ -139,9 +128,9 @@ export function Hero({ onNavigate, data }: Props) {
           {data?.hello ?? ''} <Sparkle className="size-4 text-accent" />
         </div>
 
-        {/* Full name with premium shine sweep */}
-        <h1 className="animate-name-shine font-serif text-[13vw] font-light leading-[.95] tracking-tight sm:text-[9vw] lg:text-[6.5rem]">
-          {renderName()}
+        {/* Full name — plain solid color, one line at all sizes, refined clamp scale */}
+        <h1 className="whitespace-nowrap font-bold font-[family-name:var(--font-poppins)] leading-[.95] tracking-tight text-[#C94A7E] text-[clamp(1.75rem,4vw,2.5rem)] dark:text-[#C94A7E]">
+          {data?.name ?? name}
         </h1>
 
         <p className="relative mt-6 min-h-[3.2rem] font-serif text-2xl italic sm:text-3xl">

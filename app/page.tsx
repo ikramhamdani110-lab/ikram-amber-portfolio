@@ -8,6 +8,7 @@ import { SiteFooter } from '@/components/site-footer'
 import { Hero } from '@/components/sections/hero'
 import { About } from '@/components/sections/about'
 import { Skills } from '@/components/sections/skills'
+import { Projects } from '@/components/sections/projects'
 import { Certifications } from '@/components/sections/certifications'
 import { Journey } from '@/components/sections/journey'
 import { Updates } from '@/components/sections/updates'
@@ -86,37 +87,33 @@ export default function Page() {
     return <main className="flex min-h-screen items-center justify-center px-6 text-center font-mono text-sm text-muted-foreground">{loadError}</main>
   }
 
-  // Build nav items — only show sections that have content
-  const rawNavItems: { id: SectionId; label: string }[] = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: data?.about?.sectionLabel || 'About' },
+  // Build nav items — fixed editorial order:
+  // Home → About → Journey → Skills → Projects → Certifications → Updates → Connect
+  const navItems: { id: SectionId; label: string; num: string }[] = [
+    { id: 'home', label: 'Home', num: '01' },
+    { id: 'about', label: data?.about?.sectionLabel || 'About', num: '02' },
+    { id: 'journey', label: data?.journey?.sectionLabel || 'Journey', num: '03' },
+    { id: 'skills', label: data?.skills?.sectionLabel || 'Skills', num: '04' },
+    { id: 'projects', label: data?.projectsSettings?.sectionLabel || 'Projects', num: '05' },
   ]
-
-  rawNavItems.push({ id: 'journey', label: data?.journey?.sectionLabel || 'Journey' })
-  rawNavItems.push({ id: 'skills', label: data?.skills?.sectionLabel || 'Skills' })
 
   const visibleCerts = data?.certifications?.filter((c) => c.visible !== false) || []
   if (visibleCerts.length > 0) {
-    rawNavItems.push({ id: 'certifications', label: data?.certificationsSettings?.sectionLabel || 'Certifications' })
+    navItems.push({ id: 'certifications', label: data?.certificationsSettings?.sectionLabel || 'Certifications', num: String(navItems.length + 1).padStart(2, '0') })
   }
 
   const visibleUpdates = data?.updates?.filter((u) => u.visible !== false) || []
   if (visibleUpdates.length > 0) {
-    rawNavItems.push({ id: 'updates', label: data?.updatesSettings?.sectionLabel || 'Updates' })
+    navItems.push({ id: 'updates', label: data?.updatesSettings?.sectionLabel || 'Updates', num: String(navItems.length + 1).padStart(2, '0') })
   }
 
-  rawNavItems.push({ id: 'connect', label: data?.connect?.sectionLabel || 'Connect' })
+  navItems.push({ id: 'connect', label: data?.connect?.sectionLabel || 'Connect', num: String(navItems.length + 1).padStart(2, '0') })
 
-  const navItems = rawNavItems.map((item, index) => ({
-    id: item.id,
-    label: item.label,
-    num: String(index + 1).padStart(2, '0'),
-  }))
-
-  const certNum = navItems.find((n) => n.id === 'certifications')?.num || '04'
-  const journeyNum = navItems.find((n) => n.id === 'journey')?.num || '05'
-  const updatesNum = navItems.find((n) => n.id === 'updates')?.num || '06'
-  const connectNum = navItems.find((n) => n.id === 'connect')?.num || '07'
+  const certNum = navItems.find((n) => n.id === 'certifications')?.num || '06'
+  const journeyNum = navItems.find((n) => n.id === 'journey')?.num || '03'
+  const updatesNum = navItems.find((n) => n.id === 'updates')?.num || '07'
+  const projectsNum = navItems.find((n) => n.id === 'projects')?.num || '05'
+  const connectNum = navItems.find((n) => n.id === 'connect')?.num || '08'
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -153,6 +150,7 @@ export default function Page() {
                 {active === 'home' && <Hero onNavigate={navigate} data={data.hero} />}
                 {active === 'about' && <About data={data.about} aboutSkills={data.skills?.aboutSkills} />}
                 {active === 'skills' && <Skills data={data.skills} />}
+                {active === 'projects' && <Projects projects={data.projects || []} projectsSettings={data.projectsSettings} num={projectsNum} />}
                 {active === 'certifications' && <Certifications certifications={data.certifications} certificationsSettings={data.certificationsSettings} num={certNum} />}
                 {active === 'journey' && <Journey data={data.journey} linkedinUrl={data.socials?.linkedin} num={journeyNum} />}
                 {active === 'updates' && <Updates updates={data.updates} updatesSettings={data.updatesSettings} num={updatesNum} />}

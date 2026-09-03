@@ -47,7 +47,7 @@ export function SiteNav({
         </button>
 
         {/* Desktop navigation */}
-        <div className="ml-4 hidden items-center gap-1 sm:ml-6 md:ml-8 md:flex lg:ml-12">
+        <div className="ml-8 hidden items-center gap-1 sm:ml-12 sm:gap-1.5 md:ml-16 md:flex lg:ml-20">
           {navItems.map((item) => {
             return (
               <button

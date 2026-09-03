@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Fraunces, Inter, JetBrains_Mono } from 'next/font/google'
+import { Fraunces, Inter, JetBrains_Mono, Poppins } from 'next/font/google'
 import './globals.css'
 import { readDb } from '@/lib/db'
 
@@ -21,6 +21,13 @@ const fraunces = Fraunces({
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-jetbrains',
+  display: 'swap',
+})
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['700'],
+  variable: '--font-poppins',
   display: 'swap',
 })
 
@@ -60,7 +67,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`light ${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable}`}
+      className={`light ${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable} ${poppins.variable}`}
       suppressHydrationWarning
     >
       <head>

@@ -56,6 +56,49 @@ export interface CustomSocialLink {
   order: number
 }
 
+// ==================== PROJECTS ====================
+export interface DbSchemaProject {
+  id: string
+  title: string
+  description: string
+  category: string
+  image: string
+  additionalImages: string[]
+  tags: string[]
+  demoUrl: string
+  sourceUrl: string
+  visible: boolean
+  order: number
+}
+
+export interface DbSchemaProjectsSettings {
+  sectionLabel: string
+  title: string
+  description: string
+  emptyMessage: string
+}
+
+export interface Project {
+  id: string
+  title: string
+  description: string
+  category: string
+  image: string
+  additionalImages: string[]
+  tags: string[]
+  demoUrl: string
+  sourceUrl: string
+  visible: boolean
+  order: number
+}
+
+export interface ProjectsSettings {
+  sectionLabel: string
+  title: string
+  description: string
+  emptyMessage: string
+}
+
 export interface DbSchema {
   hero: {
     hello: string
@@ -112,6 +155,8 @@ export interface DbSchema {
     ctaButtonText: string
     sectionLabel: string
   }
+  projects: Project[]
+  projectsSettings: ProjectsSettings
   socials: {
     github: string
     linkedin: string
@@ -193,6 +238,8 @@ function normalizeDbData(data: Partial<DbSchema>): DbSchema {
     customSocialLinks: data.customSocialLinks || DEFAULT_DATA.customSocialLinks,
     certifications: data.certifications || DEFAULT_DATA.certifications,
     updates: data.updates || DEFAULT_DATA.updates,
+    projects: data.projects || DEFAULT_DATA.projects,
+    projectsSettings: { ...DEFAULT_DATA.projectsSettings, ...data.projectsSettings },
   }
 }
 
@@ -370,6 +417,53 @@ const DEFAULT_DATA: DbSchema = {
     wordmark: 'IKRAM',
     copyright: '© 2026 Ikram Hamdani',
     favicon: '/uploads/BCO.4a8408d8-a19f-4b25-84fa-5e00fbb1e8db.png'
+  },
+  projects: [
+    {
+      id: 'project-portfolio',
+      title: 'Personal Portfolio Website',
+      description: 'This very website — an editorial, single-page portfolio built with Next.js, TypeScript and Tailwind CSS. It features a live CMS dashboard, image uploads, secure authentication with TOTP, and deployment on Vercel.',
+      category: 'Web',
+      image: '/uploads/1788355590040--fyp.jpg',
+      additionalImages: [],
+      tags: ['Next.js', 'TypeScript', 'Tailwind CSS'],
+      demoUrl: 'https://github.com/ikramhamdani110-lab',
+      sourceUrl: 'https://github.com/ikramhamdani110-lab',
+      visible: true,
+      order: 1,
+    },
+    {
+      id: 'project-fyp',
+      title: 'Final Year Project',
+      description: 'My final year university project — designing and building a full information system with relational database modeling, a web front-end and reporting features.',
+      category: 'Academic',
+      image: '/uploads/1788016194444-photo-2026-08-29-14-41-34.jpg',
+      additionalImages: [],
+      tags: ['PHP', 'MySQL', 'Database Design'],
+      demoUrl: '',
+      sourceUrl: 'https://github.com/ikramhamdani110-lab',
+      visible: true,
+      order: 2,
+    },
+    {
+      id: 'project-club',
+      title: 'InfoBrains Club Website',
+      description: 'A website concept for the InfoBrains Scientific Club at Hassiba Benbouali University of Chlef — event pages, member profiles and announcement feeds.',
+      category: 'Web',
+      image: '/uploads/1788126545277-shot-anim.png',
+      additionalImages: [],
+      tags: ['HTML', 'CSS', 'JavaScript'],
+      demoUrl: '',
+      sourceUrl: 'https://github.com/ikramhamdani110-lab',
+      visible: true,
+      order: 3,
+    },
+  ],
+  projectsSettings: {
+    sectionLabel: 'Projects',
+    title: 'Things I have built.',
+    description: 'A selection of academic and personal work — from information systems to full-stack web experiments.',
+    emptyMessage: 'No projects published yet.'
   },
   certifications: [],
   certificationsSettings: {

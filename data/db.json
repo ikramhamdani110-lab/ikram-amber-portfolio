@@ -65,29 +65,29 @@
   },
   "skills": {
     "title": "My digital toolbox.",
-    "description": "A growing ecosystem of languages and tools I use to learn, build and experiment. Hover a badge to see what it means to me.",
+    "description": "A growing toolkit of technologies I use to learn, create, and build.",
     "dbTextBadge": "Database Design",
     "sectionLabel": "Skills",
     "aboutSkills": [
       {
         "name": "PYTHON",
         "note": "Scripting · Data · Automation",
-        "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
+        "icon": "/icons/skills/python.svg"
       },
       {
         "name": "MYSQL",
-        "note": "Queries & relations",
-        "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"
+        "note": "Queries · Relations · Database Management",
+        "icon": "/icons/skills/mysql.svg"
       },
       {
         "name": "HTML5",
-        "note": "Semantic structure",
-        "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
+        "note": "Semantic Structure",
+        "icon": "/icons/skills/html5.svg"
       },
       {
         "name": "GIT",
-        "note": "Version control",
-        "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"
+        "note": "Version Control",
+        "icon": "/icons/skills/git.svg"
       }
     ],
     "groups": [
@@ -97,18 +97,18 @@
         "skills": [
           {
             "name": "C",
-            "note": "Fundamentals · Memory · Logic",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg"
+            "note": "Fundamentals · Logic · Memory",
+            "icon": "/icons/skills/c.svg"
           },
           {
             "name": "PYTHON",
             "note": "Scripting · Data · Automation",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
+            "icon": "/icons/skills/python.svg"
           },
           {
             "name": "JAVA",
-            "note": "OOP · Structured programs",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg"
+            "note": "OOP · Programming Foundations",
+            "icon": "/icons/skills/java.svg"
           }
         ]
       },
@@ -118,23 +118,38 @@
         "skills": [
           {
             "name": "HTML5",
-            "note": "Semantic structure",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
+            "note": "Semantic Structure",
+            "icon": "/icons/skills/html5.svg"
           },
           {
             "name": "CSS3",
-            "note": "Layout · Motion · Design",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
+            "note": "Layout · Styling · Responsive Design",
+            "icon": "/icons/skills/css3.svg"
           },
           {
             "name": "JAVASCRIPT",
-            "note": "Interactivity & logic",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+            "note": "Interactivity · Logic · Web Development",
+            "icon": "/icons/skills/javascript.svg"
           },
           {
             "name": "PHP",
-            "note": "Server-side scripting",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg"
+            "note": "Server-Side Development",
+            "icon": "/icons/skills/php.svg"
+          },
+          {
+            "name": "TYPESCRIPT",
+            "note": "Type Safety · Modern JavaScript",
+            "icon": "/icons/skills/typescript.svg"
+          },
+          {
+            "name": "REACT",
+            "note": "Components · UI Development",
+            "icon": "/icons/skills/react.svg"
+          },
+          {
+            "name": "NEXT.JS",
+            "note": "Routing · Full-Stack Web · Modern Applications",
+            "icon": "/icons/skills/nextjs.svg"
           }
         ]
       },
@@ -144,13 +159,18 @@
         "skills": [
           {
             "name": "MYSQL",
-            "note": "Queries & relations",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"
+            "note": "Queries · Relations · Database Management",
+            "icon": "/icons/skills/mysql.svg"
           },
           {
             "name": "MARIADB",
-            "note": "Open-source database",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mariadb/mariadb-original.svg"
+            "note": "Relational Databases · SQL",
+            "icon": "/icons/skills/mariadb.svg"
+          },
+          {
+            "name": "SQL",
+            "note": "Queries · Joins · Data Manipulation",
+            "icon": "/icons/skills/sql.svg"
           }
         ]
       },
@@ -160,28 +180,38 @@
         "skills": [
           {
             "name": "GIT",
-            "note": "Version control",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"
+            "note": "Version Control",
+            "icon": "/icons/skills/git.svg"
           },
           {
             "name": "GITHUB",
-            "note": "Hosting & collaboration",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg"
+            "note": "Code Hosting · Collaboration",
+            "icon": "/icons/skills/github.svg"
           },
           {
             "name": "VS CODE",
-            "note": "My daily editor",
-            "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg"
+            "note": "Development Environment",
+            "icon": "/icons/skills/vscode.svg"
           },
           {
             "name": "XAMPP",
-            "note": "Local server stack",
+            "note": "Local Development · PHP · MySQL",
             "icon": "/icons/xampp.svg"
           },
           {
             "name": "CODE::BLOCKS",
-            "note": "C/C++ IDE",
+            "note": "C/C++ Development",
             "icon": "/icons/codeblocks.svg"
+          },
+          {
+            "name": "NETBEANS",
+            "note": "Java Development",
+            "icon": "/icons/skills/netbeans.svg"
+          },
+          {
+            "name": "VERCEL",
+            "note": "Deployment · Web Hosting",
+            "icon": "/icons/skills/vercel.svg"
           }
         ]
       }
@@ -284,6 +314,65 @@
     "wordmark": "IKRAM HAMDANI",
     "copyright": "© 2026 Ikram Hamdani",
     "favicon": "/uploads/BCO.4a8408d8-a19f-4b25-84fa-5e00fbb1e8db.png"
+  },
+  "projects": [
+    {
+      "id": "project-portfolio",
+      "order": 1,
+      "title": "Personal Portfolio Website",
+      "description": "This very website — an editorial, single-page portfolio built with Next.js, TypeScript and Tailwind CSS. It features a live CMS dashboard, image uploads, secure authentication with TOTP, and deployment on Vercel.",
+      "category": "Web",
+      "image": "/uploads/1788355590040--fyp.jpg",
+      "additionalImages": [],
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS"
+      ],
+      "demoUrl": "https://github.com/ikramhamdani110-lab",
+      "sourceUrl": "https://github.com/ikramhamdani110-lab",
+      "visible": true
+    },
+    {
+      "id": "project-fyp",
+      "order": 2,
+      "title": "Final Year Project",
+      "description": "My final year university project — designing and building a full information system with relational database modeling, a web front-end and reporting features.",
+      "category": "Academic",
+      "image": "/uploads/1788016194444-photo-2026-08-29-14-41-34.jpg",
+      "additionalImages": [],
+      "tags": [
+        "PHP",
+        "MySQL",
+        "Database Design"
+      ],
+      "demoUrl": "",
+      "sourceUrl": "https://github.com/ikramhamdani110-lab",
+      "visible": true
+    },
+    {
+      "id": "project-club",
+      "order": 3,
+      "title": "InfoBrains Club Website",
+      "description": "A website concept for the InfoBrains Scientific Club at Hassiba Benbouali University of Chlef — event pages, member profiles and announcement feeds.",
+      "category": "Web",
+      "image": "/uploads/1788126545277-shot-anim.png",
+      "additionalImages": [],
+      "tags": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "demoUrl": "",
+      "sourceUrl": "https://github.com/ikramhamdani110-lab",
+      "visible": true
+    }
+  ],
+  "projectsSettings": {
+    "sectionLabel": "Projects",
+    "title": "Things I have built.",
+    "description": "A selection of academic and personal work — from information systems to full-stack web experiments.",
+    "emptyMessage": "No projects published yet."
   },
   "certifications": [
     {

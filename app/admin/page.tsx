@@ -30,7 +30,7 @@ import {
   Moon,
   Sun
 } from 'lucide-react'
-import type { DbSchema, Certification, PortfolioUpdate, Skill, SkillGroup, JourneyStage } from '@/lib/db'
+import type { DbSchema, Certification, PortfolioUpdate, Skill, SkillGroup, JourneyStage, Project } from '@/lib/db'
 
 export default function AdminPage() {
   const router = useRouter()
@@ -38,7 +38,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'profile' | 'skills' | 'journey' | 'certifications' | 'socials' | 'updates' | 'settings'
+    'overview' | 'profile' | 'skills' | 'journey' | 'certifications' | 'socials' | 'updates' | 'projects' | 'settings'
   >('overview')
   const [theme, setTheme] = useState<'dark' | 'light'>('light')
 
@@ -274,6 +274,7 @@ export default function AdminPage() {
               { id: 'journey', label: 'Journey Stages', icon: BookOpen },
               { id: 'socials', label: 'Social Links', icon: Globe },
               { id: 'updates', label: 'Updates Feed', icon: Bell },
+              { id: 'projects', label: 'Projects', icon: FolderPlus },
               { id: 'settings', label: 'Site Settings', icon: Settings },
             ].map((tab) => {
               const Icon = tab.icon
@@ -373,6 +374,9 @@ export default function AdminPage() {
         )}
         {activeTab === 'updates' && (
           <UpdatesTab db={db} save={saveSectionData} uploadImage={uploadImage} />
+        )}
+        {activeTab === 'projects' && (
+          <ProjectsTab db={db} uploadImage={uploadImage} />
         )}
         {activeTab === 'settings' && (
           <SettingsTab db={db} save={saveSectionData} />
@@ -2541,6 +2545,420 @@ function UpdatesTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
                 </button>
                 <button
                   onClick={() => handleDelete(u.id)}
+                  className="p-2 border border-border/60 rounded-xl text-muted-foreground hover:text-red-400 transition-colors"
+                >
+                  <Trash2 className="size-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ----------------------------------------------------
+// 7.5 PROJECTS TAB
+// ----------------------------------------------------
+interface ProjectFormState {
+  id?: string
+  title: string
+  description: string
+  category: string
+  image: string
+  additionalImages: string[]
+  tagsText: string
+  demoUrl: string
+  sourceUrl: string
+  visible: boolean
+}
+
+function emptyProjectForm(): ProjectFormState {
+  return {
+    title: '',
+    description: '',
+    category: 'Web',
+    image: '',
+    additionalImages: [],
+    tagsText: '',
+    demoUrl: '',
+    sourceUrl: '',
+    visible: true,
+  }
+}
+
+function ProjectsTab({ db, uploadImage }: { db: DbSchema; uploadImage: any }) {
+  const [projects, setProjects] = useState<Project[]>(db.projects || [])
+  const [isEditing, setIsEditing] = useState(false)
+  const [editForm, setEditForm] = useState<ProjectFormState>(emptyProjectForm())
+  const mainImageInputRef = useRef<HTMLInputElement>(null)
+  const additionalImageInputRef = useRef<HTMLInputElement>(null)
+
+  const handleEditClick = (p: Project) => {
+    setEditForm({
+      id: p.id,
+      title: p.title,
+      description: p.description,
+      category: p.category,
+      image: p.image || '',
+      additionalImages: p.additionalImages || [],
+      tagsText: (p.tags || []).join(', '),
+      demoUrl: p.demoUrl || '',
+      sourceUrl: p.sourceUrl || '',
+      visible: p.visible !== false,
+    })
+    setIsEditing(true)
+  }
+
+  const handleAddClick = () => {
+    setEditForm(emptyProjectForm())
+    setIsEditing(true)
+  }
+
+  const handleInputChange = (key: keyof ProjectFormState, val: any) => {
+    setEditForm((f) => ({ ...f, [key]: val }))
+  }
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, target: 'image' | 'additional') => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    try {
+      const path = await uploadImage(file)
+      if (target === 'image') {
+        handleInputChange('image', path)
+      } else {
+        setEditForm((f) => ({ ...f, additionalImages: [...f.additionalImages, path] }))
+      }
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Upload failed')
+    }
+    e.target.value = ''
+  }
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const payload = {
+      id: editForm.id,
+      title: editForm.title,
+      description: editForm.description,
+      category: editForm.category,
+      image: editForm.image,
+      additionalImages: editForm.additionalImages,
+      tags: editForm.tagsText.split(',').map((t) => t.trim()).filter(Boolean),
+      demoUrl: editForm.demoUrl,
+      sourceUrl: editForm.sourceUrl,
+      visible: editForm.visible,
+    }
+    try {
+      const res = await fetch('/api/admin/projects', {
+        method: editForm.id ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      if (res.ok) {
+        const json = await res.json()
+        setProjects(json.projects || [])
+        setIsEditing(false)
+      } else {
+        const json = await res.json().catch(() => null)
+        alert(json?.error || `Failed to save project (${res.status})`)
+      }
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Unable to reach the server while saving project')
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Permanently delete this project?')) return
+    try {
+      const res = await fetch(`/api/admin/projects?id=${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        const json = await res.json()
+        setProjects(json.projects || [])
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const toggleVisibility = async (p: Project) => {
+    try {
+      const res = await fetch('/api/admin/projects', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...p, visible: !p.visible }),
+      })
+      if (res.ok) {
+        const json = await res.json()
+        setProjects(json.projects || [])
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const moveProject = async (index: number, direction: -1 | 1) => {
+    const next = [...projects]
+    const target = index + direction
+    if (target < 0 || target >= next.length) return
+    ;[next[index], next[target]] = [next[target], next[index]]
+    const reordered = next.map((p, i) => ({ ...p, order: i + 1 }))
+    setProjects(reordered)
+    try {
+      await fetch('/api/admin/projects', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reordered),
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if (isEditing) {
+    return (
+      <div className="rounded-3xl border border-border bg-card/40 p-7 space-y-6 dark:bg-card/40">
+        <div className="flex items-center justify-between border-b border-border/40 pb-3">
+          <h3 className="font-serif text-xl font-light">
+            {editForm.id ? 'Edit Project' : 'Add New Project'}
+          </h3>
+          <button type="button" onClick={() => setIsEditing(false)} className="font-mono text-[10px] text-muted-foreground">
+            Cancel
+          </button>
+        </div>
+
+        <form onSubmit={handleFormSubmit} className="space-y-5">
+          <div className="grid gap-5 sm:grid-cols-[1fr_200px]">
+            <div>
+              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Project Title</label>
+              <input
+                type="text"
+                required
+                value={editForm.title}
+                onChange={(e) => handleInputChange('title', e.target.value)}
+                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
+              />
+            </div>
+            <div>
+              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Category</label>
+              <input
+                type="text"
+                value={editForm.category}
+                onChange={(e) => handleInputChange('category', e.target.value)}
+                placeholder="Web / Academic / ..."
+                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Description</label>
+            <textarea
+              required
+              value={editForm.description}
+              onChange={(e) => handleInputChange('description', e.target.value)}
+              rows={4}
+              className="w-full rounded-2xl border border-border bg-background p-4 text-sm focus:border-accent outline-none text-foreground leading-relaxed dark:bg-[#0e0b0d]"
+            />
+          </div>
+
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Tags (comma separated)</label>
+            <input
+              type="text"
+              value={editForm.tagsText}
+              onChange={(e) => handleInputChange('tagsText', e.target.value)}
+              placeholder="Next.js, TypeScript, MySQL"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
+            />
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Demo URL</label>
+              <input
+                type="url"
+                value={editForm.demoUrl}
+                onChange={(e) => handleInputChange('demoUrl', e.target.value)}
+                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
+              />
+            </div>
+            <div>
+              <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Source URL</label>
+              <input
+                type="url"
+                value={editForm.sourceUrl}
+                onChange={(e) => handleInputChange('sourceUrl', e.target.value)}
+                className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Main Image (Upload or path)</label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={editForm.image}
+                onChange={(e) => handleInputChange('image', e.target.value)}
+                className="flex-1 rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
+              />
+              <button
+                type="button"
+                onClick={() => mainImageInputRef.current?.click()}
+                className="rounded-2xl border border-border bg-card p-3 text-muted-foreground hover:text-accent"
+              >
+                <Upload className="size-4" />
+              </button>
+              <input
+                ref={mainImageInputRef}
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e, 'image')}
+                className="hidden"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Additional Images</label>
+            <div className="flex flex-wrap items-center gap-3">
+              {editForm.additionalImages.map((img, i) => (
+                <div key={i} className="relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={img} alt={`additional ${i + 1}`} className="size-20 rounded-2xl border border-border object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setEditForm((f) => ({ ...f, additionalImages: f.additionalImages.filter((_, j) => j !== i) }))}
+                    className="absolute -right-2 -top-2 rounded-full border border-border bg-card p-1 text-muted-foreground hover:text-red-400"
+                    aria-label={`Remove additional image ${i + 1}`}
+                  >
+                    <Trash2 className="size-3" />
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => additionalImageInputRef.current?.click()}
+                className="flex size-20 items-center justify-center rounded-2xl border border-dashed border-border text-muted-foreground hover:text-accent"
+                aria-label="Upload additional image"
+              >
+                <Plus className="size-5" />
+              </button>
+              <input
+                ref={additionalImageInputRef}
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e, 'additional')}
+                className="hidden"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => handleInputChange('visible', !editForm.visible)}
+              className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
+            >
+              {editForm.visible ? (
+                <>
+                  <Eye className="size-4 text-green-400" /> Publicly Published
+                </>
+              ) : (
+                <>
+                  <EyeOff className="size-4 text-yellow-500" /> Hidden
+                </>
+              )}
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            className="rounded-full bg-accent-soft px-8 py-3.5 text-xs font-mono uppercase tracking-wider text-[#201319] hover:bg-accent transition-transform hover:-translate-y-0.5 dark:text-[#201319]"
+          >
+            {editForm.id ? 'Save Changes' : 'Publish Project'}
+          </button>
+        </form>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="font-serif text-xl font-light">Projects ({projects.length})</h3>
+        <button
+          onClick={handleAddClick}
+          className="flex items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 text-xs font-mono uppercase tracking-wider text-[#201319] dark:text-[#201319]"
+        >
+          <Plus className="size-4" /> Add Project
+        </button>
+      </div>
+
+      {projects.length === 0 ? (
+        <div className="rounded-3xl border border-border bg-card/10 p-10 text-center text-sm text-muted-foreground">
+          No projects added yet.
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {projects.map((p, i) => (
+            <div
+              key={p.id}
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border bg-card p-6 shadow-sm dark:bg-[#0e0b0d] dark:shadow-none"
+            >
+              <div className="flex min-w-0 items-center gap-4">
+                {p.image ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={p.image} alt="" className="size-14 shrink-0 rounded-2xl border border-border object-cover" />
+                ) : (
+                  <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl border border-border text-accent">
+                    <FolderPlus className="size-5" />
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <h4 className="font-serif text-lg font-medium leading-tight">{p.title}</h4>
+                  <p className="text-xs text-muted-foreground/80 font-mono uppercase tracking-widest mt-1">
+                    #{i + 1} · <span className="text-accent">{p.category}</span>
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{p.description}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 border-t border-border/20 pt-4 sm:pt-0 sm:border-t-0 justify-end">
+                <button
+                  onClick={() => moveProject(i, -1)}
+                  disabled={i === 0}
+                  className="p-2 border border-border/60 rounded-xl text-muted-foreground hover:text-accent transition-colors disabled:opacity-30"
+                  aria-label={`Move ${p.title} up`}
+                >
+                  <ArrowUp className="size-3.5" />
+                </button>
+                <button
+                  onClick={() => moveProject(i, 1)}
+                  disabled={i === projects.length - 1}
+                  className="p-2 border border-border/60 rounded-xl text-muted-foreground hover:text-accent transition-colors disabled:opacity-30"
+                  aria-label={`Move ${p.title} down`}
+                >
+                  <ArrowDown className="size-3.5" />
+                </button>
+                <button
+                  onClick={() => toggleVisibility(p)}
+                  className={`p-2 border border-border/60 rounded-xl transition-colors ${
+                    p.visible !== false ? 'text-green-400 hover:bg-green-950/20' : 'text-yellow-500 hover:bg-yellow-950/20'
+                  }`}
+                >
+                  {p.visible !== false ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
+                </button>
+                <button
+                  onClick={() => handleEditClick(p)}
+                  className="p-2 border border-border/60 rounded-xl text-muted-foreground hover:text-accent transition-colors"
+                >
+                  <Edit className="size-3.5" />
+                </button>
+                <button
+                  onClick={() => handleDelete(p.id)}
                   className="p-2 border border-border/60 rounded-xl text-muted-foreground hover:text-red-400 transition-colors"
                 >
                   <Trash2 className="size-3.5" />
