@@ -27,6 +27,7 @@ export async function POST(req: Request) {
       name: linkData.name || 'New Link',
       url: linkData.url || '',
       icon: linkData.icon || '',
+      subtitle: linkData.subtitle || '',
       order: db.customSocialLinks.length
     }
 
@@ -58,7 +59,7 @@ export async function PUT(req: Request) {
     }
 
     // Otherwise, treat it as a single link update
-    const { id, name, url, icon } = body
+    const { id, name, url, icon, subtitle } = body
     if (!id) {
       return NextResponse.json({ error: 'Link ID is required' }, { status: 400 })
     }
@@ -73,6 +74,7 @@ export async function PUT(req: Request) {
       name: name !== undefined ? name : db.customSocialLinks[index].name,
       url: url !== undefined ? url : db.customSocialLinks[index].url,
       icon: icon !== undefined ? icon : db.customSocialLinks[index].icon,
+      subtitle: subtitle !== undefined ? subtitle : db.customSocialLinks[index].subtitle,
     }
 
     if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist social link changes. Check persistent storage configuration.' }, { status: 500 })
@@ -99,7 +101,7 @@ export async function DELETE(req: Request) {
 
     const db = await readDb()
     db.customSocialLinks = db.customSocialLinks.filter((l) => l.id !== id)
-    
+
     // Normalize order
     db.customSocialLinks = db.customSocialLinks.map((l, i) => ({ ...l, order: i }))
     if (!await writeDb(db)) return NextResponse.json({ error: 'Could not persist social link changes. Check persistent storage configuration.' }, { status: 500 })

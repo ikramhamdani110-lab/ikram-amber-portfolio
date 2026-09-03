@@ -106,7 +106,7 @@ export function Connect({ socials, connect, customSocialLinks = [], num = '06' }
           }
         : Globe,
       title: link.name,
-      sub: `Follow my ${link.name}`,
+      sub: link.subtitle?.trim() || '',
       handle: getGenericHandle(link.url) || link.name.toLowerCase(),
       cta: `Visit ${link.name}`,
       href: link.url || '#',
@@ -145,7 +145,9 @@ export function Connect({ socials, connect, customSocialLinks = [], num = '06' }
             </div>
 
             <h3 className="mt-6 font-serif text-2xl">{card.title}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{card.sub}</p>
+            {card.sub ? (
+              <p className="mt-1 text-sm text-muted-foreground">{card.sub}</p>
+            ) : null}
             <p className="mt-5 font-mono text-xs text-muted-foreground">{card.handle}</p>
 
             <span className="mt-5 inline-flex w-fit items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 text-sm font-medium text-foreground font-semibold">

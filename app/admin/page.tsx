@@ -1794,10 +1794,11 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
 
   const [customLinks, setCustomLinks] = useState(db.customSocialLinks || [])
   const [isEditingCustom, setIsEditingCustom] = useState(false)
-  const [customForm, setCustomForm] = useState<{ id?: string; name: string; url: string; icon: string }>({
+  const [customForm, setCustomForm] = useState<{ id?: string; name: string; url: string; icon: string; subtitle: string }>({
     name: '',
     url: '',
-    icon: ''
+    icon: '',
+    subtitle: ''
   })
 
   const customFileInputRef = useRef<HTMLInputElement>(null)
@@ -1824,12 +1825,12 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   }
 
   const handleAddCustom = () => {
-    setCustomForm({ name: '', url: '', icon: '' })
+    setCustomForm({ name: '', url: '', icon: '', subtitle: '' })
     setIsEditingCustom(true)
   }
 
   const handleEditCustom = (link: any) => {
-    setCustomForm({ id: link.id, name: link.name, url: link.url, icon: link.icon || '' })
+    setCustomForm({ id: link.id, name: link.name, url: link.url, icon: link.icon || '', subtitle: (link as { subtitle?: string }).subtitle || '' })
     setIsEditingCustom(true)
   }
 
@@ -1938,6 +1939,17 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               onChange={(e) => setCustomForm({ ...customForm, url: e.target.value })}
               placeholder="https://..."
               className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
+            />
+          </div>
+
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Subtitle (Optional)</label>
+            <input
+              type="text"
+              value={customForm.subtitle}
+              onChange={(e) => setCustomForm({ ...customForm, subtitle: e.target.value })}
+              placeholder="e.g., Design portfolio & case studies"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-serif dark:bg-[#0e0b0d]"
             />
           </div>
 

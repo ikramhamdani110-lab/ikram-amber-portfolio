@@ -41,13 +41,13 @@ export function SiteNav({
         <button
           onClick={() => onNavigate('home')}
           aria-label="Go to home"
-          className="shrink-0 whitespace-nowrap font-serif text-[1.1rem] font-medium tracking-tight text-foreground min-[360px]:text-[1.25rem] sm:text-[1.8rem]"
+          className="shrink-0 whitespace-nowrap font-serif text-[1.3rem] font-medium tracking-tight text-foreground min-[360px]:text-[1.45rem] sm:text-[2rem]"
         >
-          Ikram Hamdani
+          IKRA<span className="text-accent">M</span>
         </button>
 
         {/* Desktop navigation */}
-        <div className="hidden items-center gap-1 md:flex">
+        <div className="ml-4 hidden items-center gap-1 sm:ml-6 md:ml-8 md:flex lg:ml-12">
           {navItems.map((item) => {
             return (
               <button

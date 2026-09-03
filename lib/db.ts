@@ -52,6 +52,7 @@ export interface CustomSocialLink {
   name: string
   url: string
   icon?: string
+  subtitle?: string
   order: number
 }
 

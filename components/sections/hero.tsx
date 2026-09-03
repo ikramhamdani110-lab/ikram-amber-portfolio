@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { ArrowRight, ArrowUpRight, Sparkle } from 'lucide-react'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
@@ -8,6 +9,7 @@ import type { DbSchema } from '@/lib/db'
 const DEVICON_ASSET_BASE = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons'
 
 // 4 Corner Floating Tech Icons around the Hero Code Window
+const ROTATING_TITLES = ['Information Science Student', 'Web Developer', 'Designer']
 const FLOATING_HERO_ICONS = [
   {
     id: 'html5',
@@ -76,6 +78,42 @@ export function Hero({ onNavigate, data }: Props) {
   const codeLines = data?.codeLines || []
   const name = data?.name ?? ''
 
+  // Typing/deleting loop for the hero subtitle
+  const [titleText, setTitleText] = useState('')
+  useEffect(() => {
+    let wordIndex = 0
+    let charIndex = 0
+    let deleting = false
+    let timer: ReturnType<typeof setTimeout>
+
+    const tick = () => {
+      const word = ROTATING_TITLES[wordIndex]
+      if (!deleting) {
+        charIndex++
+        setTitleText(word.slice(0, charIndex))
+        if (charIndex === word.length) {
+          deleting = true
+          timer = setTimeout(tick, 1600) // pause after typing
+          return
+        }
+        timer = setTimeout(tick, 70)
+      } else {
+        charIndex--
+        setTitleText(word.slice(0, charIndex))
+        if (charIndex === 0) {
+          deleting = false
+          wordIndex = (wordIndex + 1) % ROTATING_TITLES.length
+          timer = setTimeout(tick, 400) // pause before next word
+          return
+        }
+        timer = setTimeout(tick, 40)
+      }
+    }
+
+    timer = setTimeout(tick, 500)
+    return () => clearTimeout(timer)
+  }, [])
+
   // Render name: last char in accent colour, with shine class
   const renderName = () => {
     if (name.length <= 1) return name
@@ -101,12 +139,22 @@ export function Hero({ onNavigate, data }: Props) {
           {data?.hello ?? ''} <Sparkle className="size-4 text-accent" />
         </div>
 
-        {/* IKRAM with premium shine sweep */}
-        <h1 className="animate-name-shine font-serif text-[19vw] font-light leading-[0.85] tracking-tight sm:text-[13vw] lg:text-[9.5rem]">
+        {/* Full name with premium shine sweep */}
+        <h1 className="animate-name-shine font-serif text-[13vw] font-light leading-[.95] tracking-tight sm:text-[9vw] lg:text-[6.5rem]">
           {renderName()}
         </h1>
 
-        <p className="mt-6 min-h-[3.2rem] font-serif text-2xl italic sm:text-3xl">{data?.title ?? ''}</p>
+        <p className="relative mt-6 min-h-[3.2rem] font-serif text-2xl italic sm:text-3xl">
+          {/* Invisible sizer: reserves the tallest/widest size so nothing shifts while typing */}
+          <span className="invisible" aria-hidden>
+            {ROTATING_TITLES.reduce((a, b) => (b.length > a.length ? b : a), '')}
+          </span>
+          <span className="absolute left-0 top-0">
+            {titleText}
+            <span className="animate-blink ml-0.5 text-accent" aria-hidden>▍</span>
+          </span>
+          <span className="sr-only">{data?.title ?? ''}</span>
+        </p>
 
         <p className="mt-5 max-w-md leading-relaxed text-muted-foreground">
           {data?.bio || ''}
