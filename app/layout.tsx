@@ -33,7 +33,7 @@ const poppins = Poppins({
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = (await readDb()).siteSettings
-  const favicon = settings?.favicon || '/uploads/BCO.4a8408d8-a19f-4b25-84fa-5e00fbb1e8db.png'
+  const favicon = settings?.favicon || '/uploads/BCO.6e15c77e-30f5-40bd-8b64-9a266b138aa2.png'
 
   return {
     title: settings?.metaTitle || 'Ikram Hamdani | Information Science Student & Web Developer',
