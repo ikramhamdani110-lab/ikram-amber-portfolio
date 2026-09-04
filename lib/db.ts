@@ -243,12 +243,12 @@ function normalizeDbData(data: Partial<DbSchema>): DbSchema {
   }
 }
 
-const D = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons'
+const D = '/icons/skills'
 
 const DEFAULT_DATA: DbSchema = {
   hero: {
     hello: "Hello, I'm",
-    name: "IKRAM",
+    name: "Ikram Hamdani",
     title: "Information Science Student & Web Developer",
     exploreLabel: "Explore",
     aboutLabel: "About Me",
@@ -297,48 +297,48 @@ const DEFAULT_DATA: DbSchema = {
     dbTextBadge: "Database Design",
     sectionLabel: "Skills",
     aboutSkills: [
-      { name: 'PYTHON', note: 'Scripting · Data · Automation', icon: `${D}/python/python-original.svg` },
-      { name: 'MYSQL', note: 'Queries & relations', icon: `${D}/mysql/mysql-original.svg` },
-      { name: 'HTML5', note: 'Semantic structure', icon: `${D}/html5/html5-original.svg` },
-      { name: 'GIT', note: 'Version control', icon: `${D}/git/git-original.svg` },
+      { name: 'PYTHON', note: 'Scripting · Data · Automation', icon: `${D}/python.svg` },
+      { name: 'MYSQL', note: 'Queries & relations', icon: `${D}/mysql.svg` },
+      { name: 'HTML5', note: 'Semantic structure', icon: `${D}/html5.svg` },
+      { name: 'GIT', note: 'Version control', icon: `${D}/git.svg` },
     ],
     groups: [
       {
         num: '01',
         title: 'Programming',
         skills: [
-          { name: 'C', note: 'Fundamentals · Memory · Logic', icon: `${D}/c/c-original.svg` },
-          { name: 'PYTHON', note: 'Scripting · Data · Automation', icon: `${D}/python/python-original.svg` },
-          { name: 'JAVA', note: 'OOP · Structured programs', icon: `${D}/java/java-original.svg` },
+          { name: 'C', note: 'Fundamentals · Memory · Logic', icon: `${D}/c.svg` },
+          { name: 'PYTHON', note: 'Scripting · Data · Automation', icon: `${D}/python.svg` },
+          { name: 'JAVA', note: 'OOP · Structured programs', icon: `${D}/java.svg` },
         ],
       },
       {
         num: '02',
         title: 'Web',
         skills: [
-          { name: 'HTML5', note: 'Semantic structure', icon: `${D}/html5/html5-original.svg` },
-          { name: 'CSS3', note: 'Layout · Motion · Design', icon: `${D}/css3/css3-original.svg` },
-          { name: 'JAVASCRIPT', note: 'Interactivity & logic', icon: `${D}/javascript/javascript-original.svg` },
-          { name: 'PHP', note: 'Server-side scripting', icon: `${D}/php/php-original.svg` },
+          { name: 'HTML5', note: 'Semantic structure', icon: `${D}/html5.svg` },
+          { name: 'CSS3', note: 'Layout · Motion · Design', icon: `${D}/css3.svg` },
+          { name: 'JAVASCRIPT', note: 'Interactivity & logic', icon: `${D}/javascript.svg` },
+          { name: 'PHP', note: 'Server-side scripting', icon: `${D}/php.svg` },
         ],
       },
       {
         num: '03',
         title: 'Databases',
         skills: [
-          { name: 'MYSQL', note: 'Queries & relations', icon: `${D}/mysql/mysql-original.svg` },
-          { name: 'MARIADB', note: 'Open-source database', icon: `${D}/mariadb/mariadb-original.svg` },
+          { name: 'MYSQL', note: 'Queries & relations', icon: `${D}/mysql.svg` },
+          { name: 'MARIADB', note: 'Open-source database', icon: `${D}/mariadb.svg` },
         ],
       },
       {
         num: '04',
         title: 'Tools',
         skills: [
-          { name: 'GIT', note: 'Version control', icon: `${D}/git/git-original.svg` },
-          { name: 'GITHUB', note: 'Hosting & collaboration', icon: `${D}/github/github-original.svg` },
-          { name: 'VS CODE', note: 'My daily editor', icon: `${D}/vscode/vscode-original.svg` },
-          { name: 'XAMPP', note: 'Local server stack', icon: `${D}/xampp/xampp-original.svg` },
-          { name: 'CODE::BLOCKS', note: 'C/C++ IDE', icon: `${D}/codeblocks/codeblocks-original.svg` },
+          { name: 'GIT', note: 'Version control', icon: `${D}/git.svg` },
+          { name: 'GITHUB', note: 'Hosting & collaboration', icon: `${D}/github.svg` },
+          { name: 'VS CODE', note: 'My daily editor', icon: `${D}/vscode.svg` },
+          { name: 'XAMPP', note: 'Local server stack', icon: '/icons/xampp.svg' },
+          { name: 'CODE::BLOCKS', note: 'C/C++ IDE', icon: '/icons/codeblocks.svg' },
         ],
       },
     ]

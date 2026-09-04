@@ -52,11 +52,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'light dark',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fae8f0' },
-    { media: '(prefers-color-scheme: dark)', color: '#141013' },
-  ],
+  // Light mode is the default theme; the browser UI should never render dark
+  // on first load (a user can still switch to dark via the theme toggle).
+  colorScheme: 'light',
+  themeColor: '#fae8f0',
 }
 
 export default function RootLayout({

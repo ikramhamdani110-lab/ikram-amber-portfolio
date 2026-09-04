@@ -6,7 +6,7 @@ import { ArrowRight, ArrowUpRight, Sparkle } from 'lucide-react'
 import type { SectionId } from '@/lib/data'
 import type { DbSchema } from '@/lib/db'
 
-const DEVICON_ASSET_BASE = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons'
+// Local, production-reliable icon assets (no external CDN dependency)
 
 // 4 Corner Floating Tech Icons around the Hero Code Window
 const ROTATING_TITLES = ['Information Science Student', 'Web Developer', 'Designer']
@@ -14,7 +14,7 @@ const FLOATING_HERO_ICONS = [
   {
     id: 'html5',
     name: 'HTML5',
-    icon: `${DEVICON_ASSET_BASE}/html5/html5-original.svg`,
+    icon: '/icons/skills/html5.svg',
     side: 'left',
     size: 'large',
     className: '-top-5 -left-3 sm:-top-6 sm:-left-5',
@@ -28,7 +28,7 @@ const FLOATING_HERO_ICONS = [
   {
     id: 'css3',
     name: 'CSS3',
-    icon: `${DEVICON_ASSET_BASE}/css3/css3-original.svg`,
+    icon: '/icons/skills/css3.svg',
     side: 'left',
     size: 'small',
     className: '-bottom-4 -left-2 sm:-bottom-5 sm:-left-4',
@@ -42,7 +42,7 @@ const FLOATING_HERO_ICONS = [
   {
     id: 'github',
     name: 'GitHub',
-    icon: `${DEVICON_ASSET_BASE}/github/github-original.svg`,
+    icon: '/icons/skills/github.svg',
     side: 'right',
     size: 'small',
     className: '-top-4 -right-2 sm:-top-5 sm:-right-4',
@@ -56,7 +56,7 @@ const FLOATING_HERO_ICONS = [
   {
     id: 'javascript',
     name: 'JavaScript',
-    icon: `${DEVICON_ASSET_BASE}/javascript/javascript-original.svg`,
+    icon: '/icons/skills/javascript.svg',
     side: 'right',
     size: 'large',
     className: '-bottom-5 -right-3 sm:-bottom-6 sm:-right-5',
