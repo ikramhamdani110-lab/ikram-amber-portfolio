@@ -65,12 +65,6 @@ export function Skills({ data }: Props) {
               {(group.skills || []).map((skill, i) => (
                 <SkillBadge key={skill.name} skill={skill} index={i} />
               ))}
-
-              {group.title === 'Databases' && data.dbTextBadge && (
-                <div className="flex h-16 items-center rounded-full border border-border bg-card/50 px-6 font-serif text-lg">
-                  {data.dbTextBadge}
-                </div>
-              )}
             </div>
           </div>
         ))}
