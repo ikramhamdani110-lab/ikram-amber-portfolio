@@ -210,6 +210,12 @@ export interface DbSchema {
 // Set PORTFOLIO_DB_PATH to a persistent mounted file in production.
 const DB_PATH = process.env.PORTFOLIO_DB_PATH || path.join(process.cwd(), 'data', 'db.json')
 const BLOB_DB_NAME = 'portfolio-db.json'
+// Bump SEED_VERSION (and commit the matching data/db.json) whenever the repo's
+// db.json should be re-imported into the persistent Blob store. Admin edits made
+// through the dashboard are preserved: the blob is only overwritten when this
+// version changes, and the imported content is always the latest committed db.json.
+const SEED_VERSION_KEY = 'seedVersion'
+const SEED_VERSION = 2
 
 function usesBlobStorage() {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN)
@@ -506,7 +512,7 @@ export async function readDb(): Promise<DbSchema> {
         }
 
         const normalizedData = normalizeDbData(initialData)
-        await put(BLOB_DB_NAME, JSON.stringify(normalizedData, null, 2), {
+        await put(BLOB_DB_NAME, JSON.stringify({ ...normalizedData, [SEED_VERSION_KEY]: SEED_VERSION }, null, 2), {
           access: 'private',
           addRandomSuffix: false,
           allowOverwrite: true,
@@ -516,7 +522,27 @@ export async function readDb(): Promise<DbSchema> {
         return normalizedData
       }
 
-      return normalizeDbData(await new Response(blob.stream).json() as Partial<DbSchema>)
+      const blobData = normalizeDbData(await new Response(blob.stream).json() as Partial<DbSchema>)
+      // If the repo's committed db.json is newer than what the blob was seeded
+      // with, re-import it once so content fixes (like the hero name) reach
+      // production without manual dashboard edits.
+      if ((blobData as unknown as Record<string, unknown>)[SEED_VERSION_KEY] !== SEED_VERSION && fs.existsSync(DB_PATH)) {
+        try {
+          const repoData = JSON.parse(fs.readFileSync(DB_PATH, 'utf-8')) as DbSchema
+          const reseeded = normalizeDbData(repoData)
+          await put(BLOB_DB_NAME, JSON.stringify({ ...reseeded, [SEED_VERSION_KEY]: SEED_VERSION }, null, 2), {
+            access: 'private',
+            addRandomSuffix: false,
+            allowOverwrite: true,
+            token: process.env.BLOB_READ_WRITE_TOKEN,
+            contentType: 'application/json',
+          })
+          return reseeded
+        } catch (error) {
+          console.error('Error re-importing repo db.json into Vercel Blob:', safeErrorMessage(error))
+        }
+      }
+      return blobData
     } catch (error) {
       console.error('Error reading Vercel Blob database:', safeErrorMessage(error))
       throw new Error(`Persistent database read failed: ${safeErrorMessage(error)}`)
@@ -543,7 +569,9 @@ export async function readDb(): Promise<DbSchema> {
 export async function writeDb(data: DbSchema): Promise<boolean> {
   if (usesBlobStorage()) {
     try {
-      await put(BLOB_DB_NAME, JSON.stringify(data, null, 2), {
+      // Writes from the admin dashboard stamp the current seed version so the
+      // dashboard's state is never clobbered by a stale repo re-import.
+      await put(BLOB_DB_NAME, JSON.stringify({ ...data, [SEED_VERSION_KEY]: SEED_VERSION }, null, 2), {
         access: 'private',
         addRandomSuffix: false,
         allowOverwrite: true,
