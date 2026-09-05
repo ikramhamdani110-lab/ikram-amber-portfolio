@@ -161,6 +161,7 @@ export interface DbSchema {
     github: string
     linkedin: string
     email: string
+    phone?: string
     fiverr?: string
   }
   customSocialLinks: CustomSocialLink[]
@@ -177,6 +178,9 @@ export interface DbSchema {
     emailLabel: string
     emailSubtitle: string
     emailCta: string
+    phoneLabel: string
+    phoneSubtitle: string
+    phoneCta: string
   }
   siteSettings: {
     metaTitle: string
@@ -401,6 +405,7 @@ const DEFAULT_DATA: DbSchema = {
     github: 'https://github.com/ikramhamdani110-lab',
     linkedin: 'https://www.linkedin.com/in/ikram-hamdani',
     email: 'ikramhamdani110@gmail.com',
+    phone: '0542546077',
   },
   customSocialLinks: [],
   connect: {
@@ -415,7 +420,10 @@ const DEFAULT_DATA: DbSchema = {
     linkedinCta: "Visit LinkedIn",
     emailLabel: "Email",
     emailSubtitle: "Say hello directly",
-    emailCta: "Send Email"
+    emailCta: "Send Email",
+    phoneLabel: "Phone",
+    phoneSubtitle: "Call me directly",
+    phoneCta: "Call Now"
   },
   siteSettings: {
     metaTitle: 'Ikram Hamdani | Information Science Student & Web Developer',

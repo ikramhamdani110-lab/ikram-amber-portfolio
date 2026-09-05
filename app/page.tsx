@@ -149,10 +149,10 @@ export default function Page() {
               >
                 {active === 'home' && <Hero onNavigate={navigate} data={data.hero} />}
                 {active === 'about' && <About data={data.about} aboutSkills={data.skills?.aboutSkills} />}
+                {active === 'journey' && <Journey data={data.journey} linkedinUrl={data.socials?.linkedin} num={journeyNum} />}
                 {active === 'skills' && <Skills data={data.skills} />}
                 {active === 'projects' && <Projects projects={data.projects || []} projectsSettings={data.projectsSettings} num={projectsNum} />}
                 {active === 'certifications' && <Certifications certifications={data.certifications} certificationsSettings={data.certificationsSettings} num={certNum} />}
-                {active === 'journey' && <Journey data={data.journey} linkedinUrl={data.socials?.linkedin} num={journeyNum} />}
                 {active === 'updates' && <Updates updates={data.updates} updatesSettings={data.updatesSettings} num={updatesNum} />}
                 {active === 'connect' && <Connect socials={data.socials} connect={data.connect} customSocialLinks={data.customSocialLinks} num={connectNum} />}
               </motion.section>

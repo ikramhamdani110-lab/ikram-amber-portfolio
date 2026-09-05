@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowUpRight, Mail, Globe } from 'lucide-react'
+import { ArrowUpRight, Mail, Phone, Globe } from 'lucide-react'
 import { GithubIcon, LinkedinIcon } from '@/components/brand-icons'
 import type { DbSchema } from '@/lib/db'
 import { SectionLabel } from '@/components/section-label'
@@ -13,23 +13,27 @@ interface Props {
   num?: string
 }
 
-export function Connect({ socials, connect, customSocialLinks = [], num = '06' }: Props) {
-  const githubUrl = socials?.github ?? ''
-  const linkedinUrl = socials?.linkedin ?? ''
-  const emailVal = socials?.email ?? ''
+export function Connect({ socials, connect, customSocialLinks, num = '06' }: Props) {
+  const githubUrl = socials?.github || ''
+  const linkedinUrl = socials?.linkedin || ''
+  const emailVal = socials?.email || ''
+  const phoneVal = socials?.phone || ''
 
-  const sectionLabel = connect?.sectionLabel ?? ''
-  const title = connect?.title ?? ''
-  const description = connect?.description ?? ''
-  const githubLabel = connect?.githubLabel ?? ''
-  const githubSubtitle = connect?.githubSubtitle ?? ''
-  const githubCta = connect?.githubCta ?? ''
-  const linkedinLabel = connect?.linkedinLabel ?? ''
-  const linkedinSubtitle = connect?.linkedinSubtitle ?? ''
-  const linkedinCta = connect?.linkedinCta ?? ''
-  const emailLabel = connect?.emailLabel ?? ''
-  const emailSubtitle = connect?.emailSubtitle ?? ''
-  const emailCta = connect?.emailCta ?? ''
+  const sectionLabel = connect?.sectionLabel || 'Connect'
+  const title = connect?.title || 'Find me around the web.'
+  const description = connect?.description || 'No forms, no fuss — just the places I actually live online. Follow along, or reach out whenever you like.'
+  const githubLabel = connect?.githubLabel || 'GitHub'
+  const githubSubtitle = connect?.githubSubtitle || 'Explore my code'
+  const githubCta = connect?.githubCta || 'Visit GitHub'
+  const linkedinLabel = connect?.linkedinLabel || 'LinkedIn'
+  const linkedinSubtitle = connect?.linkedinSubtitle || 'See my journey & experiences'
+  const linkedinCta = connect?.linkedinCta || 'Visit LinkedIn'
+  const emailLabel = connect?.emailLabel || 'Email'
+  const emailSubtitle = connect?.emailSubtitle || 'Say hello directly'
+  const emailCta = connect?.emailCta || 'Send Email'
+  const phoneLabel = connect?.phoneLabel || 'Phone'
+  const phoneSubtitle = connect?.phoneSubtitle || 'Call me directly'
+  const phoneCta = connect?.phoneCta || 'Call Now'
 
   const getGithubHandle = (url: string) => {
     if (!url) return ''
@@ -89,29 +93,45 @@ export function Connect({ socials, connect, customSocialLinks = [], num = '06' }
       cta: emailCta,
       href: emailVal ? `mailto:${emailVal}` : '#',
     },
-    // Custom social links from the Admin Dashboard — rendered as full cards
-    // identical in structure and styling to the three cards above.
-    ...(customSocialLinks || []).map((link) => ({
-      icon: link.icon
-        ? function CustomSocialIcon(props: { className?: string }) {
-            return (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={link.icon}
-                alt={`${link.name} icon`}
-                className={props.className ?? 'size-5'}
-                style={{ objectFit: 'contain' as const }}
-              />
-            )
-          }
-        : Globe,
-      title: link.name,
-      sub: link.subtitle?.trim() || '',
-      handle: getGenericHandle(link.url) || link.name.toLowerCase(),
-      cta: `Visit ${link.name}`,
-      href: link.url || '#',
-    })),
   ]
+
+  // Add phone card if phone number exists
+  if (phoneVal) {
+    cards.push({
+      icon: Phone,
+      title: phoneLabel,
+      sub: phoneSubtitle,
+      handle: phoneVal,
+      cta: phoneCta,
+      href: `tel:${phoneVal}`,
+    })
+  }
+
+  // Add custom social links from the Admin Dashboard
+  if (customSocialLinks && customSocialLinks.length > 0) {
+    customSocialLinks.forEach((link) => {
+      cards.push({
+        icon: link.icon
+          ? function CustomSocialIcon(props: { className?: string }) {
+              return (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={link.icon}
+                  alt={`${link.name} icon`}
+                  className={props.className ?? 'size-5'}
+                  style={{ objectFit: 'contain' as const }}
+                />
+              )
+            }
+          : Globe,
+        title: link.name,
+        sub: link.subtitle?.trim() || '',
+        handle: getGenericHandle(link.url) || link.name.toLowerCase(),
+        cta: `Visit ${link.name}`,
+        href: link.url || '#',
+      })
+    })
+  }
 
   return (
     <div>
@@ -125,13 +145,13 @@ export function Connect({ socials, connect, customSocialLinks = [], num = '06' }
         {description}
       </p>
 
-      <div className="mt-12 grid gap-5 md:grid-cols-3">
+      <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {cards.map((card, i) => (
           <motion.a
             key={`${card.title}-${i}`}
             href={card.href}
-            target="_blank"
-            rel="noreferrer"
+            target={card.href.startsWith('tel:') ? undefined : '_blank'}
+            rel={card.href.startsWith('tel:') ? undefined : 'noreferrer'}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: i * 0.1 }}

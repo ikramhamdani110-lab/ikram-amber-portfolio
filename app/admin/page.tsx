@@ -1780,6 +1780,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   const [github, setGithub] = useState(db.socials?.github || '')
   const [linkedin, setLinkedin] = useState(db.socials?.linkedin || '')
   const [email, setEmail] = useState(db.socials?.email || '')
+  const [phone, setPhone] = useState(db.socials?.phone || '')
   const [fiverr, setFiverr] = useState(db.socials?.fiverr || '')
 
   // Connect section labels
@@ -1795,6 +1796,9 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   const [emailLabel, setEmailLabel] = useState(db.connect?.emailLabel || 'Email')
   const [emailSubtitle, setEmailSubtitle] = useState(db.connect?.emailSubtitle || 'Say hello directly')
   const [emailCta, setEmailCta] = useState(db.connect?.emailCta || 'Send Email')
+  const [phoneLabel, setPhoneLabel] = useState(db.connect?.phoneLabel || 'Phone')
+  const [phoneSubtitle, setPhoneSubtitle] = useState(db.connect?.phoneSubtitle || 'Call me directly')
+  const [phoneCta, setPhoneCta] = useState(db.connect?.phoneCta || 'Call Now')
 
   const [customLinks, setCustomLinks] = useState(db.customSocialLinks || [])
   const [isEditingCustom, setIsEditingCustom] = useState(false)
@@ -1810,7 +1814,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
   const handleSavePredefined = (e: React.FormEvent) => {
     e.preventDefault()
     save('profile', {
-      socials: { github, linkedin, email, fiverr },
+      socials: { github, linkedin, email, phone, fiverr },
       connect: {
         sectionLabel: connectSectionLabel,
         title: connectTitle,
@@ -1823,7 +1827,10 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
         linkedinCta,
         emailLabel,
         emailSubtitle,
-        emailCta
+        emailCta,
+        phoneLabel,
+        phoneSubtitle,
+        phoneCta
       }
     })
   }
@@ -2034,6 +2041,17 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
         </div>
 
         <div>
+          <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Phone Number (Optional)</label>
+          <input
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="0542546077"
+            className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground font-mono dark:bg-[#0e0b0d]"
+          />
+        </div>
+
+        <div>
           <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Fiverr URL (Optional)</label>
           <input
             type="url"
@@ -2088,7 +2106,7 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
           />
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <div>
             <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">GitHub Label</label>
             <input
@@ -2176,6 +2194,36 @@ function SocialsTab({ db, save, uploadImage }: { db: DbSchema; save: any; upload
               value={emailCta}
               onChange={(e) => setEmailCta(e.target.value)}
               placeholder="Send Email"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Phone Label</label>
+            <input
+              type="text"
+              value={phoneLabel}
+              onChange={(e) => setPhoneLabel(e.target.value)}
+              placeholder="Phone"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Phone Subtitle</label>
+            <input
+              type="text"
+              value={phoneSubtitle}
+              onChange={(e) => setPhoneSubtitle(e.target.value)}
+              placeholder="Call me directly"
+              className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
+            />
+          </div>
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Phone CTA</label>
+            <input
+              type="text"
+              value={phoneCta}
+              onChange={(e) => setPhoneCta(e.target.value)}
+              placeholder="Call Now"
               className="w-full rounded-2xl border border-border bg-background p-3 text-sm focus:border-accent outline-none text-foreground dark:bg-[#0e0b0d]"
             />
           </div>
